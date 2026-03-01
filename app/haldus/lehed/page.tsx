@@ -1,0 +1,165 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Plus, Pencil, Trash2, Eye, EyeOff, ExternalLink } from 'lucide-react'
+import { useAuth } from '@/lib/auth-context'
+import { supabase } from '@/lib/supabase'
+
+const canManageProducts = (role: string) => role === 'superadmin'
+
+interface Page {
+  id: string
+  slug: string
+  title: string
+  short_description: string | null
+  image_url: string | null
+  published: boolean
+  created_at: string
+}
+
+export default function HaldusLehedPage() {
+  const router = useRouter()
+  const { profile } = useAuth()
+  const [pages, setPages] = useState<Page[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (profile && !canManageProducts(profile.role)) router.replace('/haldus')
+  }, [profile, router])
+
+  async function load() {
+    const { data } = await supabase
+      .from('pages')
+      .select('id, slug, title, short_description, image_url, published, created_at')
+      .order('created_at', { ascending: false })
+    setPages(data ?? [])
+    setLoading(false)
+  }
+
+  useEffect(() => { load() }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!canManageProducts(profile?.role ?? '')) return null
+
+  async function handleDelete(id: string, title: string) {
+    if (!confirm(`Kustuta leht "${title}"?`)) return
+    await supabase.from('pages').delete().eq('id', id)
+    await load()
+  }
+
+  async function togglePublished(id: string, current: boolean) {
+    await supabase.from('pages').update({ published: !current }).eq('id', id)
+    setPages(prev => prev.map(p => p.id === id ? { ...p, published: !current } : p))
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-20">
+        <div className="w-8 h-8 border-2 border-[#003366] border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-5">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Lehed</h1>
+          <p className="text-[14px] text-gray-500 mt-0.5">Privaatsuspoliitika, kasutustingimused jms staatilised lehed</p>
+        </div>
+        <Link
+          href="/haldus/lehed/uus"
+          className="flex items-center gap-2 bg-[#003366] hover:bg-[#004080] text-white px-4 py-2.5 rounded-xl font-semibold text-[15px] transition-colors"
+        >
+          <Plus size={16} /> Lisa leht
+        </Link>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
+        {pages.length === 0 ? (
+          <div className="p-12 text-center">
+            <p className="text-[15px] text-gray-500 mb-4">Lehti pole lisatud.</p>
+            <Link href="/haldus/lehed/uus" className="text-[#003366] font-semibold hover:underline text-[15px]">
+              + Lisa esimene leht
+            </Link>
+          </div>
+        ) : (
+          <>
+            <div className="hidden sm:grid grid-cols-[56px_1fr_auto_auto] gap-4 px-6 py-3 border-b border-gray-100 text-[12px] font-semibold text-gray-400 uppercase tracking-wider">
+              <span />
+              <span>Pealkiri / slug</span>
+              <span className="text-center">Staatus</span>
+              <span />
+            </div>
+            <div className="divide-y divide-gray-50">
+              {pages.map(page => (
+                <div key={page.id} className="flex items-center gap-4 px-6 py-4">
+                  {page.image_url ? (
+                    <img
+                      src={page.image_url}
+                      alt={page.title}
+                      className="w-14 h-14 object-cover rounded-lg border border-gray-100 flex-shrink-0"
+                    />
+                  ) : (
+                    <div className="w-14 h-14 bg-gray-100 rounded-lg flex-shrink-0 flex items-center justify-center text-gray-300 text-[11px] font-medium">
+                      PILT
+                    </div>
+                  )}
+
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-gray-900 text-[15px]">{page.title}</div>
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <span className="text-[13px] text-gray-400">/leht/{page.slug}</span>
+                      <a
+                        href={`/leht/${page.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-300 hover:text-[#003366] transition-colors"
+                      >
+                        <ExternalLink size={12} />
+                      </a>
+                    </div>
+                    <div className="text-[12px] text-gray-400 mt-0.5">
+                      {new Date(page.created_at).toLocaleDateString('et-EE')}
+                    </div>
+                  </div>
+
+                  <span className={`px-2.5 py-1 rounded-full text-[12px] font-semibold flex-shrink-0 ${
+                    page.published ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
+                  }`}>
+                    {page.published ? 'Avalik' : 'Peidetud'}
+                  </span>
+
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <button
+                      onClick={() => togglePublished(page.id, page.published)}
+                      className="p-2 text-gray-400 hover:text-[#003366] transition-colors rounded-lg hover:bg-blue-50"
+                      title={page.published ? 'Peida' : 'Avalikusta'}
+                    >
+                      {page.published ? <EyeOff size={15} /> : <Eye size={15} />}
+                    </button>
+                    <Link
+                      href={`/haldus/lehed/${page.id}/muuda`}
+                      className="p-2 text-gray-400 hover:text-[#003366] transition-colors rounded-lg hover:bg-blue-50"
+                      title="Muuda"
+                    >
+                      <Pencil size={15} />
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(page.id, page.title)}
+                      className="p-2 text-gray-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50"
+                      title="Kustuta"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}

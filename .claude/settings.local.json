@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "Bash(do:*)",
+      "WebFetch(domain:docs.montonio.com)",
+      "WebSearch",
+      "WebFetch(domain:packagist.org)",
+      "WebFetch(domain:root.packagist.org)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.montonio.com)",
+      "Bash(curl:*)",
+      "Bash(npm install:*)",
+      "Bash(test:*)",
+      "Bash(ls:*)",
+      "Bash(npm run:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}

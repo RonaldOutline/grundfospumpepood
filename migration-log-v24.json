@@ -1,0 +1,1859 @@
+{
+  "migrated": [
+    {
+      "id": 13,
+      "sku": "95906472",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-10.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/95906472.jpg"
+    },
+    {
+      "id": 14,
+      "sku": "95906489",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-11.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/95906489.jpg"
+    },
+    {
+      "id": 15,
+      "sku": "96913060",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-12.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96913060.jpg"
+    },
+    {
+      "id": 16,
+      "sku": "96913085",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-13.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96913085.jpg"
+    },
+    {
+      "id": 17,
+      "sku": "97916749",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-14.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97916749.jpg"
+    },
+    {
+      "id": 18,
+      "sku": "97916757",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-15.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97916757.jpg"
+    },
+    {
+      "id": 19,
+      "sku": "97916771",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-16.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97916771.jpg"
+    },
+    {
+      "id": 20,
+      "sku": "97916772",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-17.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97916772.jpg"
+    },
+    {
+      "id": 21,
+      "sku": "99812350",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-18.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99812350.jpg"
+    },
+    {
+      "id": 22,
+      "sku": "97924244",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-19.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924244.jpg"
+    },
+    {
+      "id": 23,
+      "sku": "97924245",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-20.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924245.jpg"
+    },
+    {
+      "id": 24,
+      "sku": "97924246",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-21.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924246.jpg"
+    },
+    {
+      "id": 25,
+      "sku": "97924247",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-22.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924247.jpg"
+    },
+    {
+      "id": 26,
+      "sku": "97924248",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-23.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924248.jpg"
+    },
+    {
+      "id": 27,
+      "sku": "97924249",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-24.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924249.jpg"
+    },
+    {
+      "id": 28,
+      "sku": "97924250",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-25.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924250.jpg"
+    },
+    {
+      "id": 29,
+      "sku": "97924251",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-26.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924251.jpg"
+    },
+    {
+      "id": 30,
+      "sku": "97924252",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-27.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924252.jpg"
+    },
+    {
+      "id": 31,
+      "sku": "97924253",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-28.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924253.jpg"
+    },
+    {
+      "id": 32,
+      "sku": "97924254",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-29.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924254.jpg"
+    },
+    {
+      "id": 33,
+      "sku": "97924255",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-30.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924255.jpg"
+    },
+    {
+      "id": 34,
+      "sku": "97924256",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-31.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924256.jpg"
+    },
+    {
+      "id": 35,
+      "sku": "97924257",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-32.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924257.jpg"
+    },
+    {
+      "id": 36,
+      "sku": "97924258",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-33.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924258.jpg"
+    },
+    {
+      "id": 37,
+      "sku": "97924260",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-34.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924260.jpg"
+    },
+    {
+      "id": 38,
+      "sku": "97924261",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-35.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924261.jpg"
+    },
+    {
+      "id": 39,
+      "sku": "97924262",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-36.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924262.jpg"
+    },
+    {
+      "id": 40,
+      "sku": "97924263",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-37.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924263.jpg"
+    },
+    {
+      "id": 41,
+      "sku": "97924264",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-38.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924264.jpg"
+    },
+    {
+      "id": 42,
+      "sku": "97924265",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-39.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924265.jpg"
+    },
+    {
+      "id": 43,
+      "sku": "97924266",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-40.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924266.jpg"
+    },
+    {
+      "id": 44,
+      "sku": "97924267",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-41.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924267.jpg"
+    },
+    {
+      "id": 45,
+      "sku": "97924268",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-42.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924268.jpg"
+    },
+    {
+      "id": 46,
+      "sku": "97924269",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-43.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924269.jpg"
+    },
+    {
+      "id": 47,
+      "sku": "97924270",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-44.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924270.jpg"
+    },
+    {
+      "id": 48,
+      "sku": "97924271",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-45.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924271.jpg"
+    },
+    {
+      "id": 49,
+      "sku": "97924272",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-46.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924272.jpg"
+    },
+    {
+      "id": 50,
+      "sku": "97924273",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-47.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924273.jpg"
+    },
+    {
+      "id": 51,
+      "sku": "97924274",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-48.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924274.jpg"
+    },
+    {
+      "id": 52,
+      "sku": "97924275",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-49.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924275.jpg"
+    },
+    {
+      "id": 53,
+      "sku": "97924276",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-50.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924276.jpg"
+    },
+    {
+      "id": 54,
+      "sku": "97924277",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-51.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924277.jpg"
+    },
+    {
+      "id": 55,
+      "sku": "97924278",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-52.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924278.jpg"
+    },
+    {
+      "id": 56,
+      "sku": "97924279",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-53.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924279.jpg"
+    },
+    {
+      "id": 57,
+      "sku": "97924336",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-54.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924336.jpg"
+    },
+    {
+      "id": 58,
+      "sku": "97924337",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-55.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924337.jpg"
+    },
+    {
+      "id": 59,
+      "sku": "97924338",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-56.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924338.jpg"
+    },
+    {
+      "id": 60,
+      "sku": "97924339",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-57.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924339.jpg"
+    },
+    {
+      "id": 61,
+      "sku": "97924340",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-58.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924340.jpg"
+    },
+    {
+      "id": 62,
+      "sku": "97924341",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-59.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924341.jpg"
+    },
+    {
+      "id": 63,
+      "sku": "97924342",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-60.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924342.jpg"
+    },
+    {
+      "id": 64,
+      "sku": "97924343",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-61.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924343.jpg"
+    },
+    {
+      "id": 65,
+      "sku": "97924344",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-62.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924344.jpg"
+    },
+    {
+      "id": 66,
+      "sku": "97924345",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-63.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924345.jpg"
+    },
+    {
+      "id": 67,
+      "sku": "97924346",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-64.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97924346.jpg"
+    },
+    {
+      "id": 68,
+      "sku": "98333832",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-65.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98333832.jpg"
+    },
+    {
+      "id": 69,
+      "sku": "98333834",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-66.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98333834.jpg"
+    },
+    {
+      "id": 70,
+      "sku": "98333836",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-67.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98333836.jpg"
+    },
+    {
+      "id": 71,
+      "sku": "98333852",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-68.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98333852.jpg"
+    },
+    {
+      "id": 72,
+      "sku": "98333854",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-69.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98333854.jpg"
+    },
+    {
+      "id": 73,
+      "sku": "98333856",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-70.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98333856.jpg"
+    },
+    {
+      "id": 74,
+      "sku": "98333872",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-71.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98333872.jpg"
+    },
+    {
+      "id": 75,
+      "sku": "98333874",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-72.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98333874.jpg"
+    },
+    {
+      "id": 76,
+      "sku": "98333876",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-73.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98333876.jpg"
+    },
+    {
+      "id": 77,
+      "sku": "98609707",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-74.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98609707.jpg"
+    },
+    {
+      "id": 78,
+      "sku": "98609709",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-75.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98609709.jpg"
+    },
+    {
+      "id": 79,
+      "sku": "99221213",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-76.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221213.jpg"
+    },
+    {
+      "id": 80,
+      "sku": "99221214",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-77.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221214.jpg"
+    },
+    {
+      "id": 81,
+      "sku": "99221215",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-78.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221215.jpg"
+    },
+    {
+      "id": 82,
+      "sku": "99221216",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-79.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221216.jpg"
+    },
+    {
+      "id": 83,
+      "sku": "99221217",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-80.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221217.jpg"
+    },
+    {
+      "id": 84,
+      "sku": "99221223",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-81.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221223.jpg"
+    },
+    {
+      "id": 85,
+      "sku": "99221224",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-82.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221224.jpg"
+    },
+    {
+      "id": 86,
+      "sku": "99221225",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-83.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221225.jpg"
+    },
+    {
+      "id": 87,
+      "sku": "99221226",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-84.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221226.jpg"
+    },
+    {
+      "id": 88,
+      "sku": "99221227",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-85.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221227.jpg"
+    },
+    {
+      "id": 89,
+      "sku": "99221233",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-86.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221233.jpg"
+    },
+    {
+      "id": 90,
+      "sku": "99221234",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-87.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221234.jpg"
+    },
+    {
+      "id": 91,
+      "sku": "99221235",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-88.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221235.jpg"
+    },
+    {
+      "id": 92,
+      "sku": "99221236",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-89.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221236.jpg"
+    },
+    {
+      "id": 93,
+      "sku": "99221237",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-90.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221237.jpg"
+    },
+    {
+      "id": 94,
+      "sku": "99221253",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-91.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221253.jpg"
+    },
+    {
+      "id": 95,
+      "sku": "99221254",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-92.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221254.jpg"
+    },
+    {
+      "id": 96,
+      "sku": "99221255",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-93.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221255.jpg"
+    },
+    {
+      "id": 97,
+      "sku": "99221256",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-94.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221256.jpg"
+    },
+    {
+      "id": 98,
+      "sku": "99221257",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-95.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221257.jpg"
+    },
+    {
+      "id": 99,
+      "sku": "99221263",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-96.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221263.jpg"
+    },
+    {
+      "id": 100,
+      "sku": "99221265",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-97.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221265.jpg"
+    },
+    {
+      "id": 101,
+      "sku": "99221269",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-98.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221269.jpg"
+    },
+    {
+      "id": 102,
+      "sku": "99221271",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-99.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221271.jpg"
+    },
+    {
+      "id": 103,
+      "sku": "99221275",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-100.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221275.jpg"
+    },
+    {
+      "id": 104,
+      "sku": "99221277",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-101.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221277.jpg"
+    },
+    {
+      "id": 105,
+      "sku": "99221281",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-102.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221281.jpg"
+    },
+    {
+      "id": 106,
+      "sku": "99221283",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-103.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221283.jpg"
+    },
+    {
+      "id": 107,
+      "sku": "99221285",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-104.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221285.jpg"
+    },
+    {
+      "id": 108,
+      "sku": "99221289",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-105.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221289.jpg"
+    },
+    {
+      "id": 109,
+      "sku": "99221291",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-106.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221291.jpg"
+    },
+    {
+      "id": 110,
+      "sku": "99221292",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-107.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221292.jpg"
+    },
+    {
+      "id": 111,
+      "sku": "99221303",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-108.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221303.jpg"
+    },
+    {
+      "id": 112,
+      "sku": "99221304",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-109.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221304.jpg"
+    },
+    {
+      "id": 113,
+      "sku": "99221305",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-110.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221305.jpg"
+    },
+    {
+      "id": 114,
+      "sku": "99221306",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-111.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221306.jpg"
+    },
+    {
+      "id": 115,
+      "sku": "99221307",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-112.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99221307.jpg"
+    },
+    {
+      "id": 116,
+      "sku": "99224453",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-113.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99224453.jpg"
+    },
+    {
+      "id": 117,
+      "sku": "99539041",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-114.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99539041.jpg"
+    },
+    {
+      "id": 118,
+      "sku": "99539056",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-115.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99539056.jpg"
+    },
+    {
+      "id": 119,
+      "sku": "99553575",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-116.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99553575.jpg"
+    },
+    {
+      "id": 120,
+      "sku": "92611467",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-117.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/92611467.jpg"
+    },
+    {
+      "id": 121,
+      "sku": "92616890",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-118.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/92616890.jpg"
+    },
+    {
+      "id": 122,
+      "sku": "92616892",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-119.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/92616892.jpg"
+    },
+    {
+      "id": 123,
+      "sku": "92616893",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-120.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/92616893.jpg"
+    },
+    {
+      "id": 124,
+      "sku": "99199551",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-121.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99199551.jpg"
+    },
+    {
+      "id": 125,
+      "sku": "99199576",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-122.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99199576.jpg"
+    },
+    {
+      "id": 126,
+      "sku": "99199577",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-123.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99199577.jpg"
+    },
+    {
+      "id": 127,
+      "sku": "99199579",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-124.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99199579.jpg"
+    },
+    {
+      "id": 128,
+      "sku": "99199587",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-125.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99199587.jpg"
+    },
+    {
+      "id": 129,
+      "sku": "99199589",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-126.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99199589.jpg"
+    },
+    {
+      "id": 130,
+      "sku": "99199590",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-127.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99199590.jpg"
+    },
+    {
+      "id": 131,
+      "sku": "99199591",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-128.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99199591.jpg"
+    },
+    {
+      "id": 132,
+      "sku": "99199593",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-129.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99199593.jpg"
+    },
+    {
+      "id": 133,
+      "sku": "99199594",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-130.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99199594.jpg"
+    },
+    {
+      "id": 134,
+      "sku": "99199596",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-131.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99199596.jpg"
+    },
+    {
+      "id": 135,
+      "sku": "99199597",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-132.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99199597.jpg"
+    },
+    {
+      "id": 136,
+      "sku": "99371956",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-133.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99371956.jpg"
+    },
+    {
+      "id": 137,
+      "sku": "99371959",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-134.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99371959.jpg"
+    },
+    {
+      "id": 138,
+      "sku": "99371961",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-135.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99371961.jpg"
+    },
+    {
+      "id": 139,
+      "sku": "99371965",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-136.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99371965.jpg"
+    },
+    {
+      "id": 140,
+      "sku": "99411107",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-137.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411107.jpg"
+    },
+    {
+      "id": 141,
+      "sku": "99411114",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-138.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411114.jpg"
+    },
+    {
+      "id": 142,
+      "sku": "99411116",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-139.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411116.jpg"
+    },
+    {
+      "id": 143,
+      "sku": "99411143",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-140.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411143.jpg"
+    },
+    {
+      "id": 144,
+      "sku": "99411150",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-141.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411150.jpg"
+    },
+    {
+      "id": 145,
+      "sku": "99411163",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-142.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411163.jpg"
+    },
+    {
+      "id": 146,
+      "sku": "99411165",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-143.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411165.jpg"
+    },
+    {
+      "id": 147,
+      "sku": "99411175",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-144.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411175.jpg"
+    },
+    {
+      "id": 148,
+      "sku": "99411178",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-145.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411178.jpg"
+    },
+    {
+      "id": 149,
+      "sku": "99411207",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-146.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411207.jpg"
+    },
+    {
+      "id": 150,
+      "sku": "99411221",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-147.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411221.jpg"
+    },
+    {
+      "id": 151,
+      "sku": "99411263",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-148.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411263.jpg"
+    },
+    {
+      "id": 152,
+      "sku": "99411272",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-149.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411272.jpg"
+    },
+    {
+      "id": 153,
+      "sku": "99411287",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-150.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411287.jpg"
+    },
+    {
+      "id": 154,
+      "sku": "99411289",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-151.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411289.jpg"
+    },
+    {
+      "id": 155,
+      "sku": "99411365",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-152.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411365.jpg"
+    },
+    {
+      "id": 156,
+      "sku": "99411424",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-153.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411424.jpg"
+    },
+    {
+      "id": 157,
+      "sku": "99411428",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-154.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411428.jpg"
+    },
+    {
+      "id": 158,
+      "sku": "99411432",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-155.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411432.jpg"
+    },
+    {
+      "id": 159,
+      "sku": "99411448",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-156.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411448.jpg"
+    },
+    {
+      "id": 160,
+      "sku": "99411449",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-157.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99411449.jpg"
+    },
+    {
+      "id": 161,
+      "sku": "99452178",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-158.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99452178.jpg"
+    },
+    {
+      "id": 162,
+      "sku": "99452182",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-159.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99452182.jpg"
+    },
+    {
+      "id": 163,
+      "sku": "99160550",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-160.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99160550.jpg"
+    },
+    {
+      "id": 164,
+      "sku": "99160574",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-161.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99160574.jpg"
+    },
+    {
+      "id": 165,
+      "sku": "99160578",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-162.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99160578.jpg"
+    },
+    {
+      "id": 166,
+      "sku": "99160579",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-163.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99160579.jpg"
+    },
+    {
+      "id": 167,
+      "sku": "99160583",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-164.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99160583.jpg"
+    },
+    {
+      "id": 168,
+      "sku": "99160584",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-165.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99160584.jpg"
+    },
+    {
+      "id": 169,
+      "sku": "99160587",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-166.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99160587.jpg"
+    },
+    {
+      "id": 170,
+      "sku": "99160590",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-167.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99160590.jpg"
+    },
+    {
+      "id": 171,
+      "sku": "99165123",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-168.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99165123.jpg"
+    },
+    {
+      "id": 172,
+      "sku": "09001K13",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-169.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/09001K13.jpg"
+    },
+    {
+      "id": 173,
+      "sku": "09001K18",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-170.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/09001K18.jpg"
+    },
+    {
+      "id": 174,
+      "sku": "09001K23",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-171.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/09001K23.jpg"
+    },
+    {
+      "id": 175,
+      "sku": "10001K12",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-172.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/10001K12.jpg"
+    },
+    {
+      "id": 176,
+      "sku": "10001K15",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-173.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/10001K15.jpg"
+    },
+    {
+      "id": 177,
+      "sku": "10001K18",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-174.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/10001K18.jpg"
+    },
+    {
+      "id": 178,
+      "sku": "10001K22",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-175.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/10001K22.jpg"
+    },
+    {
+      "id": 179,
+      "sku": "10001K25",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-176.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/10001K25.jpg"
+    },
+    {
+      "id": 180,
+      "sku": "05001K12",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-177.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/05001K12.jpg"
+    },
+    {
+      "id": 181,
+      "sku": "05001K17",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-178.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/05001K17.jpg"
+    },
+    {
+      "id": 182,
+      "sku": "05001K21",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-179.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/05001K21.jpg"
+    },
+    {
+      "id": 183,
+      "sku": "05001K25",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-180.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/05001K25.jpg"
+    },
+    {
+      "id": 184,
+      "sku": "98699180",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-181.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98699180.jpg"
+    },
+    {
+      "id": 185,
+      "sku": "98699181",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-182.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98699181.jpg"
+    },
+    {
+      "id": 186,
+      "sku": "98699182",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-183.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98699182.jpg"
+    },
+    {
+      "id": 187,
+      "sku": "98699183",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-184.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98699183.jpg"
+    },
+    {
+      "id": 188,
+      "sku": "98374697",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-185.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98374697.jpg"
+    },
+    {
+      "id": 189,
+      "sku": "98374701",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-186.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98374701.jpg"
+    },
+    {
+      "id": 190,
+      "sku": "98374702",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-187.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98374702.jpg"
+    },
+    {
+      "id": 191,
+      "sku": "98374704",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-188.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98374704.jpg"
+    },
+    {
+      "id": 192,
+      "sku": "98382202",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-189.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98382202.jpg"
+    },
+    {
+      "id": 193,
+      "sku": "98563731",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-190.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98563731.jpg"
+    },
+    {
+      "id": 194,
+      "sku": "99219420",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-191.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99219420.jpg"
+    },
+    {
+      "id": 195,
+      "sku": "99219421",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-192.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99219421.jpg"
+    },
+    {
+      "id": 196,
+      "sku": "99219423",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-193.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99219423.jpg"
+    },
+    {
+      "id": 197,
+      "sku": "96001720",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-194.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96001720.jpg"
+    },
+    {
+      "id": 198,
+      "sku": "96001869",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-195.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96001869.jpg"
+    },
+    {
+      "id": 199,
+      "sku": "96004587",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-196.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96004587.jpg"
+    },
+    {
+      "id": 200,
+      "sku": "96004599",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-197.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96004599.jpg"
+    },
+    {
+      "id": 201,
+      "sku": "96010979",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-198.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96010979.jpg"
+    },
+    {
+      "id": 202,
+      "sku": "96010980",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-199.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96010980.jpg"
+    },
+    {
+      "id": 203,
+      "sku": "96011016",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-200.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96011016.jpg"
+    },
+    {
+      "id": 204,
+      "sku": "96011018",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-201.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96011018.jpg"
+    },
+    {
+      "id": 205,
+      "sku": "96468194",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-202.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96468194.jpg"
+    },
+    {
+      "id": 206,
+      "sku": "96468195",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-203.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96468195.jpg"
+    },
+    {
+      "id": 207,
+      "sku": "96468196",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-204.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96468196.jpg"
+    },
+    {
+      "id": 208,
+      "sku": "96468352",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-205.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96468352.jpg"
+    },
+    {
+      "id": 209,
+      "sku": "96468354",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-206.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96468354.jpg"
+    },
+    {
+      "id": 210,
+      "sku": "011H1300",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-207.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/011H1300.jpg"
+    },
+    {
+      "id": 211,
+      "sku": "011H1800",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-208.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/011H1800.jpg"
+    },
+    {
+      "id": 212,
+      "sku": "011H1900",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-209.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/011H1900.jpg"
+    },
+    {
+      "id": 213,
+      "sku": "012H1300",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-210.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/012H1300.jpg"
+    },
+    {
+      "id": 214,
+      "sku": "012H1800",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-211.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/012H1800.jpg"
+    },
+    {
+      "id": 215,
+      "sku": "012H1900",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-212.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/012H1900.jpg"
+    },
+    {
+      "id": 216,
+      "sku": "013N1300",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-213.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/013N1300.jpg"
+    },
+    {
+      "id": 217,
+      "sku": "013N1800",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-214.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/013N1800.jpg"
+    },
+    {
+      "id": 218,
+      "sku": "013N1900",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-215.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/013N1900.jpg"
+    },
+    {
+      "id": 219,
+      "sku": "99458766",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-216.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99458766.jpg"
+    },
+    {
+      "id": 220,
+      "sku": "99458767",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-217.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99458767.jpg"
+    },
+    {
+      "id": 221,
+      "sku": "99458768",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-218.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99458768.jpg"
+    },
+    {
+      "id": 222,
+      "sku": "99458769",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-219.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99458769.jpg"
+    },
+    {
+      "id": 223,
+      "sku": "99458789",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-220.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99458789.jpg"
+    },
+    {
+      "id": 224,
+      "sku": "99463874",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-221.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99463874.jpg"
+    },
+    {
+      "id": 225,
+      "sku": "99463875",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-222.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99463875.jpg"
+    },
+    {
+      "id": 226,
+      "sku": "99463876",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-223.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99463876.jpg"
+    },
+    {
+      "id": 227,
+      "sku": "99463877",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-224.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99463877.jpg"
+    },
+    {
+      "id": 228,
+      "sku": "99594666",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-225.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99594666.jpg"
+    },
+    {
+      "id": 229,
+      "sku": "96280965",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-226.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96280965.jpg"
+    },
+    {
+      "id": 230,
+      "sku": "96280966",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-227.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96280966.jpg"
+    },
+    {
+      "id": 231,
+      "sku": "96280967",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-228.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96280967.jpg"
+    },
+    {
+      "id": 232,
+      "sku": "96280968",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-229.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96280968.jpg"
+    },
+    {
+      "id": 233,
+      "sku": "96280969",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-230.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96280969.jpg"
+    },
+    {
+      "id": 234,
+      "sku": "96280970",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-231.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96280970.jpg"
+    },
+    {
+      "id": 235,
+      "sku": "98624419",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-232.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98624419.jpg"
+    },
+    {
+      "id": 236,
+      "sku": "98624463",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-233.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98624463.jpg"
+    },
+    {
+      "id": 237,
+      "sku": "98624466",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-234.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/98624466.jpg"
+    },
+    {
+      "id": 238,
+      "sku": "92712335",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-235.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/92712335.jpg"
+    },
+    {
+      "id": 239,
+      "sku": "92712336",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-236.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/92712336.jpg"
+    },
+    {
+      "id": 240,
+      "sku": "92712340",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-237.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/92712340.jpg"
+    },
+    {
+      "id": 241,
+      "sku": "92713068",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-238.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/92713068.jpg"
+    },
+    {
+      "id": 242,
+      "sku": "92713100",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-239.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/92713100.jpg"
+    },
+    {
+      "id": 243,
+      "sku": "92713101",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-240.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/92713101.jpg"
+    },
+    {
+      "id": 244,
+      "sku": "92834170",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-241.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/92834170.jpg"
+    },
+    {
+      "id": 245,
+      "sku": "93001547",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-242.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93001547.jpg"
+    },
+    {
+      "id": 246,
+      "sku": "93001549",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-243.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93001549.jpg"
+    },
+    {
+      "id": 247,
+      "sku": "96510142",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-244.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510142.jpg"
+    },
+    {
+      "id": 248,
+      "sku": "96510143",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-245.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510143.jpg"
+    },
+    {
+      "id": 249,
+      "sku": "96510151",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-246.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510151.jpg"
+    },
+    {
+      "id": 250,
+      "sku": "96510152",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-247.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510152.jpg"
+    },
+    {
+      "id": 251,
+      "sku": "96510158",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-248.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510158.jpg"
+    },
+    {
+      "id": 252,
+      "sku": "96510159",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-249.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510159.jpg"
+    },
+    {
+      "id": 253,
+      "sku": "96510160",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-250.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510160.jpg"
+    },
+    {
+      "id": 254,
+      "sku": "96510166",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-251.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510166.jpg"
+    },
+    {
+      "id": 255,
+      "sku": "96510167",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-252.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510167.jpg"
+    },
+    {
+      "id": 256,
+      "sku": "96510168",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-253.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510168.jpg"
+    },
+    {
+      "id": 257,
+      "sku": "96510171",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-254.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510171.jpg"
+    },
+    {
+      "id": 258,
+      "sku": "96510190",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-255.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510190.jpg"
+    },
+    {
+      "id": 259,
+      "sku": "96510191",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-256.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510191.jpg"
+    },
+    {
+      "id": 260,
+      "sku": "96510199",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-257.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510199.jpg"
+    },
+    {
+      "id": 261,
+      "sku": "96510200",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-258.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510200.jpg"
+    },
+    {
+      "id": 262,
+      "sku": "96510206",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-259.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510206.jpg"
+    },
+    {
+      "id": 263,
+      "sku": "96510207",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-260.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510207.jpg"
+    },
+    {
+      "id": 264,
+      "sku": "96510208",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-261.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510208.jpg"
+    },
+    {
+      "id": 265,
+      "sku": "96510214",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-262.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510214.jpg"
+    },
+    {
+      "id": 266,
+      "sku": "96510215",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-263.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510215.jpg"
+    },
+    {
+      "id": 267,
+      "sku": "96510217",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-264.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510217.jpg"
+    },
+    {
+      "id": 268,
+      "sku": "96510220",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-265.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96510220.jpg"
+    },
+    {
+      "id": 269,
+      "sku": "96524501",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/product-266.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/96524501.jpg"
+    },
+    {
+      "id": 270,
+      "sku": "93013252",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-266.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93013252.jpg"
+    },
+    {
+      "id": 271,
+      "sku": "92929476",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-267.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/92929476.jpg"
+    },
+    {
+      "id": 272,
+      "sku": "99530403",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-268.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99530403.jpg"
+    },
+    {
+      "id": 273,
+      "sku": "99530404",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-269.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99530404.jpg"
+    },
+    {
+      "id": 274,
+      "sku": "99530405",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-270.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99530405.jpg"
+    },
+    {
+      "id": 275,
+      "sku": "99530407",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-271.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/99530407.jpg"
+    },
+    {
+      "id": 276,
+      "sku": "97775314",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-272.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97775314.jpg"
+    },
+    {
+      "id": 277,
+      "sku": "97775315",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-273.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97775315.jpg"
+    },
+    {
+      "id": 278,
+      "sku": "97775316",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-274.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97775316.jpg"
+    },
+    {
+      "id": 279,
+      "sku": "97775317",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-275.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97775317.jpg"
+    },
+    {
+      "id": 280,
+      "sku": "97775318",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/11/product-276.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/97775318.jpg"
+    },
+    {
+      "id": 281,
+      "sku": "93074174",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074174.jpg"
+    },
+    {
+      "id": 282,
+      "sku": "93074176",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-1.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074176.jpg"
+    },
+    {
+      "id": 283,
+      "sku": "93074177",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-2.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074177.jpg"
+    },
+    {
+      "id": 284,
+      "sku": "93074162",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-3.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074162.jpg"
+    },
+    {
+      "id": 285,
+      "sku": "93074163",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-4.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074163.jpg"
+    },
+    {
+      "id": 286,
+      "sku": "93074164",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-5.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074164.jpg"
+    },
+    {
+      "id": 287,
+      "sku": "93074165",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-6.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074165.jpg"
+    },
+    {
+      "id": 288,
+      "sku": "93074166",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-7.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074166.jpg"
+    },
+    {
+      "id": 289,
+      "sku": "93094214",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-8.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93094214.jpg"
+    },
+    {
+      "id": 290,
+      "sku": "93074178",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-9.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074178.jpg"
+    },
+    {
+      "id": 291,
+      "sku": "93074179",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-10.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074179.jpg"
+    },
+    {
+      "id": 292,
+      "sku": "93074180",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-11.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074180.jpg"
+    },
+    {
+      "id": 293,
+      "sku": "93074182",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-12.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074182.jpg"
+    },
+    {
+      "id": 294,
+      "sku": "93074167",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-13.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074167.jpg"
+    },
+    {
+      "id": 295,
+      "sku": "93074169",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-14.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074169.jpg"
+    },
+    {
+      "id": 296,
+      "sku": "93074171",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-15.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074171.jpg"
+    },
+    {
+      "id": 297,
+      "sku": "93074173",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-16.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074173.jpg"
+    },
+    {
+      "id": 298,
+      "sku": "93074181",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-17.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074181.jpg"
+    },
+    {
+      "id": 299,
+      "sku": "93074184",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-18.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074184.jpg"
+    },
+    {
+      "id": 300,
+      "sku": "93074185",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-19.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074185.jpg"
+    },
+    {
+      "id": 301,
+      "sku": "93074186",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-20.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074186.jpg"
+    },
+    {
+      "id": 302,
+      "sku": "93074187",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-21.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074187.jpg"
+    },
+    {
+      "id": 303,
+      "sku": "93074188",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-22.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074188.jpg"
+    },
+    {
+      "id": 304,
+      "sku": "93074206",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-23.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074206.jpg"
+    },
+    {
+      "id": 305,
+      "sku": "93074208",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-24.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074208.jpg"
+    },
+    {
+      "id": 306,
+      "sku": "93074210",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-25.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074210.jpg"
+    },
+    {
+      "id": 307,
+      "sku": "93074212",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-26.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074212.jpg"
+    },
+    {
+      "id": 308,
+      "sku": "93074274",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-27.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074274.jpg"
+    },
+    {
+      "id": 309,
+      "sku": "93074275",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-28.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074275.jpg"
+    },
+    {
+      "id": 310,
+      "sku": "93074276",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-29.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074276.jpg"
+    },
+    {
+      "id": 311,
+      "sku": "93074277",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-30.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074277.jpg"
+    },
+    {
+      "id": 312,
+      "sku": "93094213",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-31.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93094213.jpg"
+    },
+    {
+      "id": 313,
+      "sku": "93094215",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-32.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93094215.jpg"
+    },
+    {
+      "id": 314,
+      "sku": "93074214",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-33.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074214.jpg"
+    },
+    {
+      "id": 315,
+      "sku": "93074216",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-34.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074216.jpg"
+    },
+    {
+      "id": 316,
+      "sku": "93074218",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-35.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074218.jpg"
+    },
+    {
+      "id": 317,
+      "sku": "93074220",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-36.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074220.jpg"
+    },
+    {
+      "id": 318,
+      "sku": "93074222",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-37.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074222.jpg"
+    },
+    {
+      "id": 319,
+      "sku": "93074225",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-38.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074225.jpg"
+    },
+    {
+      "id": 320,
+      "sku": "93074226",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-39.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074226.jpg"
+    },
+    {
+      "id": 321,
+      "sku": "93074228",
+      "old": "https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/10/product-40.jpg?wsr",
+      "new": "https://avfvouczlgbtrhtqgokx.supabase.co/storage/v1/object/public/products/images/93074228.jpg"
+    }
+  ],
+  "failed": []
+}
