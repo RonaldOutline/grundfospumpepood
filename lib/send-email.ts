@@ -160,6 +160,6 @@ export async function sendOrderEmail(
     console.error('[sendOrderEmail]', type, orderId, logEntry.error)
   } finally {
     // Log regardless of success/failure
-    await supabaseAdmin.from('email_logs').insert(logEntry).throwOnError().catch(() => {})
+    try { await supabaseAdmin.from('email_logs').insert(logEntry) } catch {}
   }
 }
