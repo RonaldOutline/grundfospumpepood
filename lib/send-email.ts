@@ -1,5 +1,5 @@
 import { supabaseAdmin } from './supabase-admin'
-import { resend } from './resend'
+import { getResend } from './resend'
 import {
   buildOrderConfirmationHtml,
   buildStatusUpdateHtml,
@@ -93,7 +93,7 @@ export async function sendOrderEmail(
         companyName: fromName,
       })
 
-      const { data, error } = await resend.emails.send({
+      const { data, error } = await getResend().emails.send({
         from,
         to: customerEmail,
         subject: `Tellimus #${orderRef} vastu võetud — iPumps`,
@@ -117,7 +117,7 @@ export async function sendOrderEmail(
         note: options.note,
       })
 
-      const { data, error } = await resend.emails.send({
+      const { data, error } = await getResend().emails.send({
         from,
         to: customerEmail,
         subject: `Tellimus #${orderRef} — staatuse uuendus`,
@@ -141,7 +141,7 @@ export async function sendOrderEmail(
         shippingAddress: sa,
       })
 
-      const { data, error } = await resend.emails.send({
+      const { data, error } = await getResend().emails.send({
         from,
         to: adminEmail,
         subject: `Uus tellimus #${orderRef}`,
