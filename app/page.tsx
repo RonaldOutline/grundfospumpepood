@@ -11,14 +11,14 @@ import {
 // ─── ANDMED ────────────────────────────────────────────────────────────────
 
 const categories = [
-  { name: 'Küte',             icon: Flame,         count: 155, slug: 'kute',            color: 'from-[#01a0dc]/20 to-red-500/10' },
-  { name: 'Jahutus',          icon: Snowflake,      count: 155, slug: 'jahutus',         color: 'from-sky-500/20 to-blue-500/10' },
-  { name: 'Sooja tarbevesi',  icon: Thermometer,    count: 48,  slug: 'sooja-tarbevesi', color: 'from-amber-500/20 to-[#01a0dc]/10' },
-  { name: 'Puurkaevud',       icon: Drill,          count: 43,  slug: 'puurkaevud',      color: 'from-stone-500/20 to-gray-500/10' },
-  { name: 'Drenaaž',          icon: Waves,          count: 31,  slug: 'drenaaz',         color: 'from-teal-500/20 to-cyan-500/10' },
-  { name: 'Salvkaevud',       icon: CircleDot,      count: 22,  slug: 'salvkaevud',      color: 'from-green-500/20 to-emerald-500/10' },
-  { name: 'Rõhutõste',        icon: ArrowUpCircle,  count: 23,  slug: 'rohutõste',       color: 'from-violet-500/20 to-purple-500/10' },
-  { name: 'Reovesi',          icon: Filter,         count: 9,   slug: 'reovesi',         color: 'from-slate-500/20 to-gray-500/10' },
+  { name: 'Küte',           icon: Flame,         count: 155, slug: 'kute',                              color: 'from-[#01a0dc]/20 to-red-500/10' },
+  { name: 'Jahutus',        icon: Snowflake,      count: 155, slug: 'jahutus',                           color: 'from-sky-500/20 to-blue-500/10' },
+  { name: 'Soe tarbevesi',  icon: Thermometer,    count: 48,  slug: 'sooja-tarbevee-tsirkulatsioonipump', color: 'from-amber-500/20 to-[#01a0dc]/10' },
+  { name: 'Puurkaevud',     icon: Drill,          count: 43,  slug: 'puurkaevud',                        color: 'from-stone-500/20 to-gray-500/10' },
+  { name: 'Drenaaž',        icon: Waves,          count: 31,  slug: 'drenaaz',                           color: 'from-teal-500/20 to-cyan-500/10' },
+  { name: 'Salvkaevud',     icon: CircleDot,      count: 22,  slug: 'salvkaevud',                        color: 'from-green-500/20 to-emerald-500/10' },
+  { name: 'Rõhutõste',      icon: ArrowUpCircle,  count: 23,  slug: 'rohutoste',                         color: 'from-violet-500/20 to-purple-500/10' },
+  { name: 'Reovesi',        icon: Filter,         count: 9,   slug: 'reovesi',                           color: 'from-slate-500/20 to-gray-500/10' },
 ]
 
 const slides = [
@@ -211,7 +211,7 @@ function CategoriesSection() {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {categories.map(cat => (
-            <a key={cat.slug} href={`/kategooria/${cat.slug}`}
+            <a key={cat.slug} href={`/tooted?tegevusala=${cat.slug}`}
               className="group relative bg-gradient-to-br from-gray-50 to-white border border-gray-100 rounded-2xl p-6 hover:border-[#003366]/20 hover:shadow-lg transition-all duration-300 overflow-hidden">
               <div className={`absolute inset-0 bg-gradient-to-br ${cat.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl`} />
               <div className="relative z-10">

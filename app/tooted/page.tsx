@@ -329,7 +329,7 @@ function TootedPageContent() {
 
   const [inputQuery, setInputQuery]         = useState(searchParams.get('q') || '')
   const [query, setQuery]                   = useState(searchParams.get('q') || '')
-  const [selectedAla, setSelectedAla]       = useState('')
+  const [selectedAla, setSelectedAla]       = useState(searchParams.get('tegevusala') || '')
   const [selectedSeeria, setSelectedSeeria] = useState('')
   const [inStockOnly, setInStockOnly]       = useState(false)
   const [priceMin, setPriceMin]             = useState('')

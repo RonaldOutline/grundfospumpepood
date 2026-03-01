@@ -16,14 +16,14 @@ import { useAuth } from '@/lib/auth-context'
 const languages = ['ET', 'EN', 'LV', 'LT', 'PL', 'RU']
 
 const categories = [
-  { name: 'Küte',             icon: Flame,         count: 155, slug: 'kute' },
-  { name: 'Jahutus',          icon: Snowflake,      count: 155, slug: 'jahutus' },
-  { name: 'Sooja tarbevesi',  icon: Thermometer,    count: 48,  slug: 'sooja-tarbevee-tsirkulatsioonipump' },
-  { name: 'Puurkaevud',       icon: Drill,          count: 43,  slug: 'puurkaevud' },
-  { name: 'Drenaaž',          icon: Waves,          count: 31,  slug: 'drenaa' },
-  { name: 'Salvkaevud',       icon: CircleDot,      count: 22,  slug: 'salvkaevud' },
-  { name: 'Rõhutõste',        icon: ArrowUpCircle,  count: 23,  slug: 'rohutoste' },
-  { name: 'Reovesi',          icon: Filter,         count: 9,   slug: 'reovesi' },
+  { name: 'Küte',            icon: Flame,         count: 155, slug: 'kute' },
+  { name: 'Jahutus',         icon: Snowflake,      count: 155, slug: 'jahutus' },
+  { name: 'Soe tarbevesi',   icon: Thermometer,    count: 48,  slug: 'sooja-tarbevee-tsirkulatsioonipump' },
+  { name: 'Puurkaevud',      icon: Drill,          count: 43,  slug: 'puurkaevud' },
+  { name: 'Drenaaž',         icon: Waves,          count: 31,  slug: 'drenaaz' },
+  { name: 'Salvkaevud',      icon: CircleDot,      count: 22,  slug: 'salvkaevud' },
+  { name: 'Rõhutõste',       icon: ArrowUpCircle,  count: 23,  slug: 'rohutoste' },
+  { name: 'Reovesi',         icon: Filter,         count: 9,   slug: 'reovesi' },
 ]
 
 // ─── OSTUKORV HELPER ───────────────────────────────────────────────────────
