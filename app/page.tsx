@@ -8,6 +8,7 @@ import {
   Phone, MapPin, Truck, Wrench, Shield, Clock
 } from 'lucide-react'
 import ObfuscatedEmail from '@/components/ObfuscatedEmail'
+import PumpCalculator from '@/components/PumpCalculator'
 
 // ─── ANDMED ────────────────────────────────────────────────────────────────
 
@@ -412,6 +413,7 @@ export default function HomePage() {
       <SeasonalPromo />
       <CategoriesSection />
       <FeaturedProducts />
+      <PumpCalculator />
       <InstallationBlock />
       <LocationBlock />
       <Benefits />
