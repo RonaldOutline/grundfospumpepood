@@ -16,6 +16,32 @@ async function getCallerProfile(): Promise<{ id: string; role: string } | null> 
   return profile ?? null
 }
 
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params
+  const caller = await getCallerProfile()
+
+  if (!caller || !['manager', 'superadmin'].includes(caller.role)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
+  const [profileRes, ordersRes] = await Promise.all([
+    supabaseAdmin.from('profiles').select('*').eq('id', id).single(),
+    supabaseAdmin.from('orders')
+      .select('id, montonio_order_id, status, total, created_at')
+      .eq('user_id', id)
+      .order('created_at', { ascending: false }),
+  ])
+
+  if (profileRes.error || !profileRes.data) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
+
+  return NextResponse.json({ profile: profileRes.data, orders: ordersRes.data ?? [] })
+}
+
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },

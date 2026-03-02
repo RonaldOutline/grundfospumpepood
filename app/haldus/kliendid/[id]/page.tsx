@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
 import { ArrowLeft, ShoppingBag } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
-import { supabase } from '@/lib/supabase'
 
 const canManageOrders   = (role: string) => ['manager', 'superadmin'].includes(role)
 const canManageProducts = (role: string) => role === 'superadmin'
@@ -73,14 +72,12 @@ export default function KlientDetailPage() {
   useEffect(() => {
     if (!id) return
     async function load() {
-      const [clientRes, ordersRes] = await Promise.all([
-        supabase.from('profiles').select('*').eq('id', id).single(),
-        supabase.from('orders').select('id, montonio_order_id, status, total, created_at').eq('user_id', id).order('created_at', { ascending: false }),
-      ])
-      if (clientRes.error || !clientRes.data) { setNotFound(true); setLoading(false); return }
-      setClient(clientRes.data)
-      setNewRole(clientRes.data.role)
-      setOrders(ordersRes.data ?? [])
+      const res = await fetch(`/api/haldus/clients/${id}`)
+      if (!res.ok) { setNotFound(true); setLoading(false); return }
+      const data = await res.json()
+      setClient(data.profile)
+      setNewRole(data.profile.role)
+      setOrders(data.orders ?? [])
       setLoading(false)
     }
     load()
