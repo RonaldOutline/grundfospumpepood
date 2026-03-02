@@ -7,6 +7,7 @@ import {
   Search, MapPin, Package, ShieldCheck, Truck, Check
 } from 'lucide-react'
 import CouponInput from '@/components/checkout/CouponInput'
+import { useTranslations } from 'next-intl'
 
 // ─── TÜÜBID ─────────────────────────────────────────────────────────────────
 
@@ -35,37 +36,6 @@ interface ParcelPoint {
   postal_code: string
 }
 
-// ─── KONFIG: riigid ja kandjad ───────────────────────────────────────────────
-
-const COUNTRIES = [
-  {
-    code: 'EE', name: 'Eesti', carriers: [
-      { code: 'omniva',    name: 'Omniva' },
-      { code: 'dpd',       name: 'DPD' },
-      { code: 'smartpost', name: 'Itella SmartPost' },
-    ],
-  },
-  {
-    code: 'LV', name: 'Läti', carriers: [
-      { code: 'omniva',   name: 'Omniva' },
-      { code: 'dpd',      name: 'DPD' },
-      { code: 'venipak',  name: 'Venipak' },
-    ],
-  },
-  {
-    code: 'LT', name: 'Leedu', carriers: [
-      { code: 'omniva',   name: 'Omniva' },
-      { code: 'dpd',      name: 'DPD' },
-      { code: 'venipak',  name: 'Venipak' },
-    ],
-  },
-  {
-    code: 'FI', name: 'Soome', carriers: [
-      { code: 'smartpost', name: 'Itella SmartPost' },
-    ],
-  },
-]
-
 const VAT_RATE = 0.22
 
 // ─── OSTUKORV ────────────────────────────────────────────────────────────────
@@ -90,6 +60,7 @@ function ParcelSelect({
   selected: ParcelPoint | null
   onSelect: (p: ParcelPoint) => void
 }) {
+  const t = useTranslations('checkout')
   const [points, setPoints]   = useState<ParcelPoint[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
@@ -97,7 +68,6 @@ function ParcelSelect({
   const [open, setOpen]       = useState(false)
   const wrapRef               = useRef<HTMLDivElement>(null)
 
-  // Lae postiautomaadid
   useEffect(() => {
     if (!carrier || !country) return
     setLoading(true)
@@ -110,14 +80,13 @@ function ParcelSelect({
         if (data.points && data.points.length > 0) {
           setPoints(data.points)
         } else {
-          setError(data.error || 'Postiautomaate ei leitud')
+          setError(data.error || t('noParcelsFound'))
         }
       })
-      .catch(() => setError('Ühenduse viga'))
+      .catch(() => setError(t('connectionError')))
       .finally(() => setLoading(false))
-  }, [carrier, country])
+  }, [carrier, country, t])
 
-  // Sulge klikk väljaspool
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
@@ -136,7 +105,7 @@ function ParcelSelect({
     return (
       <div className="flex items-center gap-2 py-3 text-[15px] text-gray-400">
         <Loader2 size={16} className="animate-spin" />
-        Laadin postiautomaate...
+        {t('loadingParcels')}
       </div>
     )
   }
@@ -152,7 +121,6 @@ function ParcelSelect({
 
   return (
     <div ref={wrapRef} className="relative">
-      {/* Valitud automaadi kuva / otsinguväli */}
       <button
         type="button"
         onClick={() => setOpen(v => !v)}
@@ -167,7 +135,7 @@ function ParcelSelect({
               <span className="font-medium">{selected.name}</span>
               <span className="text-gray-400"> — {selected.city}</span>
             </span>
-          ) : 'Vali postiautomaadi'}
+          ) : t('selectParcel')}
         </span>
         <ChevronRight
           size={14}
@@ -175,17 +143,15 @@ function ParcelSelect({
         />
       </button>
 
-      {/* Dropdown */}
       {open && (
         <div className="absolute z-30 left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden">
-          {/* Otsing */}
           <div className="p-2 border-b border-gray-100">
             <div className="relative">
               <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 autoFocus
                 type="search"
-                placeholder="Otsi linna, nime..."
+                placeholder={t('searchParcel')}
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 text-[15px] text-gray-900 outline-none bg-gray-50 rounded-lg"
@@ -193,11 +159,10 @@ function ParcelSelect({
             </div>
           </div>
 
-          {/* Nimekiri */}
           <div className="max-h-60 overflow-y-auto">
             {filtered.length === 0 ? (
               <div className="px-4 py-8 text-center text-[15px] text-gray-400">
-                Automaate ei leitud
+                {t('noMachinesFound')}
               </div>
             ) : (
               filtered.map(point => (
@@ -238,10 +203,41 @@ function ParcelSelect({
 // ─── PEAKOMPONENT ────────────────────────────────────────────────────────────
 
 export default function CheckoutPage() {
+  const t    = useTranslations('checkout')
+  const tNav = useTranslations('nav')
+
+  const countries = [
+    {
+      code: 'EE', name: t('countryEE'), carriers: [
+        { code: 'omniva',    name: 'Omniva' },
+        { code: 'dpd',       name: 'DPD' },
+        { code: 'smartpost', name: 'Itella SmartPost' },
+      ],
+    },
+    {
+      code: 'LV', name: t('countryLV'), carriers: [
+        { code: 'omniva',   name: 'Omniva' },
+        { code: 'dpd',      name: 'DPD' },
+        { code: 'venipak',  name: 'Venipak' },
+      ],
+    },
+    {
+      code: 'LT', name: t('countryLT'), carriers: [
+        { code: 'omniva',   name: 'Omniva' },
+        { code: 'dpd',      name: 'DPD' },
+        { code: 'venipak',  name: 'Venipak' },
+      ],
+    },
+    {
+      code: 'FI', name: t('countryFI'), carriers: [
+        { code: 'smartpost', name: 'Itella SmartPost' },
+      ],
+    },
+  ]
+
   const [items, setItems]         = useState<CartItem[]>([])
   const [mounted, setMounted]     = useState(false)
 
-  // Kontaktandmed
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName]   = useState('')
   const [email, setEmail]         = useState('')
@@ -249,15 +245,12 @@ export default function CheckoutPage() {
   const [company, setCompany]     = useState('')
   const [notes, setNotes]         = useState('')
 
-  // Tarne
   const [countryCode, setCountryCode]   = useState('EE')
   const [carrierCode, setCarrierCode]   = useState('omniva')
   const [selectedPoint, setSelectedPoint] = useState<ParcelPoint | null>(null)
 
-  // Kupong
   const [coupon, setCoupon]     = useState<AppliedCoupon | null>(null)
 
-  // UI
   const [errors, setErrors]     = useState<Record<string, string>>({})
   const [loading, setLoading]   = useState(false)
   const [apiError, setApiError] = useState('')
@@ -267,10 +260,9 @@ export default function CheckoutPage() {
     setMounted(true)
   }, [])
 
-  // Riigi vahetusel lähtesta kandja ja postiautomaadi valik
   const handleCountryChange = (code: string) => {
     setCountryCode(code)
-    const country = COUNTRIES.find(c => c.code === code)
+    const country = countries.find(c => c.code === code)
     setCarrierCode(country?.carriers[0]?.code || 'omniva')
     setSelectedPoint(null)
   }
@@ -285,23 +277,21 @@ export default function CheckoutPage() {
   const vat       = (subtotal - discount) * VAT_RATE
   const total     = subtotal - discount + vat
 
-  const currentCountry  = COUNTRIES.find(c => c.code === countryCode)!
+  const currentCountry  = countries.find(c => c.code === countryCode)!
   const currentCarrier  = currentCountry.carriers.find(c => c.code === carrierCode)!
 
-  // ── Validatsioon ─────────────────────────────────────────────────────────
   const validate = useCallback((): boolean => {
     const e: Record<string, string> = {}
-    if (!firstName.trim()) e.firstName = 'Kohustuslik'
-    if (!lastName.trim())  e.lastName  = 'Kohustuslik'
+    if (!firstName.trim()) e.firstName = t('required')
+    if (!lastName.trim())  e.lastName  = t('required')
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-      e.email = 'Sisesta korrektne e-posti aadress'
-    if (!phone.trim())     e.phone     = 'Kohustuslik'
-    if (!selectedPoint)    e.point     = 'Vali postiautomaadi'
+      e.email = t('invalidEmail')
+    if (!phone.trim())     e.phone     = t('required')
+    if (!selectedPoint)    e.point     = t('selectParcelError')
     setErrors(e)
     return Object.keys(e).length === 0
-  }, [firstName, lastName, email, phone, selectedPoint])
+  }, [firstName, lastName, email, phone, selectedPoint, t])
 
-  // ── Esita tellimus ───────────────────────────────────────────────────────
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validate()) return
@@ -343,7 +333,7 @@ export default function CheckoutPage() {
       const data = await res.json() as { payment_url?: string; error?: string }
 
       if (!res.ok || !data.payment_url) {
-        setApiError(data.error || 'Tellimuse esitamine ebaõnnestus')
+        setApiError(data.error || t('orderFailed'))
         setLoading(false)
         return
       }
@@ -352,24 +342,23 @@ export default function CheckoutPage() {
       window.dispatchEvent(new Event('cart_updated'))
       window.location.href = data.payment_url
     } catch {
-      setApiError('Ühenduse viga. Palun proovi uuesti.')
+      setApiError(t('connectionFailed'))
       setLoading(false)
     }
   }
 
   if (!mounted) return null
 
-  // Tühi korv
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="text-5xl mb-4">🛒</div>
-          <h1 className="text-xl font-bold text-gray-800 mb-2">Ostukorv on tühi</h1>
-          <p className="text-[15px] text-gray-500 mb-5">Lisa tooteid enne kassa avamist</p>
+          <h1 className="text-xl font-bold text-gray-800 mb-2">{t('emptyCart')}</h1>
+          <p className="text-[15px] text-gray-500 mb-5">{t('emptyCartHint')}</p>
           <Link href="/tooted"
             className="bg-[#003366] text-white px-6 py-3 rounded-xl font-semibold text-[15px] hover:bg-[#004080] transition-colors">
-            Vaata tooteid
+            {t('viewProducts')}
           </Link>
         </div>
       </div>
@@ -382,14 +371,14 @@ export default function CheckoutPage() {
 
         {/* Leivaküljed */}
         <nav className="flex items-center gap-2 text-[15px] text-gray-400 mb-6">
-          <Link href="/" className="hover:text-[#003366] transition-colors">Avaleht</Link>
+          <Link href="/" className="hover:text-[#003366] transition-colors">{tNav('home')}</Link>
           <ChevronRight size={14} />
-          <Link href="/ostukorv" className="hover:text-[#003366] transition-colors">Ostukorv</Link>
+          <Link href="/ostukorv" className="hover:text-[#003366] transition-colors">{tNav('cart')}</Link>
           <ChevronRight size={14} />
-          <span className="text-gray-700 font-medium">Kassa</span>
+          <span className="text-gray-700 font-medium">{t('title')}</span>
         </nav>
 
-        <h1 className="text-2xl md:text-3xl font-bold text-[#003366] mb-8">Kassa</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-[#003366] mb-8">{t('title')}</h1>
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
@@ -399,13 +388,12 @@ export default function CheckoutPage() {
 
               {/* Kontaktandmed */}
               <div className="bg-white rounded-2xl border border-gray-100 p-6">
-                <h2 className="font-bold text-gray-900 text-[17px] mb-5">Kontaktandmed</h2>
+                <h2 className="font-bold text-gray-900 text-[17px] mb-5">{t('contactDetails')}</h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Eesnimi */}
                   <div>
                     <label className="block text-[15px] font-medium text-gray-700 mb-1.5">
-                      Eesnimi <span className="text-red-500">*</span>
+                      {t('firstName')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text" value={firstName}
@@ -415,10 +403,9 @@ export default function CheckoutPage() {
                     {errors.firstName && <p className="text-[13px] text-red-500 mt-1">{errors.firstName}</p>}
                   </div>
 
-                  {/* Perekonnanimi */}
                   <div>
                     <label className="block text-[15px] font-medium text-gray-700 mb-1.5">
-                      Perekonnanimi <span className="text-red-500">*</span>
+                      {t('lastName')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text" value={lastName}
@@ -428,10 +415,9 @@ export default function CheckoutPage() {
                     {errors.lastName && <p className="text-[13px] text-red-500 mt-1">{errors.lastName}</p>}
                   </div>
 
-                  {/* Email */}
                   <div>
                     <label className="block text-[15px] font-medium text-gray-700 mb-1.5">
-                      E-posti aadress <span className="text-red-500">*</span>
+                      {t('emailAddress')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email" value={email} placeholder="mina@firma.ee"
@@ -441,10 +427,9 @@ export default function CheckoutPage() {
                     {errors.email && <p className="text-[13px] text-red-500 mt-1">{errors.email}</p>}
                   </div>
 
-                  {/* Telefon */}
                   <div>
                     <label className="block text-[15px] font-medium text-gray-700 mb-1.5">
-                      Telefon <span className="text-red-500">*</span>
+                      {t('phone')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="tel" value={phone} placeholder="+372 5XXX XXXX"
@@ -455,10 +440,9 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                {/* Ettevõte (vabatahtlik) */}
                 <div className="mt-4">
                   <label className="block text-[15px] font-medium text-gray-700 mb-1.5">
-                    Ettevõtte nimi <span className="text-gray-400 font-normal">(vabatahtlik)</span>
+                    {t('companyName')} <span className="text-gray-400 font-normal">{t('optional')}</span>
                   </label>
                   <input
                     type="text" value={company} placeholder="OÜ Näidis"
@@ -468,19 +452,19 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Tarne — postiautomaadi valik */}
+              {/* Tarne */}
               <div className="bg-white rounded-2xl border border-gray-100 p-6">
-                <h2 className="font-bold text-gray-900 text-[17px] mb-5">Tarne postiautomaati</h2>
+                <h2 className="font-bold text-gray-900 text-[17px] mb-5">{t('shippingTitle')}</h2>
 
                 <div className="space-y-4">
 
                   {/* Riik */}
                   <div>
                     <label className="block text-[15px] font-medium text-gray-700 mb-1.5">
-                      Riik <span className="text-red-500">*</span>
+                      {t('country')} <span className="text-red-500">*</span>
                     </label>
                     <div className="grid grid-cols-4 gap-2">
-                      {COUNTRIES.map(c => (
+                      {countries.map(c => (
                         <button
                           key={c.code}
                           type="button"
@@ -500,7 +484,7 @@ export default function CheckoutPage() {
                   {/* Kandja */}
                   <div>
                     <label className="block text-[15px] font-medium text-gray-700 mb-1.5">
-                      Kandja <span className="text-red-500">*</span>
+                      {t('carrier')} <span className="text-red-500">*</span>
                     </label>
                     <div className="flex flex-wrap gap-2">
                       {currentCountry.carriers.map(c => (
@@ -520,10 +504,10 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
-                  {/* Postiautomaadi valik */}
+                  {/* Postiautomaad */}
                   <div>
                     <label className="block text-[15px] font-medium text-gray-700 mb-1.5">
-                      Postiautomaadi <span className="text-red-500">*</span>
+                      {t('parcelMachine')} <span className="text-red-500">*</span>
                     </label>
                     <ParcelSelect
                       carrier={carrierCode}
@@ -537,7 +521,6 @@ export default function CheckoutPage() {
                       </p>
                     )}
 
-                    {/* Valitud automaadi aadress */}
                     {selectedPoint && (
                       <div className="mt-2 flex items-start gap-2 bg-blue-50 rounded-xl px-4 py-3">
                         <MapPin size={14} className="text-[#003366] mt-0.5 flex-shrink-0" />
@@ -556,9 +539,9 @@ export default function CheckoutPage() {
 
               {/* Märkused */}
               <div className="bg-white rounded-2xl border border-gray-100 p-6">
-                <h2 className="font-bold text-gray-900 text-[17px] mb-3">Märkused</h2>
+                <h2 className="font-bold text-gray-900 text-[17px] mb-3">{t('notes')}</h2>
                 <textarea
-                  placeholder="Lisainfo tellimuse kohta (vabatahtlik)"
+                  placeholder={t('notesPlaceholder')}
                   value={notes}
                   onChange={e => setNotes(e.target.value)}
                   rows={3}
@@ -578,7 +561,7 @@ export default function CheckoutPage() {
             {/* ── Parem veerg — kokkuvõte ─────────────────────────────── */}
             <div className="lg:col-span-2">
               <div className="bg-white rounded-2xl border border-gray-100 p-6 sticky top-24">
-                <h2 className="font-bold text-gray-900 text-[17px] mb-5">Tellimuse kokkuvõte</h2>
+                <h2 className="font-bold text-gray-900 text-[17px] mb-5">{t('orderSummary')}</h2>
 
                 {/* Tooted */}
                 <div className="space-y-3 mb-5 max-h-64 overflow-y-auto">
@@ -613,25 +596,25 @@ export default function CheckoutPage() {
                 {/* Hinnad */}
                 <div className="border-t border-gray-100 pt-4 space-y-2.5 mb-5">
                   <div className="flex justify-between text-[15px]">
-                    <span className="text-gray-500">Summa (km-ta)</span>
+                    <span className="text-gray-500">{t('subtotalExVat')}</span>
                     <span className="font-medium">{subtotal.toFixed(2).replace('.', ',')} €</span>
                   </div>
                   {coupon && (
                     <div className="flex justify-between text-[15px]">
-                      <span className="text-green-600">Soodustus ({coupon.code})</span>
+                      <span className="text-green-600">{t('discount')} ({coupon.code})</span>
                       <span className="font-medium text-green-600">−{coupon.discountAmount.toFixed(2).replace('.', ',')} €</span>
                     </div>
                   )}
                   <div className="flex justify-between text-[15px]">
-                    <span className="text-gray-500">KM (22%)</span>
+                    <span className="text-gray-500">{t('vatAmount')}</span>
                     <span className="font-medium">{vat.toFixed(2).replace('.', ',')} €</span>
                   </div>
                   <div className="flex justify-between text-[15px]">
-                    <span className="text-gray-500">Tarne</span>
-                    <span className="text-[#01a0dc] font-medium">Tasuta</span>
+                    <span className="text-gray-500">{t('delivery')}</span>
+                    <span className="text-[#01a0dc] font-medium">{t('free')}</span>
                   </div>
                   <div className="border-t border-gray-100 pt-2.5 flex justify-between items-baseline">
-                    <span className="font-bold text-gray-900 text-[17px]">Kokku</span>
+                    <span className="font-bold text-gray-900 text-[17px]">{t('total')}</span>
                     <span className="font-bold text-[#003366] text-xl">
                       {total.toFixed(2).replace('.', ',')} €
                     </span>
@@ -657,18 +640,18 @@ export default function CheckoutPage() {
                   className="w-full flex items-center justify-center gap-2 bg-[#003366] text-white py-4 rounded-xl font-bold text-[15px] hover:bg-[#004080] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {loading ? (
-                    <><Loader2 size={18} className="animate-spin" /> Suunan maksma...</>
+                    <><Loader2 size={18} className="animate-spin" /> {t('redirectingToPayment')}</>
                   ) : (
-                    <><Lock size={16} /> Telli ja maksa — {total.toFixed(2).replace('.', ',')} €</>
+                    <><Lock size={16} /> {t('orderAndPay')} {total.toFixed(2).replace('.', ',')} €</>
                   )}
                 </button>
 
                 {/* Usalduse indikaatorid */}
                 <div className="mt-4 pt-4 border-t border-gray-100 grid grid-cols-3 gap-2">
                   {[
-                    { icon: Lock,        label: 'Turvaline' },
-                    { icon: Package,     label: 'Originaal' },
-                    { icon: ShieldCheck, label: 'Garantii' },
+                    { icon: Lock,        label: t('secure') },
+                    { icon: Package,     label: t('original') },
+                    { icon: ShieldCheck, label: t('guarantee') },
                   ].map(b => (
                     <div key={b.label} className="flex flex-col items-center gap-1">
                       <b.icon size={15} className="text-[#003366]" />
@@ -678,8 +661,9 @@ export default function CheckoutPage() {
                 </div>
 
                 <p className="text-[13px] text-gray-400 text-center mt-3">
-                  Makse läbi{' '}
-                  <span className="font-semibold text-gray-500">Montonio</span> — turvaline pangalink
+                  {t('paymentVia')}{' '}
+                  <span className="font-semibold text-gray-500">Montonio</span>{' '}
+                  {t('secureBankLink')}
                 </p>
               </div>
             </div>

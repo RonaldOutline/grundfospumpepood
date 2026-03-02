@@ -40,7 +40,7 @@ const DB_TO_URL: Record<string, string> = { 'drenaa': 'drenaaz' }
 const URL_TO_DB: Record<string, string> = { 'drenaaz': 'drenaa' }
 
 // ─── SLUG → TRANSLATION KEY ────────────────────────────────────────────────
-type CatNameKey = 'heating' | 'cooling' | 'hotWater' | 'borewell' | 'drainage' | 'wells' | 'pressure' | 'sewage' | 'title'
+type CatNameKey = 'heating' | 'cooling' | 'hotWater' | 'borewell' | 'drainage' | 'wells' | 'pressure' | 'sewage' | 'title' | 'jpWaterAutomatics'
 const SLUG_TO_CAT_KEY: Partial<Record<string, CatNameKey>> = {
   'elamud-ja-arihooned': 'title',
   'kute': 'heating',
@@ -51,6 +51,7 @@ const SLUG_TO_CAT_KEY: Partial<Record<string, CatNameKey>> = {
   'rohutoste': 'pressure',
   'sooja-tarbevee-tsirkulatsioonipump': 'hotWater',
   'reovesi': 'sewage',
+  'jp-veeautomaat': 'jpWaterAutomatics',
 }
 
 // ─── KATEGOORIA HIERARHIA ──────────────────────────────────────────────────
