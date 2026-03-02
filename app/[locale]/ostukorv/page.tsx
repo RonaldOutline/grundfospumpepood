@@ -6,6 +6,7 @@ import {
   Trash2, Plus, Minus, ShoppingCart,
   ChevronRight, ArrowRight, Package
 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 // ─── TÜÜBID ────────────────────────────────────────────────────────────────
 
@@ -47,6 +48,8 @@ function CartRow({
   onQtyChange: (id: number, delta: number) => void
   onRemove: (id: number) => void
 }) {
+  const t = useTranslations('cart')
+
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-4 flex items-center gap-4">
       {/* Pilt */}
@@ -67,7 +70,7 @@ function CartRow({
           {item.name}
         </Link>
         <div className="text-[15px] text-gray-500 mt-0.5">
-          {Number(item.price).toFixed(2).replace('.', ',')} € / tk
+          {Number(item.price).toFixed(2).replace('.', ',')} € {t('perPiece')}
         </div>
       </div>
 
@@ -103,7 +106,7 @@ function CartRow({
         <button
           onClick={() => onRemove(item.id)}
           className="p-2 text-gray-300 hover:text-red-500 transition-colors"
-          title="Eemalda"
+          title={t('remove')}
         >
           <Trash2 size={17} />
         </button>
@@ -115,6 +118,8 @@ function CartRow({
 // ─── PEAKOMPONENT ──────────────────────────────────────────────────────────
 
 export default function OstukorvPage() {
+  const t = useTranslations('cart')
+  const tCommon = useTranslations('common')
   const [items, setItems] = useState<CartItem[]>([])
   const [mounted, setMounted] = useState(false)
 
@@ -150,7 +155,6 @@ export default function OstukorvPage() {
   const vat           = subtotalNoVat * VAT_RATE
   const total         = subtotalNoVat + vat
 
-  // Ära renderda serveril (localStorage puudub)
   if (!mounted) return null
 
   return (
@@ -159,18 +163,18 @@ export default function OstukorvPage() {
 
         {/* Leivaküljed */}
         <nav className="flex items-center gap-2 text-[15px] text-gray-400 mb-6">
-          <Link href="/" className="hover:text-[#003366] transition-colors">Avaleht</Link>
+          <Link href="/" className="hover:text-[#003366] transition-colors">{tCommon('home')}</Link>
           <ChevronRight size={14} />
-          <span className="text-gray-700 font-medium">Ostukorv</span>
+          <span className="text-gray-700 font-medium">{t('title')}</span>
         </nav>
 
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl md:text-3xl font-bold text-[#003366]">
-            Ostukorv
+            {t('title')}
           </h1>
           {items.length > 0 && (
             <span className="text-[15px] text-gray-400">
-              {items.reduce((s, i) => s + i.qty, 0)} toode(t)
+              {t('itemCount', { count: items.reduce((s, i) => s + i.qty, 0) })}
             </span>
           )}
         </div>
@@ -180,14 +184,14 @@ export default function OstukorvPage() {
           <div className="bg-white rounded-2xl border border-gray-100 p-16 text-center">
             <ShoppingCart size={52} className="mx-auto text-gray-200 mb-5" />
             <h2 className="text-xl font-semibold text-gray-800 mb-2">
-              Ostukorv on tühi
+              {t('empty')}
             </h2>
             <p className="text-[15px] text-gray-400 mb-7">
-              Lisa tooteid, et alustada ostlemist
+              {t('emptyHint')}
             </p>
             <Link href="/tooted"
               className="inline-flex items-center gap-2 bg-[#003366] text-white px-6 py-3 rounded-xl font-semibold text-[15px] hover:bg-[#004080] transition-colors">
-              Vaata tooteid <ArrowRight size={16} />
+              {t('viewProducts')} <ArrowRight size={16} />
             </Link>
           </div>
         ) : (
@@ -207,13 +211,13 @@ export default function OstukorvPage() {
               <div className="flex justify-between items-center pt-2">
                 <Link href="/tooted"
                   className="text-[15px] text-[#003366] hover:underline font-medium">
-                  ← Jätka ostlemist
+                  {t('continueShopping')}
                 </Link>
                 <button
                   onClick={clearCart}
                   className="text-[15px] text-gray-400 hover:text-red-500 transition-colors"
                 >
-                  Tühjenda korv
+                  {t('clearCart')}
                 </button>
               </div>
             </div>
@@ -222,28 +226,28 @@ export default function OstukorvPage() {
             <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl border border-gray-100 p-6 sticky top-24">
                 <h2 className="font-bold text-gray-900 text-[17px] mb-5">
-                  Tellimuse kokkuvõte
+                  {t('orderSummary')}
                 </h2>
 
                 <div className="space-y-3 mb-5">
                   <div className="flex justify-between text-[15px]">
-                    <span className="text-gray-500">Summa (km-ta)</span>
+                    <span className="text-gray-500">{t('subtotalExVat')}</span>
                     <span className="font-medium text-gray-800">
                       {subtotalNoVat.toFixed(2).replace('.', ',')} €
                     </span>
                   </div>
                   <div className="flex justify-between text-[15px]">
-                    <span className="text-gray-500">KM (22%)</span>
+                    <span className="text-gray-500">{t('vat')}</span>
                     <span className="font-medium text-gray-800">
                       {vat.toFixed(2).replace('.', ',')} €
                     </span>
                   </div>
                   <div className="flex justify-between text-[15px]">
-                    <span className="text-gray-500">Tarne</span>
-                    <span className="text-[#01a0dc] font-medium">Täpsustame</span>
+                    <span className="text-gray-500">{t('shipping')}</span>
+                    <span className="text-[#01a0dc] font-medium">{t('shippingTbd')}</span>
                   </div>
                   <div className="border-t border-gray-100 pt-3 flex justify-between items-baseline">
-                    <span className="font-bold text-gray-900 text-[17px]">Kokku</span>
+                    <span className="font-bold text-gray-900 text-[17px]">{t('total')}</span>
                     <span className="font-bold text-[#003366] text-xl">
                       {total.toFixed(2).replace('.', ',')} €
                     </span>
@@ -252,13 +256,13 @@ export default function OstukorvPage() {
 
                 <Link href="/checkout"
                   className="w-full flex items-center justify-center gap-2 bg-[#003366] text-white py-3.5 rounded-xl font-semibold text-[15px] hover:bg-[#004080] transition-colors">
-                  Jätka kassasse <ArrowRight size={16} />
+                  {t('checkout')} <ArrowRight size={16} />
                 </Link>
 
                 {/* Usaldusmärgid */}
                 <div className="mt-5 pt-5 border-t border-gray-100 flex items-center justify-center gap-3 text-[13px] text-gray-400">
                   <Package size={14} />
-                  <span>Turvaline maksmine Montonioga</span>
+                  <span>{t('securePay')}</span>
                 </div>
               </div>
             </div>

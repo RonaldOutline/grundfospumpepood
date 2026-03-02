@@ -8,6 +8,7 @@ import AccountNav from '@/components/konto/AccountNav'
 import OrderStatusBadge from '@/components/konto/OrderStatusBadge'
 import { useAuth } from '@/lib/auth-context'
 import { supabase } from '@/lib/supabase'
+import { useTranslations } from 'next-intl'
 
 interface Order {
   id: string
@@ -26,6 +27,8 @@ export default function KontoDashboard() {
 }
 
 function Dashboard() {
+  const t = useTranslations('account')
+  const tCommon = useTranslations('common')
   const { user, profile } = useAuth()
   const [orders, setOrders] = useState<Order[]>([])
   const [loadingOrders, setLoadingOrders] = useState(true)
@@ -60,9 +63,9 @@ function Dashboard() {
           {/* Kiirlingid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             {[
-              { href: '/konto/tellimused', icon: ShoppingBag, label: 'Tellimused', desc: 'Vaata kõiki tellimusi' },
-              { href: '/konto/profiil',   icon: User,         label: 'Profiil',    desc: 'Muuda andmeid' },
-              { href: '/konto/aadressid', icon: MapPin,       label: 'Aadressid',  desc: 'Halda aadresse' },
+              { href: '/konto/tellimused', icon: ShoppingBag, label: t('orders'),    desc: tCommon('viewAll') },
+              { href: '/konto/profiil',   icon: User,         label: t('profile'),   desc: tCommon('edit') },
+              { href: '/konto/aadressid', icon: MapPin,       label: t('addresses'), desc: tCommon('edit') },
             ].map(({ href, icon: Icon, label, desc }) => (
               <Link
                 key={href}
@@ -84,9 +87,9 @@ function Dashboard() {
           {/* Viimased tellimused */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-              <h2 className="font-semibold text-gray-900">Viimased tellimused</h2>
+              <h2 className="font-semibold text-gray-900">{t('orders')}</h2>
               <Link href="/konto/tellimused" className="text-[13px] text-[#003366] hover:underline font-medium">
-                Vaata kõiki
+                {tCommon('viewAll')}
               </Link>
             </div>
 
@@ -96,8 +99,7 @@ function Dashboard() {
               </div>
             ) : orders.length === 0 ? (
               <div className="p-8 text-center text-[15px] text-gray-500">
-                Tellimusi veel pole.{' '}
-                <Link href="/tooted" className="text-[#003366] hover:underline">Sirvi tooteid</Link>
+                <Link href="/tooted" className="text-[#003366] hover:underline">{tCommon('viewAll')}</Link>
               </div>
             ) : (
               <div className="divide-y divide-gray-50">
@@ -119,7 +121,7 @@ function Dashboard() {
                       href={`/konto/tellimused/${order.id}`}
                       className="text-[13px] text-[#003366] hover:underline font-medium"
                     >
-                      Detailid →
+                      {tCommon('open')} →
                     </Link>
                   </div>
                 ))}

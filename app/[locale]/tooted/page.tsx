@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef, Suspense } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
@@ -8,6 +8,7 @@ import {
   Search, SlidersHorizontal, LayoutGrid, List,
   ShoppingCart, ChevronDown, ChevronRight, X, Check
 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 // ─── TÜÜBID ────────────────────────────────────────────────────────────────
 
@@ -32,25 +33,15 @@ interface Category {
 
 // ─── KONSTANDID ────────────────────────────────────────────────────────────
 
-const SORT_OPTIONS = [
-  { value: 'name_asc',   label: 'Nimi A–Z' },
-  { value: 'name_desc',  label: 'Nimi Z–A' },
-  { value: 'price_asc',  label: 'Hind: odavaimad ees' },
-  { value: 'price_desc', label: 'Hind: kallimad ees' },
-]
-
 const PAGE_SIZE = 48
 
 // ─── SLUG ALIASES ───────────────────────────────────────────────────────────
-// Some categories have a truncated slug in the DB; map canonical URL slugs
-// to the actual DB slugs and vice-versa.
 const DB_TO_URL: Record<string, string> = { 'drenaa': 'drenaaz' }
 const URL_TO_DB: Record<string, string> = { 'drenaaz': 'drenaa' }
 
 // ─── KATEGOORIA HIERARHIA ──────────────────────────────────────────────────
-// Tagastab rootSlug + kõik tema alamkategooriad rekursiivselt (BFS)
 async function getDescendantSlugs(rootSlug: string): Promise<string[]> {
-  const dbRoot = URL_TO_DB[rootSlug] ?? rootSlug   // resolve alias → DB slug
+  const dbRoot = URL_TO_DB[rootSlug] ?? rootSlug
   const { data: allCats } = await supabase
     .from('categories')
     .select('slug, parent_slug')
@@ -88,6 +79,7 @@ function addToCart(product: Product) {
 // ─── TOOTEKAART (GRID) ─────────────────────────────────────────────────────
 
 function ProductCard({ product }: { product: Product }) {
+  const t = useTranslations('products')
   const [added, setAdded] = useState(false)
   const displayPrice = product.sale_price ?? product.price
 
@@ -108,7 +100,7 @@ function ProductCard({ product }: { product: Product }) {
         )}
         <span className={`absolute top-3 right-3 flex items-center gap-1 text-[13px] font-medium px-2 py-0.5 rounded-full ${product.in_stock ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
           <span className={`w-1.5 h-1.5 rounded-full ${product.in_stock ? 'bg-green-500' : 'bg-gray-400'}`} />
-          {product.in_stock ? 'Laos' : 'Otsas'}
+          {product.in_stock ? t('inStock') : t('outOfStock')}
         </span>
         <img src={product.image_url || '/placeholder.png'} alt={product.name}
           className="h-28 object-contain group-hover:scale-105 transition-transform duration-300"
@@ -146,6 +138,7 @@ function ProductCard({ product }: { product: Product }) {
 // ─── TOOTE RIDA (LIST) ─────────────────────────────────────────────────────
 
 function ProductRow({ product }: { product: Product }) {
+  const t = useTranslations('products')
   const [added, setAdded] = useState(false)
   const displayPrice = product.sale_price ?? product.price
 
@@ -168,7 +161,7 @@ function ProductRow({ product }: { product: Product }) {
           {product.sku && <span className="text-[13px] text-gray-400 font-mono">{product.sku}</span>}
           <span className={`flex items-center gap-1 text-[13px] ${product.in_stock ? 'text-green-700' : 'text-gray-400'}`}>
             <span className={`w-1.5 h-1.5 rounded-full ${product.in_stock ? 'bg-green-500' : 'bg-gray-400'}`} />
-            {product.in_stock ? 'Laos' : 'Otsas'}
+            {product.in_stock ? t('inStock') : t('outOfStock')}
           </span>
         </div>
         <div className="font-semibold text-gray-800 text-[15px] leading-snug group-hover:text-[#003366] transition-colors line-clamp-1">
@@ -191,7 +184,7 @@ function ProductRow({ product }: { product: Product }) {
         </div>
         <button onClick={handleAdd} disabled={!product.in_stock}
           className={`hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-[15px] font-semibold transition-all ${added ? 'bg-green-500 text-white' : product.in_stock ? 'bg-[#003366] hover:bg-[#01a0dc] text-white' : 'bg-gray-100 text-gray-300 cursor-not-allowed'}`}>
-          {added ? <><Check size={15} /> Lisatud</> : <><ShoppingCart size={15} /> Lisa</>}
+          {added ? <><Check size={15} /> {t('added')}</> : <><ShoppingCart size={15} /> {t('add')}</>}
         </button>
       </div>
     </Link>
@@ -206,6 +199,7 @@ function CategoryTree({ categories, selected, onSelect, title }: {
   onSelect: (slug: string) => void
   title: string
 }) {
+  const tCommon = useTranslations('common')
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
   const toggle = (slug: string) => setExpanded(prev => ({ ...prev, [slug]: !prev[slug] }))
 
@@ -249,7 +243,7 @@ function CategoryTree({ categories, selected, onSelect, title }: {
           className={`w-full text-left px-3 py-2 rounded-lg text-[15px] transition-colors ${
             selected === '' ? 'bg-[#003366] text-white font-medium' : 'hover:bg-gray-100 text-gray-700'
           }`}>
-          Kõik
+          {tCommon('all')}
         </button>
         {categories.map(cat => renderCat(cat))}
       </div>
@@ -282,16 +276,19 @@ function FiltersPanel({
   setPriceMax: (v: string) => void
   onClose?: () => void
 }) {
+  const t = useTranslations('products')
+  const tNav = useTranslations('nav')
+
   return (
     <div className="space-y-5">
-      <CategoryTree categories={tegevusalad} selected={URL_TO_DB[selectedAla] ?? selectedAla} onSelect={setSelectedAla} title="Tegevusala" />
+      <CategoryTree categories={tegevusalad} selected={URL_TO_DB[selectedAla] ?? selectedAla} onSelect={setSelectedAla} title={t('activityArea')} />
       <div className="border-t border-gray-100" />
-      <CategoryTree categories={seeriad} selected={selectedSeeria} onSelect={setSelectedSeeria} title="Tooteseeria" />
+      <CategoryTree categories={seeriad} selected={selectedSeeria} onSelect={setSelectedSeeria} title={tNav('productSeries')} />
       <div className="border-t border-gray-100" />
 
       {/* Hinnavahemik */}
       <div>
-        <div className="text-[15px] font-semibold text-gray-800 mb-3">Hinnavahemik (€)</div>
+        <div className="text-[15px] font-semibold text-gray-800 mb-3">{t('priceRange')}</div>
         <div className="flex items-center gap-2">
           <input type="number" placeholder="Min" value={priceMin} onChange={e => setPriceMin(e.target.value)}
             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-[15px] text-gray-900 outline-none focus:border-[#003366] transition-colors" />
@@ -305,20 +302,20 @@ function FiltersPanel({
 
       {/* Laoseis */}
       <div>
-        <div className="text-[15px] font-semibold text-gray-800 mb-3">Saadavus</div>
+        <div className="text-[15px] font-semibold text-gray-800 mb-3">{t('availability')}</div>
         <label className="flex items-center gap-3 cursor-pointer">
           <div onClick={() => setInStockOnly(!inStockOnly)}
             className={`w-10 h-6 rounded-full transition-colors flex-shrink-0 relative cursor-pointer ${inStockOnly ? 'bg-[#003366]' : 'bg-gray-200'}`}>
             <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${inStockOnly ? 'translate-x-5' : 'translate-x-1'}`} />
           </div>
-          <span className="text-[15px] text-gray-700">Ainult laos olevad</span>
+          <span className="text-[15px] text-gray-700">{t('inStockOnly')}</span>
         </label>
       </div>
 
       {onClose && (
         <button onClick={onClose}
           className="w-full bg-[#003366] text-white py-3 rounded-xl font-semibold text-[15px] hover:bg-[#004080] transition-colors">
-          Rakenda filtrid
+          {t('applyFilters')}
         </button>
       )}
     </div>
@@ -331,9 +328,6 @@ export default function TootedPage() {
   return <Suspense><TootedPageOuter /></Suspense>
 }
 
-// Reads all URL params and passes them as initial props so TootedPageContent
-// always remounts fresh when tegevusala changes (fixes Suspense hydration race).
-// All other filter changes update the URL via router.replace inside TootedPageContent.
 function TootedPageOuter() {
   const searchParams = useSearchParams()
   const tegevusala = searchParams.get('tegevusala') || ''
@@ -358,6 +352,16 @@ function TootedPageContent({
   initAla: string; initQ: string; initSeeria: string; initLaos: boolean
   initMin: string; initMax: string; initSort: string; initPage: number
 }) {
+  const t = useTranslations('products')
+  const tCommon = useTranslations('common')
+
+  const SORT_OPTIONS = [
+    { value: 'name_asc',   label: t('sortNameAsc') },
+    { value: 'name_desc',  label: t('sortNameDesc') },
+    { value: 'price_asc',  label: t('sortPriceAsc') },
+    { value: 'price_desc', label: t('sortPriceDesc') },
+  ]
+
   const router = useRouter()
 
   const [selectedAla, setSelectedAla]       = useState(initAla)
@@ -379,7 +383,6 @@ function TootedPageContent({
   const [tegevusalad, setTegevusalad]       = useState<Category[]>([])
   const [seeriad, setSeeriad]               = useState<Category[]>([])
 
-  // ── Lae kategooriad ────────────────────────────────────────────────────
   useEffect(() => {
     async function loadCategories() {
       const { data } = await supabase
@@ -399,13 +402,11 @@ function TootedPageContent({
     loadCategories()
   }, [])
 
-  // ── Debounce otsing ────────────────────────────────────────────────────
   useEffect(() => {
-    const t = setTimeout(() => { setQuery(inputQuery); setPage(1) }, 350)
-    return () => clearTimeout(t)
+    const timer = setTimeout(() => { setQuery(inputQuery); setPage(1) }, 350)
+    return () => clearTimeout(timer)
   }, [inputQuery])
 
-  // ── Sünkroniseeri filtrid URL-iga (turundus / jagamine) ────────────────
   useEffect(() => {
     const p = new URLSearchParams()
     if (selectedAla)           p.set('tegevusala', selectedAla)
@@ -420,7 +421,6 @@ function TootedPageContent({
     router.replace(qs ? `/tooted?${qs}` : '/tooted', { scroll: false })
   }, [selectedAla, selectedSeeria, query, inStockOnly, priceMin, priceMax, sortBy, page, router])
 
-  // ── Lae tooted ─────────────────────────────────────────────────────────
   const loadProducts = useCallback(async () => {
     setLoading(true)
 
@@ -481,7 +481,6 @@ function TootedPageContent({
   const handleSetAla    = (v: string) => { setSelectedAla(DB_TO_URL[v] ?? v); setSelectedSeeria(''); setPage(1) }
   const handleSetSeeria = (v: string) => { setSelectedSeeria(v); setSelectedAla('');    setPage(1) }
 
-  // Kategooria nime leidmine (DB slug may differ from URL slug — use alias map)
   const activeCatName = tegevusalad.find(c => (DB_TO_URL[c.slug] ?? c.slug) === selectedAla)?.name_et
     || seeriad.find(c => c.slug === selectedSeeria)?.name_et
     || seeriad.flatMap(c => c.children || []).find(c => c.slug === selectedSeeria)?.name_et
@@ -493,15 +492,15 @@ function TootedPageContent({
         {/* Päis */}
         <div className="mb-6">
           <nav className="flex items-center gap-2 text-[15px] text-gray-400 mb-3">
-            <Link href="/" className="hover:text-[#003366] transition-colors">Avaleht</Link>
+            <Link href="/" className="hover:text-[#003366] transition-colors">{tCommon('home')}</Link>
             <ChevronRight size={14} />
-            <span className="text-gray-700 font-medium">Tooted</span>
+            <span className="text-gray-700 font-medium">{t('title')}</span>
           </nav>
           <h1 className="text-2xl md:text-3xl font-bold text-[#003366]">
-            {activeCatName || 'Kõik tooted'}
+            {activeCatName || t('allProducts')}
           </h1>
           <p className="text-[15px] text-gray-500 mt-1">
-            {loading ? 'Laadin...' : `${total} toodet`}
+            {loading ? tCommon('loading') : t('productCount', { count: total })}
           </p>
         </div>
 
@@ -509,7 +508,7 @@ function TootedPageContent({
         <div className="flex items-center gap-3 mb-5 flex-wrap">
           <div className="relative flex-1 min-w-[200px]">
             <Search size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input type="search" placeholder="Otsi nime, SKU, kirjelduse järgi..."
+            <input type="search" placeholder={t('searchPlaceholder')}
               value={inputQuery} onChange={e => setInputQuery(e.target.value)}
               className="w-full pl-10 pr-10 py-2.5 bg-white border border-gray-200 rounded-xl text-[15px] text-gray-900 focus:outline-none focus:border-[#003366] transition-colors shadow-sm" />
             {inputQuery && (
@@ -525,7 +524,7 @@ function TootedPageContent({
               activeFiltersCount > 0 ? 'bg-[#003366] text-white border-[#003366]' : 'bg-white border-gray-200 text-gray-700 hover:border-[#003366]'
             }`}>
             <SlidersHorizontal size={16} />
-            <span className="hidden sm:inline">Filtrid</span>
+            <span className="hidden sm:inline">{t('filters')}</span>
             {activeFiltersCount > 0 && (
               <span className="bg-white/25 text-white text-[13px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
                 {activeFiltersCount}
@@ -537,7 +536,7 @@ function TootedPageContent({
             <button onClick={() => setSortOpen(!sortOpen)}
               className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-[15px] text-gray-700 hover:border-[#003366] transition-colors shadow-sm font-medium">
               <span className="hidden sm:inline">{SORT_OPTIONS.find(o => o.value === sortBy)?.label}</span>
-              <span className="sm:hidden">Sorteeri</span>
+              <span className="sm:hidden">{tCommon('sort')}</span>
               <ChevronDown size={15} className={`transition-transform ${sortOpen ? 'rotate-180' : ''}`} />
             </button>
             {sortOpen && (
@@ -567,7 +566,7 @@ function TootedPageContent({
         {/* Aktiivsed filtrid */}
         {activeFiltersCount > 0 && (
           <div className="flex flex-wrap items-center gap-2 mb-5">
-            <span className="text-[15px] text-gray-500">Filtrid:</span>
+            <span className="text-[15px] text-gray-500">{t('filters')}:</span>
             {selectedAla && (
               <span className="flex items-center gap-1.5 bg-[#003366]/10 text-[#003366] text-[15px] font-medium px-3 py-1 rounded-full">
                 {tegevusalad.find(c => (DB_TO_URL[c.slug] ?? c.slug) === selectedAla)?.name_et}
@@ -582,7 +581,7 @@ function TootedPageContent({
             )}
             {inStockOnly && (
               <span className="flex items-center gap-1.5 bg-green-50 text-green-700 text-[15px] font-medium px-3 py-1 rounded-full">
-                Laos olemas <button onClick={() => setInStockOnly(false)}><X size={13} /></button>
+                {t('inStockBadge')} <button onClick={() => setInStockOnly(false)}><X size={13} /></button>
               </span>
             )}
             {(priceMin || priceMax) && (
@@ -592,7 +591,7 @@ function TootedPageContent({
               </span>
             )}
             <button onClick={clearFilters} className="text-[15px] text-gray-400 hover:text-red-500 transition-colors underline">
-              Tühista kõik
+              {t('clearAll')}
             </button>
           </div>
         )}
@@ -604,9 +603,9 @@ function TootedPageContent({
           <aside className="hidden lg:block w-60 flex-shrink-0">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto">
               <div className="flex items-center justify-between mb-5">
-                <span className="font-bold text-gray-900 text-[17px]">Filtrid</span>
+                <span className="font-bold text-gray-900 text-[17px]">{t('filters')}</span>
                 {activeFiltersCount > 0 && (
-                  <button onClick={clearFilters} className="text-[15px] text-[#01a0dc] hover:underline">Tühista</button>
+                  <button onClick={clearFilters} className="text-[15px] text-[#01a0dc] hover:underline">{t('resetFilters')}</button>
                 )}
               </div>
               <FiltersPanel
@@ -629,11 +628,11 @@ function TootedPageContent({
             ) : products.length === 0 ? (
               <div className="bg-white rounded-2xl border border-gray-100 p-16 text-center">
                 <div className="text-4xl mb-4">🔍</div>
-                <div className="font-semibold text-gray-800 text-lg mb-2">Tooteid ei leitud</div>
-                <div className="text-[15px] text-gray-400 mb-5">Proovi muuta otsingut või filtreid</div>
+                <div className="font-semibold text-gray-800 text-lg mb-2">{t('noProducts')}</div>
+                <div className="text-[15px] text-gray-400 mb-5">{t('noProductsHint')}</div>
                 <button onClick={clearFilters}
                   className="bg-[#003366] text-white px-6 py-2.5 rounded-xl font-semibold text-[15px] hover:bg-[#004080] transition-colors">
-                  Tühista filtrid
+                  {t('clearFilters')}
                 </button>
               </div>
             ) : viewMode === 'grid' ? (
@@ -651,7 +650,7 @@ function TootedPageContent({
               <div className="flex items-center justify-center gap-2 mt-8 flex-wrap">
                 <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
                   className="flex items-center gap-1 px-4 py-2 rounded-xl border border-gray-200 text-[15px] font-medium text-gray-600 hover:border-[#003366] hover:text-[#003366] disabled:opacity-40 disabled:cursor-not-allowed transition-colors bg-white">
-                  ← Eelmine
+                  {t('prev')}
                 </button>
                 <div className="flex items-center gap-1">
                   {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
@@ -670,7 +669,7 @@ function TootedPageContent({
                 </div>
                 <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
                   className="flex items-center gap-1 px-4 py-2 rounded-xl border border-gray-200 text-[15px] font-medium text-gray-600 hover:border-[#003366] hover:text-[#003366] disabled:opacity-40 disabled:cursor-not-allowed transition-colors bg-white">
-                  Järgmine →
+                  {t('next')}
                 </button>
               </div>
             )}
@@ -684,7 +683,7 @@ function TootedPageContent({
           <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setFiltersOpen(false)} />
           <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-white z-50 lg:hidden shadow-2xl flex flex-col">
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <span className="font-bold text-gray-900 text-lg">Filtrid</span>
+              <span className="font-bold text-gray-900 text-lg">{t('filters')}</span>
               <button onClick={() => setFiltersOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
                 <X size={20} />
               </button>

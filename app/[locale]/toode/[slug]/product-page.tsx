@@ -6,6 +6,7 @@ import {
   ShoppingCart, ChevronRight, Package, Truck, Shield,
   Phone, ChevronLeft, ZoomIn, Check, Share2, Printer
 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 // ─── TÜÜBID ────────────────────────────────────────────────────────────────
 
@@ -49,6 +50,8 @@ interface BulkPrice {
 // ─── PÄIS ──────────────────────────────────────────────────────────────────
 
 function Header() {
+  const t = useTranslations('nav')
+
   return (
     <header className="bg-[#003366] sticky top-0 z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -57,14 +60,14 @@ function Header() {
         </a>
         <nav className="hidden lg:flex items-center gap-1">
           {[
-            { label: 'Elamud ja Ärihooned', href: '/#kategooriad' },
-            { label: 'Tooted', href: '/tooted' },
-            { label: 'Projektimüük', href: 'https://ipumps.ee/kontakt/' },
-            { label: 'Kontakt', href: '/#kontakt' },
+            { labelKey: 'buildings', href: '/#kategooriad' },
+            { labelKey: 'products', href: '/tooted' },
+            { labelKey: 'projectSales', href: 'https://ipumps.ee/kontakt/' },
+            { labelKey: 'contact', href: '/#kontakt' },
           ].map(item => (
-            <a key={item.label} href={item.href}
+            <a key={item.labelKey} href={item.href}
               className="text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10">
-              {item.label}
+              {t(item.labelKey)}
             </a>
           ))}
         </nav>
@@ -82,12 +85,15 @@ function Header() {
 // ─── LEIVAKÜLJED ───────────────────────────────────────────────────────────
 
 function Breadcrumb({ product }: { product: Product }) {
+  const t = useTranslations('nav')
+  const tCommon = useTranslations('common')
+
   return (
     <nav className="bg-gray-50 border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-2 text-[15px] text-gray-500 flex-wrap">
-        <a href="/" className="hover:text-[#003366] transition-colors">Avaleht</a>
+        <a href="/" className="hover:text-[#003366] transition-colors">{tCommon('home')}</a>
         <ChevronRight size={14} className="text-gray-300" />
-        <a href="/tooted" className="hover:text-[#003366] transition-colors">Tooted</a>
+        <a href="/tooted" className="hover:text-[#003366] transition-colors">{t('products')}</a>
         <ChevronRight size={14} className="text-gray-300" />
         <span className="text-gray-800 font-medium truncate max-w-xs">{product.name}</span>
       </div>
@@ -119,7 +125,6 @@ function ProductGallery({ image, name }: { image: string; name: string }) {
         </div>
       </div>
 
-      {/* Zoom modal */}
       {zoomed && (
         <div
           className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-8 cursor-zoom-out"
@@ -145,12 +150,13 @@ function ProductInfo({
   onAddToCart: (qty: number, effectivePrice: number) => void
   bulkPrices: BulkPrice[]
 }) {
+  const t = useTranslations('product')
+  const tBenefits = useTranslations('benefits')
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)
 
   const basePrice = product.sale_price ?? product.price
 
-  // Leia hulgi hind koguse põhjal
   function getEffectivePrice(q: number): number {
     if (bulkPrices.length === 0) return basePrice
     const sorted = [...bulkPrices].sort((a, b) => b.min_quantity - a.min_quantity)
@@ -170,7 +176,7 @@ function ProductInfo({
     <div className="flex flex-col gap-5">
       {/* SKU */}
       <div className="text-[15px] text-gray-400">
-        Tootekood: <span className="font-mono text-gray-600">{product.sku}</span>
+        {t('productCode')}: <span className="font-mono text-gray-600">{product.sku}</span>
       </div>
 
       {/* Nimi */}
@@ -204,7 +210,7 @@ function ProductInfo({
             {Number(product.price).toFixed(2).replace('.', ',')} €
           </span>
         )}
-        <span className="text-[15px] text-gray-400">+ KM</span>
+        <span className="text-[15px] text-gray-400">{t('vatExcl')}</span>
       </div>
 
       {/* Hulgihinnad */}
@@ -214,7 +220,7 @@ function ProductInfo({
       <div className="flex items-center gap-2">
         <div className={`w-2.5 h-2.5 rounded-full ${product.in_stock ? 'bg-green-500' : 'bg-red-400'}`} />
         <span className={`text-[15px] font-medium ${product.in_stock ? 'text-green-700' : 'text-red-600'}`}>
-          {product.in_stock ? 'Laos olemas' : 'Laost otsas'}
+          {product.in_stock ? t('inStockFull') : t('outOfStockFull')}
         </span>
       </div>
 
@@ -242,28 +248,28 @@ function ProductInfo({
               : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           }`}
         >
-          {added ? <><Check size={18} /> Lisatud!</> : <><ShoppingCart size={18} /> Lisa ostukorvi</>}
+          {added ? <><Check size={18} /> {t('added')}</> : <><ShoppingCart size={18} /> {t('addToCart')}</>}
         </button>
       </div>
 
       {/* Päring */}
       <a href="/#kontakt"
         className="flex items-center justify-center gap-2 py-3 px-6 rounded-xl border-2 border-[#003366] text-[#003366] hover:bg-[#003366] hover:text-white font-semibold text-[15px] transition-all">
-        <Phone size={16} /> Küsi hinnapakkumist
+        <Phone size={16} /> {t('requestQuote')}
       </a>
 
       {/* Eelised */}
       <div className="grid grid-cols-3 gap-3 pt-2 border-t border-gray-100">
-        {[
-          { icon: Truck, text: 'Kiire tarne' },
-          { icon: Shield, text: 'Garantii' },
-          { icon: Package, text: 'Originaaltoode' },
-        ].map(b => (
-          <div key={b.text} className="flex flex-col items-center gap-1.5 text-center">
+        {([
+          { icon: Truck,   label: tBenefits('shipping') },
+          { icon: Shield,  label: tBenefits('warranty') },
+          { icon: Package, label: t('original') },
+        ] as const).map((b, i) => (
+          <div key={i} className="flex flex-col items-center gap-1.5 text-center">
             <div className="w-9 h-9 bg-[#003366]/8 rounded-xl flex items-center justify-center">
               <b.icon size={16} className="text-[#003366]" />
             </div>
-            <span className="text-[15px] text-gray-500">{b.text}</span>
+            <span className="text-[15px] text-gray-500">{b.label}</span>
           </div>
         ))}
       </div>
@@ -271,11 +277,11 @@ function ProductInfo({
       {/* Jaga / Prindi */}
       <div className="flex items-center gap-3 pt-1">
         <button className="flex items-center gap-1.5 text-[15px] text-gray-400 hover:text-[#003366] transition-colors">
-          <Share2 size={15} /> Jaga
+          <Share2 size={15} /> {t('share')}
         </button>
         <button onClick={() => window.print()}
           className="flex items-center gap-1.5 text-[15px] text-gray-400 hover:text-[#003366] transition-colors">
-          <Printer size={15} /> Prindi
+          <Printer size={15} /> {t('print')}
         </button>
       </div>
     </div>
@@ -285,9 +291,9 @@ function ProductInfo({
 // ─── ATRIBUUDID ────────────────────────────────────────────────────────────
 
 function AttributesTable({ attributes, product }: { attributes: Attribute[]; product: Product }) {
+  const t = useTranslations('product')
   const [showAll, setShowAll] = useState(false)
 
-  // Lisa kaal ja mõõtmed kui on
   const physicalAttrs: Attribute[] = []
   if (product.weight_kg) physicalAttrs.push({ attribute_name: 'Kaal (kg)', attribute_value: String(product.weight_kg) })
   if (product.length_cm) physicalAttrs.push({ attribute_name: 'Pikkus (cm)', attribute_value: String(product.length_cm) })
@@ -299,7 +305,6 @@ function AttributesTable({ attributes, product }: { attributes: Attribute[]; pro
 
   if (allAttrs.length === 0) return null
 
-  // Jaga kaheks veeruks
   const half = Math.ceil(visibleAttrs.length / 2)
   const col1 = visibleAttrs.slice(0, half)
   const col2 = visibleAttrs.slice(half)
@@ -307,8 +312,8 @@ function AttributesTable({ attributes, product }: { attributes: Attribute[]; pro
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
-        <h2 className="font-bold text-gray-900 text-[17px]">Tehnilised andmed</h2>
-        <span className="text-[15px] text-gray-400">{allAttrs.length} parameetrit</span>
+        <h2 className="font-bold text-gray-900 text-[17px]">{t('specs')}</h2>
+        <span className="text-[15px] text-gray-400">{allAttrs.length} {t('parameters')}</span>
       </div>
       <div className="p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8">
@@ -332,7 +337,7 @@ function AttributesTable({ attributes, product }: { attributes: Attribute[]; pro
             onClick={() => setShowAll(!showAll)}
             className="mt-4 w-full py-2.5 border border-gray-200 rounded-xl text-[15px] text-gray-500 hover:border-[#003366] hover:text-[#003366] transition-colors font-medium"
           >
-            {showAll ? 'Peida' : `Näita kõiki ${allAttrs.length} parameetrit`}
+            {showAll ? t('hide') : t('showAllParams', { count: allAttrs.length })}
           </button>
         )}
       </div>
@@ -343,11 +348,13 @@ function AttributesTable({ attributes, product }: { attributes: Attribute[]; pro
 // ─── HULGIHINNAD ───────────────────────────────────────────────────────────
 
 function BulkPricingTable({ prices, basePrice }: { prices: BulkPrice[]; basePrice: number }) {
+  const t = useTranslations('product')
+  const tCart = useTranslations('cart')
+
   if (prices.length === 0) return null
 
   const sorted = [...prices].sort((a, b) => a.min_quantity - b.min_quantity)
 
-  // Loo vahemikud: [1-4, 5-9, 10+]
   const rows = sorted.map((bp, i) => {
     const next = sorted[i + 1]
     const toLabel = next ? `${bp.min_quantity}–${next.min_quantity - 1} tk` : `${bp.min_quantity}+ tk`
@@ -357,10 +364,10 @@ function BulkPricingTable({ prices, basePrice }: { prices: BulkPrice[]; basePric
 
   return (
     <div className="mt-5 border-t border-gray-100 pt-4">
-      <h3 className="text-[15px] font-semibold text-gray-700 mb-3">Hulgihinnad</h3>
+      <h3 className="text-[15px] font-semibold text-gray-700 mb-3">{t('bulkPrices')}</h3>
       <div className="space-y-1.5">
         <div className="grid grid-cols-[auto_1fr_auto] gap-3 text-[13px] font-medium text-gray-400 px-1">
-          <span>Kogus</span><span /><span>Hind</span>
+          <span>{tCart('quantity')}</span><span /><span>{t('price')}</span>
         </div>
         {rows.map((row, i) => (
           <div key={i} className="grid grid-cols-[auto_1fr_auto] gap-3 items-center bg-gray-50 rounded-xl px-4 py-2.5">
@@ -385,11 +392,13 @@ function BulkPricingTable({ prices, basePrice }: { prices: BulkPrice[]; basePric
 // ─── SEOTUD TOOTED ─────────────────────────────────────────────────────────
 
 function RelatedProducts({ products }: { products: RelatedProduct[] }) {
+  const t = useTranslations('product')
+
   if (products.length === 0) return null
 
   return (
     <div className="mt-10">
-      <h2 className="text-xl font-bold text-gray-900 mb-5">Sarnased tooted</h2>
+      <h2 className="text-xl font-bold text-gray-900 mb-5">{t('relatedProductsTitle')}</h2>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {products.map(p => (
           <a key={p.slug} href={`/toode/${p.slug}`}
@@ -418,6 +427,9 @@ function RelatedProducts({ products }: { products: RelatedProduct[] }) {
 // ─── PEAKOMPONENT ──────────────────────────────────────────────────────────
 
 export default function ProductPage({ params }: { params: { slug: string } }) {
+  const t = useTranslations('product')
+  const tNav = useTranslations('nav')
+  const tCommon = useTranslations('common')
   const [product, setProduct] = useState<Product | null>(null)
   const [attributes, setAttributes] = useState<Attribute[]>([])
   const [related, setRelated] = useState<RelatedProduct[]>([])
@@ -429,7 +441,6 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     async function loadProduct() {
       setLoading(true)
 
-      // Lae toode
       const { data: prod } = await supabase
         .from('products')
         .select('*')
@@ -439,7 +450,6 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       if (!prod) { setLoading(false); return }
       setProduct(prod)
 
-      // Lae atribuudid ja hulgihinnad paralleelselt
       const [attrsRes, bpRes] = await Promise.all([
         supabase.from('product_attributes')
           .select('attribute_name, attribute_value')
@@ -454,7 +464,6 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       setAttributes(attrsRes.data || [])
       setBulkPrices((bpRes.data as BulkPrice[]) || [])
 
-      // Lae seotud tooted (sama kategooria, erinev toode)
       const { data: cats } = await supabase
         .from('product_categories')
         .select('category_slug')
@@ -517,7 +526,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center text-gray-400">
             <div className="w-10 h-10 border-2 border-[#003366] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <div className="text-[15px]">Laadin toodet...</div>
+            <div className="text-[15px]">{t('loading')}</div>
           </div>
         </div>
       </>
@@ -531,10 +540,10 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <div className="text-5xl mb-4">🔍</div>
-            <h1 className="text-xl font-bold text-gray-800 mb-2">Toodet ei leitud</h1>
-            <p className="text-[15px] text-gray-500 mb-5">See toode ei ole saadaval või on eemaldatud.</p>
+            <h1 className="text-xl font-bold text-gray-800 mb-2">{t('notFound')}</h1>
+            <p className="text-[15px] text-gray-500 mb-5">{t('notFoundHint')}</p>
             <a href="/tooted" className="bg-[#003366] text-white px-6 py-3 rounded-xl font-semibold text-[15px] hover:bg-[#004080] transition-colors">
-              Vaata kõiki tooteid
+              {t('viewAllProducts')}
             </a>
           </div>
         </div>
@@ -562,7 +571,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           {product.description_et && (
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
-                <h2 className="font-bold text-gray-900 text-[17px]">Toote kirjeldus</h2>
+                <h2 className="font-bold text-gray-900 text-[17px]">{t('descriptionTitle')}</h2>
               </div>
               <div className="p-6 text-[15px] text-gray-600 leading-relaxed">
                 {product.description_et}
@@ -583,9 +592,9 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-[15px]">
           <span>© 2025 iPumps OÜ</span>
           <div className="flex gap-4">
-            <a href="/" className="hover:text-white transition-colors">Avaleht</a>
-            <a href="/tooted" className="hover:text-white transition-colors">Tooted</a>
-            <a href="/#kontakt" className="hover:text-white transition-colors">Kontakt</a>
+            <a href="/" className="hover:text-white transition-colors">{tCommon('home')}</a>
+            <a href="/tooted" className="hover:text-white transition-colors">{tNav('products')}</a>
+            <a href="/#kontakt" className="hover:text-white transition-colors">{tNav('contact')}</a>
           </div>
         </div>
       </footer>

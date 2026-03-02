@@ -3,8 +3,10 @@
 import { useState, FormEvent } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { useTranslations } from 'next-intl'
 
 export default function ParooliTaastaminePage() {
+  const t = useTranslations('account')
   const [email, setEmail] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -18,7 +20,7 @@ export default function ParooliTaastaminePage() {
       redirectTo: `${window.location.origin}/konto/uus-parool`,
     })
     if (err) {
-      setError('Viga parooli lähtestamisel. Kontrolli e-posti aadressi.')
+      setError(t('errorPasswordReset'))
       setSubmitting(false)
     } else {
       setSuccess(true)
@@ -34,12 +36,12 @@ export default function ParooliTaastaminePage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Kontrollimislink saadetud</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">{t('resetLinkSent')}</h2>
           <p className="text-[15px] text-gray-500 mb-6">
-            Saatsime parooli lähtestamise lingi aadressile <strong>{email}</strong>.
+            {t('resetLinkSentDesc', { email })}
           </p>
           <Link href="/konto/sisselogimine" className="text-[#003366] font-semibold hover:underline text-[15px]">
-            Tagasi sisselogimisele
+            {t('backToLogin')}
           </Link>
         </div>
       </div>
@@ -49,14 +51,14 @@ export default function ParooliTaastaminePage() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Parooli taastamine</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">{t('passwordResetTitle')}</h1>
         <p className="text-[15px] text-gray-500 mb-6">
-          Sisesta oma e-posti aadress ja saadame sulle parooli lähtestamise lingi.
+          {t('passwordResetSubtitle')}
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-[13px] font-medium text-gray-700 mb-1">E-posti aadress</label>
+            <label className="block text-[13px] font-medium text-gray-700 mb-1">{t('emailLabel')}</label>
             <input
               type="email"
               required
@@ -78,13 +80,13 @@ export default function ParooliTaastaminePage() {
             disabled={submitting}
             className="w-full bg-[#003366] hover:bg-[#004080] text-white px-6 py-3 rounded-xl font-semibold transition-colors disabled:opacity-60"
           >
-            {submitting ? 'Saatmine...' : 'Saada link'}
+            {submitting ? t('sending') : t('sendLink')}
           </button>
         </form>
 
         <p className="text-center text-[14px] text-gray-500 mt-5">
           <Link href="/konto/sisselogimine" className="text-[#003366] font-semibold hover:underline">
-            Tagasi sisselogimisele
+            {t('backToLogin')}
           </Link>
         </p>
       </div>

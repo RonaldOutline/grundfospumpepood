@@ -4,8 +4,10 @@ import { useState, useEffect, FormEvent } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
+import { useTranslations } from 'next-intl'
 
 export default function SisselogimisePage() {
+  const t = useTranslations('account')
   const { user, signIn, signInWithGoogle, loading } = useAuth()
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -31,16 +33,16 @@ export default function SisselogimisePage() {
   }
 
   function mapError(msg: string) {
-    if (msg.includes('Invalid login credentials')) return 'Vale e-posti aadress või parool.'
-    if (msg.includes('Email not confirmed')) return 'Palun kinnita oma e-posti aadress.'
-    return 'Sisselogimine ebaõnnestus. Proovi uuesti.'
+    if (msg.includes('Invalid login credentials')) return t('errorInvalidCredentials')
+    if (msg.includes('Email not confirmed')) return t('errorEmailNotConfirmed')
+    return t('errorLoginFailed')
   }
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Logi sisse</h1>
-        <p className="text-[15px] text-gray-500 mb-6">Tere tulemast tagasi iPumps poodi</p>
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">{t('login')}</h1>
+        <p className="text-[15px] text-gray-500 mb-6">{t('welcomeBack')}</p>
 
         <button
           onClick={signInWithGoogle}
@@ -52,18 +54,18 @@ export default function SisselogimisePage() {
             <path d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
             <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
           </svg>
-          Jätka Google'iga
+          {t('continueWithGoogle')}
         </button>
 
         <div className="flex items-center gap-3 mb-5">
           <div className="flex-1 h-px bg-gray-200" />
-          <span className="text-[13px] text-gray-400">või</span>
+          <span className="text-[13px] text-gray-400">{t('or')}</span>
           <div className="flex-1 h-px bg-gray-200" />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-[13px] font-medium text-gray-700 mb-1">E-posti aadress</label>
+            <label className="block text-[13px] font-medium text-gray-700 mb-1">{t('emailLabel')}</label>
             <input
               type="email"
               required
@@ -75,9 +77,9 @@ export default function SisselogimisePage() {
           </div>
           <div>
             <div className="flex justify-between items-center mb-1">
-              <label className="text-[13px] font-medium text-gray-700">Parool</label>
+              <label className="text-[13px] font-medium text-gray-700">{t('password')}</label>
               <Link href="/konto/parooli-taastamine" className="text-[13px] text-[#003366] hover:underline">
-                Unustasid parooli?
+                {t('forgotPassword')}
               </Link>
             </div>
             <input
@@ -101,14 +103,14 @@ export default function SisselogimisePage() {
             disabled={submitting}
             className="w-full bg-[#003366] hover:bg-[#004080] text-white px-6 py-3 rounded-xl font-semibold transition-colors disabled:opacity-60"
           >
-            {submitting ? 'Sisselogimine...' : 'Logi sisse'}
+            {submitting ? t('signingIn') : t('login')}
           </button>
         </form>
 
         <p className="text-center text-[14px] text-gray-500 mt-5">
-          Pole kontot?{' '}
+          {t('noAccount')}{' '}
           <Link href="/konto/registreerimine" className="text-[#003366] font-semibold hover:underline">
-            Registreeru
+            {t('register')}
           </Link>
         </p>
       </div>
