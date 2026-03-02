@@ -53,10 +53,10 @@ const slides = [
 ]
 
 const featuredProducts = [
-  { name: 'MAGNA3 25-40 180',    price: '490.08€', category: 'Küte',            image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', slug: 'magna3-25-40-180', badge: 'Bestseller' },
-  { name: 'UP20-15N 150',        price: '262.84€', category: 'Soe tarbevesi',   image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', slug: 'up20-15n-150',    badge: null },
-  { name: 'SCALA1 3-25',         price: '422€',    category: 'Rõhutõste',       image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', slug: 'scala1-3-25',    badge: 'Uus' },
-  { name: 'COMFORT 15-14 B TDT', price: '199.36€', category: 'Soe tarbevesi',   image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', slug: 'comfort-15-14',  badge: null },
+  { name: 'MAGNA3 25-40 180',    price: '490.08€', category: 'Küte',          image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', href: '/tooted?q=MAGNA3+25-40', badge: 'Bestseller' },
+  { name: 'UP20-15N 150',        price: '262.84€', category: 'Soe tarbevesi', image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', href: '/tooted?q=UP20-15N',     badge: null },
+  { name: 'SCALA1 3-25',         price: '422€',    category: 'Rõhutõste',     image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', href: '/tooted?q=SCALA1',       badge: 'Uus' },
+  { name: 'COMFORT 15-14 B TDT', price: '199.36€', category: 'Soe tarbevesi', image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', href: '/tooted?q=COMFORT+15-14', badge: null },
 ]
 
 const benefits = [
@@ -247,7 +247,7 @@ function FeaturedProducts() {
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {featuredProducts.map(product => (
-            <a key={product.slug} href={`/toode/${product.slug}`}
+            <a key={product.href} href={product.href}
               className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-[#003366]/20 hover:shadow-lg transition-all duration-300">
               <div className="relative bg-gray-50 p-6 flex items-center justify-center h-44">
                 {product.badge && (
@@ -308,12 +308,9 @@ function InstallationBlock() {
               ))}
             </ul>
             <div className="flex flex-wrap gap-3">
-              <a href="/paigaldus" className="bg-[#01a0dc] hover:bg-[#0190c5] text-white px-6 py-3 rounded-xl font-semibold transition-colors text-[15px]">
-                Küsi hinnapakkumist
-              </a>
-              <a href="tel:+37255551234"
+              <a href="tel:+3725033978"
                 className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-semibold transition-colors text-[15px] border border-white/20">
-                <Phone size={16} /> +372 5555 1234
+                <Phone size={16} /> +372 503 3978
               </a>
             </div>
           </div>
@@ -360,23 +357,45 @@ function LocationBlock() {
             <div className="text-[13px] font-semibold text-[#01a0dc] uppercase tracking-widest mb-3">Asukoht</div>
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Leia meid üles</h2>
             <div className="space-y-5">
-              {[
-                { icon: MapPin, title: 'Aadress',          lines: ['Vana-Narva mnt 3, uks 5/6', 'Tallinn'] },
-                { icon: Clock,  title: 'Lahtiolekuajad',   lines: ['Esmaspäev–Reede: 8:00–17:00', 'Laupäev–Pühapäev: suletud'] },
-                { icon: Phone,  title: 'Kontakt',          lines: ['+372 5555 1234', 'info@ipumps.ee'] },
-              ].map(item => (
-                <div key={item.title} className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <item.icon size={18} className="text-[#003366]" />
-                  </div>
-                  <div>
-                    <div className="font-semibold text-gray-800 mb-0.5">{item.title}</div>
-                    {item.lines.map(line => (
-                      <div key={line} className="text-gray-500 text-[15px]">{line}</div>
-                    ))}
-                  </div>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <MapPin size={18} className="text-[#003366]" />
                 </div>
-              ))}
+                <div>
+                  <div className="font-semibold text-gray-800 mb-0.5">Aadress</div>
+                  <a
+                    href="https://www.google.com/maps/dir/?api=1&destination=Vana-Narva+mnt+3,+Tallinn"
+                    target="_blank" rel="noopener noreferrer"
+                    className="text-gray-500 text-[15px] hover:text-[#003366] transition-colors"
+                  >
+                    Vana-Narva mnt 3, uks 5/6, Tallinn
+                  </a>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Clock size={18} className="text-[#003366]" />
+                </div>
+                <div>
+                  <div className="font-semibold text-gray-800 mb-0.5">Lahtiolekuajad</div>
+                  <div className="text-gray-500 text-[15px]">Esmaspäev–Reede: 8:00–17:00</div>
+                  <div className="text-gray-500 text-[15px]">Laupäev–Pühapäev: suletud</div>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Phone size={18} className="text-[#003366]" />
+                </div>
+                <div>
+                  <div className="font-semibold text-gray-800 mb-0.5">Kontakt</div>
+                  <a href="tel:+3725033978" className="block text-gray-500 text-[15px] hover:text-[#003366] transition-colors">
+                    +372 503 3978
+                  </a>
+                  <a href="mailto:info@ipumps.ee" className="block text-gray-500 text-[15px] hover:text-[#003366] transition-colors">
+                    info@ipumps.ee
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
           <div className="rounded-2xl overflow-hidden shadow-lg h-72">
