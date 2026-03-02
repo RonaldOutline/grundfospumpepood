@@ -413,6 +413,7 @@ function TootedPageContent({
   const [loading, setLoading]               = useState(true)
   const [tegevusalad, setTegevusalad]       = useState<Category[]>([])
   const [seeriad, setSeeriad]               = useState<Category[]>([])
+  const [aiSuggestion, setAiSuggestion]     = useState<{ slug: string; type: string; name: string } | null>(null)
 
   useEffect(() => {
     async function loadCategories() {
@@ -493,9 +494,41 @@ function TootedPageContent({
     q = q.range(from, to)
 
     const { data, count, error } = await q
-    if (!error) { setProducts(data || []); setTotal(count || 0) }
+    if (!error) {
+      setProducts(data || [])
+      setTotal(count || 0)
+
+      // AI fallback: if text query returned 0 results and no category filter is active,
+      // ask Claude to map the query to a category
+      if (!error && (count ?? 0) === 0 && query.trim() && !selectedAla && !selectedSeeria) {
+        try {
+          const res = await fetch('/api/search-ai', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: query.trim() }),
+          })
+          const aiData = await res.json()
+          if (aiData.categorySlug) {
+            // Find human-readable name from loaded categories
+            const allCats = [...tegevusalad, ...seeriad, ...seeriad.flatMap(s => s.children || [])]
+            const match = allCats.find(c => c.slug === aiData.categorySlug || c.slug === aiData.categorySlug.replace('drenaaz', 'drenaa'))
+            setAiSuggestion({
+              slug: aiData.categorySlug,
+              type: aiData.categoryType ?? 'tegevusala',
+              name: match?.name_et ?? aiData.categorySlug,
+            })
+          } else {
+            setAiSuggestion(null)
+          }
+        } catch {
+          setAiSuggestion(null)
+        }
+      } else {
+        setAiSuggestion(null)
+      }
+    }
     setLoading(false)
-  }, [query, selectedAla, selectedSeeria, inStockOnly, priceMin, priceMax, sortBy, page])
+  }, [query, selectedAla, selectedSeeria, inStockOnly, priceMin, priceMax, sortBy, page, tegevusalad, seeriad])
 
   useEffect(() => { loadProducts() }, [loadProducts])
 
@@ -506,7 +539,7 @@ function TootedPageContent({
   const clearFilters = () => {
     setSelectedAla(''); setSelectedSeeria('')
     setInStockOnly(false); setPriceMin(''); setPriceMax('')
-    setInputQuery(''); setPage(1)
+    setInputQuery(''); setPage(1); setAiSuggestion(null)
   }
 
   const handleSetAla    = (v: string) => { setSelectedAla(DB_TO_URL[v] ?? v); setSelectedSeeria(''); setPage(1) }
@@ -669,10 +702,33 @@ function TootedPageContent({
                 <div className="text-4xl mb-4">🔍</div>
                 <div className="font-semibold text-gray-800 text-lg mb-2">{t('noProducts')}</div>
                 <div className="text-[15px] text-gray-400 mb-5">{t('noProductsHint')}</div>
-                <button onClick={clearFilters}
-                  className="bg-[#003366] text-white px-6 py-2.5 rounded-xl font-semibold text-[15px] hover:bg-[#004080] transition-colors">
-                  {t('clearFilters')}
-                </button>
+                {aiSuggestion && (
+                  <div className="mb-5">
+                    <p className="text-[15px] text-gray-500 mb-3">
+                      Kas mõtlesid kategooriat <strong className="text-gray-800">{aiSuggestion.name}</strong>?
+                    </p>
+                    <button
+                      onClick={() => {
+                        setInputQuery('')
+                        if (aiSuggestion.type === 'seeria') {
+                          handleSetSeeria(aiSuggestion.slug)
+                        } else {
+                          handleSetAla(aiSuggestion.slug)
+                        }
+                        setAiSuggestion(null)
+                      }}
+                      className="bg-[#003366] text-white px-6 py-2.5 rounded-xl font-semibold text-[15px] hover:bg-[#004080] transition-colors"
+                    >
+                      Näita {aiSuggestion.name} tooteid
+                    </button>
+                  </div>
+                )}
+                {!aiSuggestion && (
+                  <button onClick={clearFilters}
+                    className="bg-[#003366] text-white px-6 py-2.5 rounded-xl font-semibold text-[15px] hover:bg-[#004080] transition-colors">
+                    {t('clearFilters')}
+                  </button>
+                )}
               </div>
             ) : viewMode === 'grid' ? (
               <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">

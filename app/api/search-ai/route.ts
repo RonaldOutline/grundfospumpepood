@@ -4,23 +4,29 @@ import { supabaseAdmin } from '@/lib/supabase-admin'
 
 const client = new Anthropic()
 
+// type: 'tegevusala' maps to ?tegevusala= in URL
+//       'seeria'     maps to ?seeria= in URL
 const CATEGORIES = [
-  { label: 'Küte',         slug: 'kute' },
-  { label: 'Jahutus',      slug: 'jahutus' },
-  { label: 'Soe tarbevesi', slug: 'sooja-tarbevee-tsirkulatsioonipump' },
-  { label: 'Puurkaevud',   slug: 'puurkaevud' },
-  { label: 'Drenaaž',      slug: 'drenaaz' },
-  { label: 'Salvkaevud',   slug: 'salvkaevud' },
-  { label: 'Rõhutõste',    slug: 'rohutoste' },
-  { label: 'Reovesi',      slug: 'reovesi' },
-]
+  { label: 'Küte / küttepump / radiaatoriküte / kütteringlus',                       slug: 'kute',                              type: 'tegevusala' },
+  { label: 'Jahutus / jahutuspump / kliimaseade',                                    slug: 'jahutus',                           type: 'tegevusala' },
+  { label: 'Soe tarbevesi / boiler tsirkulatsioon / kuumavesi',                      slug: 'sooja-tarbevee-tsirkulatsioonipump', type: 'tegevusala' },
+  { label: 'Puurkaev / puurkaevupump / sügavpump / kaevupump',                       slug: 'puurkaevud',                        type: 'tegevusala' },
+  { label: 'Drenaaž / drenaažipump / veepump keldrist / üleujutus',                  slug: 'drenaaz',                           type: 'tegevusala' },
+  { label: 'Salvkaev / salvkaevupump / pinnaveepump',                                 slug: 'salvkaevud',                        type: 'tegevusala' },
+  { label: 'Rõhutõste / survetõstja / madal veetrõhk / vesi majja',                  slug: 'rohutoste',                         type: 'tegevusala' },
+  { label: 'Reovesi / kanalisatsioon / fekaalipump / reovee pump',                    slug: 'reovesi',                           type: 'tegevusala' },
+  { label: 'JP Veeautomaat / aiapump / aiapumbad / aia niisutus / kastmispump / pinnavesi / aiaveepump / välikastmine', slug: 'jp-veeautomaat', type: 'seeria' },
+] as const
+
+type CategoryType = typeof CATEGORIES[number]['type']
 
 const VALID_SLUGS = new Set(CATEGORIES.map(c => c.slug))
+const SLUG_TO_TYPE = Object.fromEntries(CATEGORIES.map(c => [c.slug, c.type])) as Record<string, CategoryType>
 
 /**
  * POST /api/search-ai
  * Body: { query: string }
- * Returns: { categorySlug: string | null }
+ * Returns: { categorySlug: string | null, categoryType: 'tegevusala' | 'seeria' | null }
  *
  * Called only when DB search returns no results.
  * Checks synonym cache first, then falls back to Claude.
@@ -28,7 +34,7 @@ const VALID_SLUGS = new Set(CATEGORIES.map(c => c.slug))
  */
 export async function POST(req: NextRequest) {
   const { query } = await req.json().catch(() => ({}))
-  if (!query?.trim()) return NextResponse.json({ categorySlug: null })
+  if (!query?.trim()) return NextResponse.json({ categorySlug: null, categoryType: null })
 
   const normalized = query.trim().toLowerCase()
   const cacheKey   = `search:${normalized}`
@@ -42,11 +48,14 @@ export async function POST(req: NextRequest) {
 
   if (cached) {
     const slug = cached.value === 'none' ? null : cached.value
-    return NextResponse.json({ categorySlug: slug })
+    return NextResponse.json({
+      categorySlug: slug,
+      categoryType: slug ? (SLUG_TO_TYPE[slug] ?? 'tegevusala') : null,
+    })
   }
 
   // 2. Ask Claude — tiny prompt, ~100-300 tokens in, ~5 tokens out
-  const categoryList = CATEGORIES.map(c => `${c.label} (${c.slug})`).join(', ')
+  const categoryList = CATEGORIES.map(c => `${c.label} → ${c.slug}`).join('\n')
 
   let categorySlug: string | null = null
   try {
@@ -56,7 +65,10 @@ export async function POST(req: NextRequest) {
       messages: [{
         role: 'user',
         content: `User searched for: "${normalized}"
-Available pump categories: ${categoryList}
+
+Available pump categories (Estonian labels → slug):
+${categoryList}
+
 If the search clearly matches one category, reply with only its slug. Otherwise reply with "none".`,
       }],
     })
@@ -68,7 +80,7 @@ If the search clearly matches one category, reply with only its slug. Otherwise 
     categorySlug = VALID_SLUGS.has(text) ? text : null
   } catch (e) {
     console.error('Claude search-ai error:', e)
-    return NextResponse.json({ categorySlug: null })
+    return NextResponse.json({ categorySlug: null, categoryType: null })
   }
 
   // 3. Cache result so this query never hits Claude again
@@ -77,5 +89,8 @@ If the search clearly matches one category, reply with only its slug. Otherwise 
     { onConflict: 'key' },
   )
 
-  return NextResponse.json({ categorySlug })
+  return NextResponse.json({
+    categorySlug,
+    categoryType: categorySlug ? (SLUG_TO_TYPE[categorySlug] ?? 'tegevusala') : null,
+  })
 }

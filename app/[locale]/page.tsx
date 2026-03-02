@@ -65,7 +65,8 @@ function HeroSearch() {
       })
       const data = await res.json()
       if (data.categorySlug) {
-        window.location.href = `/tooted?tegevusala=${data.categorySlug}`
+        const param = data.categoryType === 'seeria' ? 'seeria' : 'tegevusala'
+        window.location.href = `/tooted?${param}=${data.categorySlug}`
         return
       }
     } catch { /* fall through */ }
