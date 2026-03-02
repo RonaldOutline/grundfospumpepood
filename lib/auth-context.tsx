@@ -84,7 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       password,
       options: {
         data: { full_name: fullName },
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin,
       },
     })
     return { error: error as Error | null }
