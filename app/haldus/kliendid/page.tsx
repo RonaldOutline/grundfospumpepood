@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Search, Users } from 'lucide-react'
+import { Search, Users, UserPlus } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 
 const canManageOrders = (role: string) => ['manager', 'superadmin'].includes(role)
@@ -76,7 +76,16 @@ export default function KliendidPage() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Kliendid</h1>
-        <span className="text-sm text-gray-500">Kokku {total}</span>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-500">Kokku {total}</span>
+          <Link
+            href="/haldus/kliendid/uus"
+            className="flex items-center gap-2 px-4 py-2 bg-[#003366] text-white text-[14px] font-semibold rounded-xl hover:bg-[#004080] transition-colors"
+          >
+            <UserPlus size={15} />
+            Uus klient
+          </Link>
+        </div>
       </div>
 
       <div className="relative max-w-xs">

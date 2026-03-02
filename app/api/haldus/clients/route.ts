@@ -73,3 +73,50 @@ export async function GET(req: NextRequest) {
     total:   (profileCount ?? 0) + pending.length,
   })
 }
+
+export async function POST(req: NextRequest) {
+  const caller = await getCallerProfile()
+  if (!caller || !['manager', 'superadmin'].includes(caller.role)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
+  const body = await req.json().catch(() => ({}))
+  const { email, password, full_name, phone, role } = body as {
+    email?: string; password?: string; full_name?: string; phone?: string; role?: string
+  }
+
+  if (!email || !password) {
+    return NextResponse.json({ error: 'Email ja parool on kohustuslikud' }, { status: 400 })
+  }
+  if (password.length < 6) {
+    return NextResponse.json({ error: 'Parool peab olema vähemalt 6 tähemärki' }, { status: 400 })
+  }
+
+  const allowedRole = caller.role === 'superadmin'
+    ? (['customer', 'manager', 'superadmin'].includes(role ?? '') ? role! : 'customer')
+    : 'customer'
+
+  // Create auth user with email pre-confirmed — bypasses rate limits & email flow
+  const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { full_name: full_name ?? '' },
+  })
+
+  if (authError || !authData.user) {
+    return NextResponse.json({ error: authError?.message ?? 'Viga kasutaja loomisel' }, { status: 500 })
+  }
+
+  // Upsert profile row (trigger may not have run yet)
+  await supabaseAdmin.from('profiles').upsert({
+    id:        authData.user.id,
+    email,
+    full_name: full_name ?? null,
+    phone:     phone ?? null,
+    role:      allowedRole,
+    status:    'active',
+  }, { onConflict: 'id' })
+
+  return NextResponse.json({ id: authData.user.id })
+}
