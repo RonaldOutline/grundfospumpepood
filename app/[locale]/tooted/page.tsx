@@ -542,8 +542,8 @@ function TootedPageContent({
     setInputQuery(''); setPage(1); setAiSuggestion(null)
   }
 
-  const handleSetAla    = (v: string) => { setSelectedAla(DB_TO_URL[v] ?? v); setSelectedSeeria(''); setPage(1) }
-  const handleSetSeeria = (v: string) => { setSelectedSeeria(v); setSelectedAla('');    setPage(1) }
+  const handleSetAla    = (v: string) => { setSelectedAla(DB_TO_URL[v] ?? v); setSelectedSeeria(''); setPage(1); setInputQuery(''); setQuery('') }
+  const handleSetSeeria = (v: string) => { setSelectedSeeria(v); setSelectedAla(''); setPage(1); setInputQuery(''); setQuery('') }
 
   const activeCatRaw = tegevusalad.find(c => (DB_TO_URL[c.slug] ?? c.slug) === selectedAla)
     ?? seeriad.find(c => c.slug === selectedSeeria)
