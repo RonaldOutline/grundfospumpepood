@@ -32,14 +32,14 @@ function HaldusContent({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Top header bar */}
-      <div className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40">
+      <div className="bg-[#003366] sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
           <a href="/">
-            <img src="/ipumpsLogo.svg" alt="iPumps" className="h-7 w-auto" />
+            <img src="/ipumps-logo-white.svg" alt="iPumps" className="h-7 w-auto" />
           </a>
           <div className="flex items-center gap-5 text-[14px]">
-            <a href="/" className="text-gray-500 hover:text-[#003366] transition-colors">← Pood</a>
-            <span className="text-gray-400">{profile.full_name || profile.email}</span>
+            <a href="/" className="text-white/70 hover:text-white transition-colors">← Pood</a>
+            <span className="text-white/50">{profile.full_name || profile.email}</span>
           </div>
         </div>
       </div>
