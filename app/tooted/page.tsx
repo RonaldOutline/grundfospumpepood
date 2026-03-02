@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef, Suspense } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import {
@@ -321,15 +321,21 @@ function FiltersPanel({
 // ─── PEAKOMPONENT ──────────────────────────────────────────────────────────
 
 export default function TootedPage() {
-  return <Suspense><TootedPageContent /></Suspense>
+  return <Suspense><TootedPageOuter /></Suspense>
 }
 
-function TootedPageContent() {
-  const router = useRouter()
+// Reads tegevusala from URL and passes it as a key+prop so TootedPageContent
+// always remounts fresh when the URL param changes (fixes Suspense hydration race).
+function TootedPageOuter() {
+  const searchParams = useSearchParams()
+  const tegevusala = searchParams.get('tegevusala') || ''
+  return <TootedPageContent key={tegevusala} tegevusala={tegevusala} />
+}
+
+function TootedPageContent({ tegevusala }: { tegevusala: string }) {
   const searchParams = useSearchParams()
 
-  // Derive selectedAla directly from URL — always in sync, no state needed
-  const selectedAla = searchParams.get('tegevusala') || ''
+  const [selectedAla, setSelectedAla]       = useState(tegevusala)
 
   const [inputQuery, setInputQuery]         = useState(searchParams.get('q') || '')
   const [query, setQuery]                   = useState(searchParams.get('q') || '')
@@ -428,20 +434,13 @@ function TootedPageContent() {
   const activeFiltersCount = [selectedAla, selectedSeeria, inStockOnly ? '1' : '', priceMin, priceMax].filter(Boolean).length
 
   const clearFilters = () => {
-    setSelectedSeeria('')
+    setSelectedAla(''); setSelectedSeeria('')
     setInStockOnly(false); setPriceMin(''); setPriceMax('')
     setInputQuery(''); setPage(1)
-    router.push('/tooted', { scroll: false })
   }
 
-  const handleSetAla = (v: string) => {
-    setSelectedSeeria(''); setPage(1)
-    const params = new URLSearchParams(searchParams.toString())
-    if (v) params.set('tegevusala', v)
-    else params.delete('tegevusala')
-    router.push(`/tooted?${params.toString()}`, { scroll: false })
-  }
-  const handleSetSeeria  = (v: string) => { setSelectedSeeria(v); setPage(1) }
+  const handleSetAla    = (v: string) => { setSelectedAla(v);    setSelectedSeeria(''); setPage(1) }
+  const handleSetSeeria = (v: string) => { setSelectedSeeria(v); setSelectedAla('');    setPage(1) }
 
   // Kategooria nime leidmine
   const activeCatName = tegevusalad.find(c => c.slug === selectedAla)?.name_et
