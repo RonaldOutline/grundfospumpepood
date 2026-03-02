@@ -41,16 +41,23 @@ const SORT_OPTIONS = [
 
 const PAGE_SIZE = 48
 
+// ─── SLUG ALIASES ───────────────────────────────────────────────────────────
+// Some categories have a truncated slug in the DB; map canonical URL slugs
+// to the actual DB slugs and vice-versa.
+const DB_TO_URL: Record<string, string> = { 'drenaa': 'drenaaz' }
+const URL_TO_DB: Record<string, string> = { 'drenaaz': 'drenaa' }
+
 // ─── KATEGOORIA HIERARHIA ──────────────────────────────────────────────────
 // Tagastab rootSlug + kõik tema alamkategooriad rekursiivselt (BFS)
 async function getDescendantSlugs(rootSlug: string): Promise<string[]> {
+  const dbRoot = URL_TO_DB[rootSlug] ?? rootSlug   // resolve alias → DB slug
   const { data: allCats } = await supabase
     .from('categories')
     .select('slug, parent_slug')
-  if (!allCats) return [rootSlug]
+  if (!allCats) return [dbRoot]
 
-  const result = [rootSlug]
-  const queue = [rootSlug]
+  const result = [dbRoot]
+  const queue = [dbRoot]
   while (queue.length > 0) {
     const cur = queue.shift()!
     for (const cat of allCats) {
@@ -471,11 +478,11 @@ function TootedPageContent({
     setInputQuery(''); setPage(1)
   }
 
-  const handleSetAla    = (v: string) => { setSelectedAla(v);    setSelectedSeeria(''); setPage(1) }
+  const handleSetAla    = (v: string) => { setSelectedAla(DB_TO_URL[v] ?? v); setSelectedSeeria(''); setPage(1) }
   const handleSetSeeria = (v: string) => { setSelectedSeeria(v); setSelectedAla('');    setPage(1) }
 
-  // Kategooria nime leidmine
-  const activeCatName = tegevusalad.find(c => c.slug === selectedAla)?.name_et
+  // Kategooria nime leidmine (DB slug may differ from URL slug — use alias map)
+  const activeCatName = tegevusalad.find(c => (DB_TO_URL[c.slug] ?? c.slug) === selectedAla)?.name_et
     || seeriad.find(c => c.slug === selectedSeeria)?.name_et
     || seeriad.flatMap(c => c.children || []).find(c => c.slug === selectedSeeria)?.name_et
 
@@ -563,7 +570,7 @@ function TootedPageContent({
             <span className="text-[15px] text-gray-500">Filtrid:</span>
             {selectedAla && (
               <span className="flex items-center gap-1.5 bg-[#003366]/10 text-[#003366] text-[15px] font-medium px-3 py-1 rounded-full">
-                {tegevusalad.find(c => c.slug === selectedAla)?.name_et}
+                {tegevusalad.find(c => (DB_TO_URL[c.slug] ?? c.slug) === selectedAla)?.name_et}
                 <button onClick={() => handleSetAla('')}><X size={13} /></button>
               </span>
             )}
