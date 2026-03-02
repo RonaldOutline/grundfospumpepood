@@ -25,6 +25,7 @@
     "subtitle": "Wyszukaj spośród 321 produktów według nazwy, SKU lub parametrów technicznych",
     "searchPlaceholder": "np. MAGNA3, Max Flow 5 m³/h, Rated Power 65W, SKU 59641500...",
     "searchButton": "Szukaj",
+    "searching": "Szukam...",
     "tags": {
       "magna3": "MAGNA3",
       "alpha": "Pompa obiegowa Alpha",

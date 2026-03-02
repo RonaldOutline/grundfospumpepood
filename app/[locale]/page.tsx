@@ -4,12 +4,13 @@ import { useState } from 'react'
 import {
   Flame, Snowflake, Thermometer, Drill, Waves,
   ArrowUpCircle, Filter, CircleDot,
-  Search, ChevronRight,
+  Search, ChevronRight, Loader2,
   Phone, MapPin, Truck, Wrench, Shield, Clock
 } from 'lucide-react'
 import ObfuscatedEmail from '@/components/ObfuscatedEmail'
 import PumpCalculator from '@/components/PumpCalculator'
 import FeaturedProductsSlider from '@/components/FeaturedProductsSlider'
+import { supabase } from '@/lib/supabase'
 import { useTranslations } from 'next-intl'
 
 // ─── ANDMED ────────────────────────────────────────────────────────────────
@@ -36,12 +37,41 @@ const benefitDefs = [
 
 function HeroSearch() {
   const t = useTranslations('hero')
-  const [query, setQuery] = useState('')
+  const [query,     setQuery]     = useState('')
+  const [searching, setSearching] = useState(false)
 
-  const handleSearch = () => {
-    if (query.trim()) {
-      window.location.href = `/tooted?q=${encodeURIComponent(query.trim())}`
+  const handleSearch = async () => {
+    const q = query.trim()
+    if (!q) return
+    setSearching(true)
+
+    // 1. Fast DB check — does any product name match?
+    const { count } = await supabase
+      .from('products')
+      .select('id', { count: 'exact', head: true })
+      .ilike('name', `%${q}%`)
+
+    if ((count ?? 0) > 0) {
+      window.location.href = `/tooted?q=${encodeURIComponent(q)}`
+      return
     }
+
+    // 2. AI fallback — maps unknown terms to a category (cached after first call)
+    try {
+      const res  = await fetch('/api/search-ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: q }),
+      })
+      const data = await res.json()
+      if (data.categorySlug) {
+        window.location.href = `/tooted?tegevusala=${data.categorySlug}`
+        return
+      }
+    } catch { /* fall through */ }
+
+    // 3. Default — show whatever products match (may be empty list)
+    window.location.href = `/tooted?q=${encodeURIComponent(q)}`
   }
 
   return (
@@ -54,19 +84,24 @@ function HeroSearch() {
           {t('subtitle')}
         </p>
         <div className="relative max-w-2xl mx-auto">
-          <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+          {searching
+            ? <Loader2 size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 animate-spin" />
+            : <Search  size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+          }
           <input
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSearch()}
+            disabled={searching}
             placeholder={t('searchPlaceholder')}
-            className="w-full pl-12 pr-32 py-4 rounded-xl text-gray-800 text-[15px] shadow-2xl outline-none focus:ring-2 focus:ring-[#01a0dc] bg-white"
+            className="w-full pl-12 pr-32 py-4 rounded-xl text-gray-800 text-[15px] shadow-2xl outline-none focus:ring-2 focus:ring-[#01a0dc] bg-white disabled:opacity-70"
           />
           <button
             onClick={handleSearch}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#01a0dc] hover:bg-[#0190c5] text-white px-5 py-2.5 rounded-lg text-[15px] font-semibold transition-colors"
+            disabled={searching}
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#01a0dc] hover:bg-[#0190c5] text-white px-5 py-2.5 rounded-lg text-[15px] font-semibold transition-colors disabled:opacity-70"
           >
-            {t('searchButton')}
+            {searching ? t('searching') : t('searchButton')}
           </button>
         </div>
         <div className="flex flex-wrap justify-center gap-2 mt-4">

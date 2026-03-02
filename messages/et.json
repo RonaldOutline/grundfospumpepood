@@ -25,6 +25,7 @@
     "subtitle": "Otsi 321 toote seast nime, SKU või tehniliste parameetrite järgi",
     "searchPlaceholder": "nt. MAGNA3, Max Flow 5 m³/h, Rated Power 65W, SKU 59641500...",
     "searchButton": "Otsi",
+    "searching": "Otsin...",
     "tags": {
       "magna3": "MAGNA3",
       "alpha": "Alpha ringluspump",

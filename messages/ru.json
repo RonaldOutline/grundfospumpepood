@@ -25,6 +25,7 @@
     "subtitle": "Поиск среди 321 продукта по названию, SKU или техническим параметрам",
     "searchPlaceholder": "например MAGNA3, Max Flow 5 м³/ч, Rated Power 65W, SKU 59641500...",
     "searchButton": "Поиск",
+    "searching": "Поиск...",
     "tags": {
       "magna3": "MAGNA3",
       "alpha": "Циркуляционный насос Alpha",

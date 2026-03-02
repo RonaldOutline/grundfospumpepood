@@ -25,6 +25,7 @@
     "subtitle": "Ieškokite iš 321 produkto pagal pavadinimą, SKU arba techninius parametrus",
     "searchPlaceholder": "pvz. MAGNA3, Max Flow 5 m³/h, Rated Power 65W, SKU 59641500...",
     "searchButton": "Paieška",
+    "searching": "Ieškau...",
     "tags": {
       "magna3": "MAGNA3",
       "alpha": "Alpha cirkuliacinis siurblys",
