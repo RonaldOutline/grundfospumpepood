@@ -284,7 +284,7 @@ function FiltersPanel({
 }) {
   return (
     <div className="space-y-5">
-      <CategoryTree categories={tegevusalad} selected={selectedAla} onSelect={setSelectedAla} title="Tegevusala" />
+      <CategoryTree categories={tegevusalad} selected={URL_TO_DB[selectedAla] ?? selectedAla} onSelect={setSelectedAla} title="Tegevusala" />
       <div className="border-t border-gray-100" />
       <CategoryTree categories={seeriad} selected={selectedSeeria} onSelect={setSelectedSeeria} title="Tooteseeria" />
       <div className="border-t border-gray-100" />
