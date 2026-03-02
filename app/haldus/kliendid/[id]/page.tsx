@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
-import { ArrowLeft, ShoppingBag, MailCheck } from 'lucide-react'
+import { ArrowLeft, ShoppingBag, MailCheck, Trash2 } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 
 const canManageOrders   = (role: string) => ['manager', 'superadmin'].includes(role)
@@ -62,9 +62,10 @@ export default function KlientDetailPage() {
   const [notFound, setNotFound]     = useState(false)
   const [emailConfirmed, setEmailConfirmed] = useState<boolean | null>(null)
 
-  const [saving, setSaving]     = useState(false)
-  const [saveMsg, setSaveMsg]   = useState('')
-  const [newRole, setNewRole]   = useState('')
+  const [saving, setSaving]       = useState(false)
+  const [saveMsg, setSaveMsg]     = useState('')
+  const [newRole, setNewRole]     = useState('')
+  const [confirmDelete, setConfirmDelete] = useState(false)
 
   useEffect(() => {
     if (profile && !canManageOrders(profile.role)) router.replace('/haldus')
@@ -137,6 +138,18 @@ export default function KlientDetailPage() {
     }
     setSaving(false)
     setTimeout(() => setSaveMsg(''), 3000)
+  }
+
+  async function handleDelete() {
+    setSaving(true); setSaveMsg('')
+    const res = await fetch(`/api/haldus/clients/${id}`, { method: 'DELETE' })
+    if (res.ok) {
+      router.replace('/haldus/kliendid')
+    } else {
+      const data = await res.json().catch(() => ({}))
+      setSaveMsg(data.error ?? 'Viga!')
+      setSaving(false)
+    }
   }
 
   if (profile && !canManageOrders(profile.role)) return null
@@ -309,6 +322,44 @@ export default function KlientDetailPage() {
                 >
                   Salvesta roll
                 </button>
+              </div>
+            )}
+
+            {/* Kustuta konto — ainult superadmin */}
+            {canManageProducts(profile?.role ?? '') && (
+              <div className="pt-2 border-t border-gray-100">
+                {!confirmDelete ? (
+                  <button
+                    onClick={() => setConfirmDelete(true)}
+                    disabled={saving}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-[14px] font-semibold text-red-600 border border-red-200 rounded-xl hover:bg-red-50 transition-colors disabled:opacity-50"
+                  >
+                    <Trash2 size={14} />
+                    Kustuta konto
+                  </button>
+                ) : (
+                  <div className="space-y-2">
+                    <p className="text-[13px] text-red-600 font-medium text-center">
+                      Konto kustutatakse jäädavalt. Tellimused säilivad.
+                    </p>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setConfirmDelete(false)}
+                        disabled={saving}
+                        className="flex-1 px-3 py-2 text-[14px] font-semibold border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                      >
+                        Tühista
+                      </button>
+                      <button
+                        onClick={handleDelete}
+                        disabled={saving}
+                        className="flex-1 px-3 py-2 text-[14px] font-semibold bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors disabled:opacity-50"
+                      >
+                        {saving ? 'Töötleb...' : 'Jah, kustuta'}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

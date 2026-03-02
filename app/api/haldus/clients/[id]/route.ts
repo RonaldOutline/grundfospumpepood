@@ -49,6 +49,35 @@ export async function GET(
   })
 }
 
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params
+  const caller = await getCallerProfile()
+
+  if (!caller || caller.role !== 'superadmin') {
+    return NextResponse.json({ error: 'Forbidden: requires superadmin' }, { status: 403 })
+  }
+
+  // Prevent self-deletion
+  if (caller.id === id) {
+    return NextResponse.json({ error: 'Cannot delete your own account' }, { status: 400 })
+  }
+
+  // 1. Nullify orders so history is preserved
+  await supabaseAdmin.from('orders').update({ user_id: null }).eq('user_id', id)
+
+  // 2. Delete profile (may already cascade from step 3, but be explicit)
+  await supabaseAdmin.from('profiles').delete().eq('id', id)
+
+  // 3. Delete auth user — this is the authoritative delete
+  const { error } = await supabaseAdmin.auth.admin.deleteUser(id)
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+  return NextResponse.json({ ok: true })
+}
+
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
