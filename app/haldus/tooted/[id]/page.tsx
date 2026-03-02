@@ -126,6 +126,18 @@ export default function MuudaToode() {
 
     if (err) { setError(err.message); setSaving(false); return }
 
+    // Fire-and-forget auto-translation (non-blocking)
+    const fieldsToTranslate: Record<string, string> = {}
+    if (desc.trim()) fieldsToTranslate.description = desc.trim()
+    if (shortDesc.trim()) fieldsToTranslate.short_description = shortDesc.trim()
+    if (Object.keys(fieldsToTranslate).length > 0) {
+      fetch('/api/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ table: 'products', id: Number(id), fields: fieldsToTranslate }),
+      }).catch(console.error)
+    }
+
     // Update category
     await supabase.from('product_categories').delete().eq('product_id', id)
     if (catSlug) {

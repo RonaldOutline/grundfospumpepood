@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
   if (!apiKey) return NextResponse.json({ error: 'ANTHROPIC_API_KEY not set' }, { status: 500 })
   if (!SERVICE_KEY) return NextResponse.json({ error: 'SUPABASE_SERVICE_ROLE_KEY not set' }, { status: 500 })
 
-  let body: { table: string; id: number; fields: Record<string, string> }
+  let body: { table: string; id: number | string; fields: Record<string, string> }
   try {
     body = await req.json()
   } catch {

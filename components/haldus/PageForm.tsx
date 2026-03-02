@@ -113,18 +113,47 @@ export default function PageForm({ initialData, mode }: { initialData?: PageData
       updated_at: new Date().toISOString(),
     }
 
-    const { error: err } = mode === 'create'
-      ? await supabase.from('pages').insert(payload)
-      : await supabase.from('pages').update(payload).eq('id', initialData!.id)
+    let pageId: string | undefined = initialData?.id
 
-    if (err) {
-      setError(
-        err.message.includes('unique') || err.message.includes('duplicate')
-          ? 'See slug on juba kasutusel. Vali teine.'
-          : 'Salvestamine ebaõnnestus: ' + err.message
-      )
-      setSaving(false)
-      return
+    if (mode === 'create') {
+      const { data: created, error: err } = await supabase.from('pages').insert(payload).select('id').single()
+      if (err || !created) {
+        setError(
+          err?.message.includes('unique') || err?.message.includes('duplicate')
+            ? 'See slug on juba kasutusel. Vali teine.'
+            : 'Salvestamine ebaõnnestus: ' + (err?.message ?? 'Tundmatu viga')
+        )
+        setSaving(false)
+        return
+      }
+      pageId = created.id
+    } else {
+      const { error: err } = await supabase.from('pages').update(payload).eq('id', initialData!.id)
+      if (err) {
+        setError(
+          err.message.includes('unique') || err.message.includes('duplicate')
+            ? 'See slug on juba kasutusel. Vali teine.'
+            : 'Salvestamine ebaõnnestus: ' + err.message
+        )
+        setSaving(false)
+        return
+      }
+    }
+
+    // Fire-and-forget auto-translation (non-blocking)
+    if (pageId) {
+      const fieldsToTranslate: Record<string, string> = {}
+      if (title.trim()) fieldsToTranslate.title = title.trim()
+      if (shortDesc.trim()) fieldsToTranslate.short_description = shortDesc.trim()
+      // Only translate free-text content, not the contact template JSON
+      if (template === 'default' && content.trim()) fieldsToTranslate.content = content.trim()
+      if (Object.keys(fieldsToTranslate).length > 0) {
+        fetch('/api/translate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ table: 'pages', id: pageId, fields: fieldsToTranslate }),
+        }).catch(console.error)
+      }
     }
 
     router.push('/haldus/lehed')

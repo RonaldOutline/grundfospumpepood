@@ -37,7 +37,8 @@ const HEADERS = { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}`, '
 async function sbFetch(path, opts = {}) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1${path}`, { headers: HEADERS, ...opts })
   if (!res.ok) throw new Error(`Supabase error ${res.status}: ${await res.text()}`)
-  return res.json()
+  const text = await res.text()
+  return text ? JSON.parse(text) : null
 }
 
 async function translateText(text, targetLang) {
@@ -62,14 +63,20 @@ async function translateText(text, targetLang) {
 async function main() {
   console.log('Fetching products with descriptions...')
 
+  // Fetch all locale columns so we can skip already-translated fields
   const products = await sbFetch(
-    '/products?select=id,slug,description_et,short_description_et&order=id'
+    '/products?select=id,slug,' +
+    'description_et,description_en,description_ru,description_lv,description_lt,description_pl,' +
+    'short_description_et,short_description_en,short_description_ru,short_description_lv,short_description_lt,short_description_pl' +
+    '&order=id'
   )
 
   const toTranslate = products.filter(p => p.description_et || p.short_description_et)
-  console.log(`Found ${toTranslate.length} products with descriptions to translate.\n`)
+  console.log(`Found ${toTranslate.length} products with descriptions.`)
+  console.log('Skipping fields that are already translated (safe to re-run).\n')
 
   let done = 0
+  let skipped = 0
   let failed = 0
 
   for (const product of toTranslate) {
@@ -78,21 +85,27 @@ async function main() {
     const patch = {}
 
     for (const locale of LOCALES) {
-      if (product.description_et) {
+      // Only translate if the target column is NULL
+      if (product.description_et && !product[`description_${locale}`]) {
         try {
           patch[`description_${locale}`] = await translateText(product.description_et, locale)
         } catch (e) {
           console.warn(`\n  ✗ description_${locale}: ${e.message}`)
           failed++
         }
+      } else if (product[`description_${locale}`]) {
+        skipped++
       }
-      if (product.short_description_et) {
+
+      if (product.short_description_et && !product[`short_description_${locale}`]) {
         try {
           patch[`short_description_${locale}`] = await translateText(product.short_description_et, locale)
         } catch (e) {
           console.warn(`\n  ✗ short_description_${locale}: ${e.message}`)
           failed++
         }
+      } else if (product[`short_description_${locale}`]) {
+        skipped++
       }
     }
 
@@ -101,13 +114,15 @@ async function main() {
         method: 'PATCH',
         body: JSON.stringify(patch),
       })
+      console.log(`✓ (${Object.keys(patch).length} fields)`)
+    } else {
+      console.log('— already done')
     }
 
     done++
-    console.log('✓')
   }
 
-  console.log(`\nDone! ${done} products translated. ${failed} errors.`)
+  console.log(`\nDone! ${done} products processed. ${skipped} fields already had translations. ${failed} errors.`)
 }
 
 main().catch(e => { console.error(e); process.exit(1) })

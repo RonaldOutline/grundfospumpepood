@@ -90,6 +90,18 @@ export default function UusToode() {
       await supabase.from('product_categories').insert({ product_id: product.id, category_slug: catSlug })
     }
 
+    // Fire-and-forget auto-translation (non-blocking)
+    const fieldsToTranslate: Record<string, string> = {}
+    if (desc.trim()) fieldsToTranslate.description = desc.trim()
+    if (shortDesc.trim()) fieldsToTranslate.short_description = shortDesc.trim()
+    if (product && Object.keys(fieldsToTranslate).length > 0) {
+      fetch('/api/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ table: 'products', id: Number(product.id), fields: fieldsToTranslate }),
+      }).catch(console.error)
+    }
+
     router.push(`/haldus/tooted/${product!.id}`)
   }
 

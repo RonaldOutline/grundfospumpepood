@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Search, Plus, Upload, Download, Package } from 'lucide-react'
+import { Search, Plus, Upload, Download, Package, Languages } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 import { supabase } from '@/lib/supabase'
 
@@ -32,6 +32,13 @@ export default function TootedPage() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'true' | 'false'>('all')
   const [loading, setLoading]   = useState(true)
 
+  // Auto-translate missing state
+  const [missing, setMissing]           = useState<number | null>(null)
+  const [translating, setTranslating]   = useState(false)
+  const [translateDone, setTranslateDone] = useState(false)
+  const [translateProgress, setTranslateProgress] = useState({ done: 0, total: 0 })
+  const translateRunning = useRef(false)
+
   useEffect(() => {
     if (profile && !canManageProducts(profile.role)) router.replace('/haldus')
   }, [profile, router])
@@ -54,6 +61,47 @@ export default function TootedPage() {
   }, [page, search, statusFilter])
 
   useEffect(() => { load() }, [load])
+
+  // Check for missing translations on load
+  useEffect(() => {
+    fetch('/api/translate-missing')
+      .then(r => r.json())
+      .then(d => setMissing(d.missing ?? 0))
+      .catch(() => setMissing(0))
+  }, [])
+
+  async function runTranslateAll() {
+    if (translateRunning.current) return
+    translateRunning.current = true
+    setTranslating(true)
+    setTranslateDone(false)
+    const total = missing ?? 0
+    setTranslateProgress({ done: 0, total })
+
+    let remaining = total
+    let done = 0
+    while (remaining > 0 && translateRunning.current) {
+      try {
+        const res = await fetch('/api/translate-missing', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ limit: 5 }),
+        })
+        const data = await res.json()
+        done += data.processed ?? 0
+        remaining = data.remaining ?? 0
+        setTranslateProgress({ done, total })
+      } catch {
+        break
+      }
+    }
+
+    translateRunning.current = false
+    setTranslating(false)
+    setMissing(0)
+    setTranslateDone(true)
+    setTimeout(() => setTranslateDone(false), 5000)
+  }
 
   const totalPages = Math.ceil(total / PAGE_SIZE)
 
@@ -85,6 +133,35 @@ export default function TootedPage() {
           </Link>
         </div>
       </div>
+
+      {/* Tõlkimise banner */}
+      {translateDone && (
+        <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-2xl px-4 py-3 text-[14px] text-green-700 font-medium">
+          <Languages size={16} /> Kõik tõlked on valmis!
+        </div>
+      )}
+      {(missing !== null && missing > 0 && !translateDone) && (
+        <div className="flex flex-wrap items-center justify-between gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3">
+          <div className="flex items-center gap-2 text-[14px] text-amber-800">
+            <Languages size={16} />
+            {translating
+              ? `Tõlgin... ${translateProgress.done}/${translateProgress.total} toodet valmis`
+              : `${missing} tootel puuduvad tõlked`
+            }
+            {translating && (
+              <div className="w-4 h-4 border-2 border-amber-600 border-t-transparent rounded-full animate-spin ml-1" />
+            )}
+          </div>
+          {!translating && (
+            <button
+              onClick={runTranslateAll}
+              className="flex items-center gap-1.5 px-4 py-2 text-[13px] font-semibold text-white bg-amber-600 rounded-xl hover:bg-amber-700 transition-colors"
+            >
+              <Languages size={13} /> Tõlgi kõik automaatselt
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Filtrid */}
       <div className="flex flex-wrap gap-3">
