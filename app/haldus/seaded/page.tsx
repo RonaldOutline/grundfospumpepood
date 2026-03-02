@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { supabase } from '@/lib/supabase'
@@ -44,9 +44,44 @@ export default function SeadedPage() {
   const [saved, setSaved]       = useState(false)
   const [error, setError]       = useState('')
 
+  // Translation state
+  const [missing, setMissing]               = useState<number | null>(null)
+  const [translating, setTranslating]       = useState(false)
+  const [translateDone, setTranslateDone]   = useState(false)
+  const [translateProgress, setTranslateProgress] = useState({ done: 0, total: 0 })
+  const translateRunning = useRef(false)
+
   useEffect(() => {
     if (profile && !canManageProducts(profile.role)) router.replace('/haldus')
   }, [profile, router])
+
+  useEffect(() => {
+    fetch('/api/translate-missing')
+      .then(r => r.json())
+      .then(d => setMissing(d.missing ?? 0))
+      .catch(() => setMissing(0))
+  }, [])
+
+  async function runTranslateAll() {
+    if (translateRunning.current) return
+    translateRunning.current = true
+    setTranslating(true); setTranslateDone(false)
+    const total = missing ?? 0
+    setTranslateProgress({ done: 0, total })
+    let remaining = total; let done = 0
+    while (remaining > 0 && translateRunning.current) {
+      try {
+        const res  = await fetch('/api/translate-missing', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ limit: 5 }) })
+        const data = await res.json()
+        done      += data.processed ?? 0
+        remaining  = data.remaining ?? 0
+        setTranslateProgress({ done, total })
+      } catch { break }
+    }
+    translateRunning.current = false
+    setTranslating(false); setMissing(0); setTranslateDone(true)
+    setTimeout(() => setTranslateDone(false), 5000)
+  }
 
   useEffect(() => {
     supabase.from('settings').select('key, value').then(({ data }) => {
@@ -206,6 +241,54 @@ export default function SeadedPage() {
             label="Laost otsas tooted tellitavad (eeltellimus)"
           />
         </div>
+      </div>
+
+      {/* Tõlge */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+        <div>
+          <h2 className="font-semibold text-gray-900">Toodete tõlge</h2>
+          <p className="text-[14px] text-gray-500 mt-0.5">
+            Tõlgi puuduvad tõlked kõigi avaldatud toodete jaoks korraga.
+          </p>
+        </div>
+
+        {missing !== null && (
+          <div className="flex items-center gap-3 text-[14px]">
+            <span className={`px-2.5 py-1 rounded-full font-semibold text-[13px] ${missing > 0 ? 'bg-amber-50 text-amber-700' : 'bg-green-50 text-green-700'}`}>
+              {missing > 0 ? `${missing} toodet vajab tõlkimist` : 'Kõik tõlked on olemas'}
+            </span>
+          </div>
+        )}
+
+        {translating && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-[14px] text-gray-600">
+              <span>Tõlgin... {translateProgress.done} / {translateProgress.total}</span>
+              <span className="text-gray-400">{translateProgress.total > 0 ? Math.round((translateProgress.done / translateProgress.total) * 100) : 0}%</span>
+            </div>
+            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-[#003366] rounded-full transition-all duration-300"
+                style={{ width: `${translateProgress.total > 0 ? (translateProgress.done / translateProgress.total) * 100 : 0}%` }}
+              />
+            </div>
+          </div>
+        )}
+
+        {translateDone && (
+          <div className="bg-green-50 border border-green-200 text-green-700 rounded-xl px-4 py-3 text-[14px]">
+            Tõlkimine lõpetatud!
+          </div>
+        )}
+
+        <button
+          type="button"
+          onClick={runTranslateAll}
+          disabled={translating || missing === 0}
+          className="px-5 py-2.5 bg-[#003366] text-white font-semibold rounded-xl hover:bg-[#004080] transition-colors disabled:opacity-50 text-[15px]"
+        >
+          {translating ? 'Tõlgin...' : 'Tõlgi kõik puuduvad'}
+        </button>
       </div>
 
       <div className="flex justify-end">

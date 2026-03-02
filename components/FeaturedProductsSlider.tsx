@@ -54,16 +54,16 @@ export default function FeaturedProductsSlider() {
   }, [visible])
 
   // ── Derived ───────────────────────────────────────────────────────────────
-  // Number of pages needed to show all 8 products once (e.g. 2 for 4-visible)
-  const totalPages = products.length > 0 ? Math.ceil(products.length / visible) : 0
+  // Each "page" advances by 1 card (not a full visible-width)
+  const totalPages = products.length > 0 ? products.length : 0
 
   // Duplicate the array so the last real page seamlessly wraps to the first
   const slides = [...products, ...products]
 
-  // ── Auto-advance every 3 s ────────────────────────────────────────────────
+  // ── Auto-advance every 4 s ────────────────────────────────────────────────
   useEffect(() => {
     if (products.length === 0) return
-    const id = setInterval(() => setPage(p => p + 1), 3000)
+    const id = setInterval(() => setPage(p => p + 1), 4000)
     return () => clearInterval(id)
   }, [products.length])
 
@@ -139,7 +139,7 @@ export default function FeaturedProductsSlider() {
                 style={{
                   display: 'flex',
                   width: '100%',
-                  transform: `translateX(${-page * 100}%)`,
+                  transform: `translateX(${-page * (100 / visible)}%)`,
                   transition: animate ? 'transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'none',
                 }}
               >

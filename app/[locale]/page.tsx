@@ -45,7 +45,7 @@ function HeroSearch() {
   }
 
   return (
-    <section className="bg-gradient-to-br from-[#003366] via-[#004080] to-[#002244] py-14">
+    <section className="bg-gradient-to-br from-[#2c3d4e] via-[#1e2d3d] to-[#19222c] py-14">
       <div className="max-w-4xl mx-auto px-4 text-center">
         <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
           {t('title')}
@@ -94,14 +94,14 @@ function SeasonalPromo() {
         <div className="rounded-2xl overflow-hidden flex flex-col lg:flex-row shadow-xl min-h-[380px]">
 
           {/* Vasakpoolne osa — pakkumine (40%) */}
-          <div className="lg:w-2/5 relative bg-gradient-to-br from-[#003366] via-[#004d80] to-[#005a99] p-8 lg:p-10 flex flex-col justify-between overflow-hidden">
+          <div className="lg:w-2/5 relative bg-gradient-to-br from-[#00c270] via-[#00a75d] to-[#007a44] p-8 lg:p-10 flex flex-col justify-between overflow-hidden">
             {/* Kaunistused */}
             <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full translate-x-24 -translate-y-24 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-56 h-56 bg-[#01a0dc]/10 rounded-full -translate-x-16 translate-y-16 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-56 h-56 bg-white/5 rounded-full -translate-x-16 translate-y-16 pointer-events-none" />
 
             {/* Sisu */}
             <div className="relative z-10">
-              <span className="inline-flex items-center gap-1.5 bg-green-400/20 text-green-300 border border-green-400/30 text-[13px] font-semibold px-3 py-1 rounded-full mb-5">
+              <span className="inline-flex items-center gap-1.5 bg-white/20 text-white/90 border border-white/30 text-[13px] font-semibold px-3 py-1 rounded-full mb-5">
                 {t('badge')}
               </span>
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 leading-tight whitespace-pre-line">
@@ -113,8 +113,8 @@ function SeasonalPromo() {
               <ul className="space-y-2.5 mb-7">
                 {(['bullet1', 'bullet2', 'bullet3'] as const).map(key => (
                   <li key={key} className="flex items-center gap-2.5 text-white/80 text-[15px]">
-                    <div className="w-4 h-4 rounded-full bg-green-400/30 border border-green-400/50 flex items-center justify-center flex-shrink-0">
-                      <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                    <div className="w-4 h-4 rounded-full bg-white/30 border border-white/50 flex items-center justify-center flex-shrink-0">
+                      <div className="w-1.5 h-1.5 rounded-full bg-white" />
                     </div>
                     {t(key)}
                   </li>
@@ -147,7 +147,7 @@ function SeasonalPromo() {
               className="absolute inset-0 w-full h-full object-cover"
             />
             {/* Pehmendab üleminekut vasaku veeruga */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#003366]/40 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#007a44]/40 to-transparent pointer-events-none" />
           </div>
 
         </div>

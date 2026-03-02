@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Phone, Mail, MapPin } from 'lucide-react'
+import { Phone, Mail } from 'lucide-react'
 import ObfuscatedEmail from './ObfuscatedEmail'
 import { useTranslations } from 'next-intl'
 
@@ -39,7 +39,7 @@ export default function Footer() {
         {/* ── 4 veergu ──────────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
 
-          {/* Veerg 1 — Logo + kirjeldus */}
+          {/* Veerg 1 — Logo + kirjeldus + kontaktandmed */}
           <div className="col-span-2 lg:col-span-1">
             <div className="mb-4">
               <img src="/ipumps-logo-white.svg" alt="iPumps" className="h-7 w-auto" />
@@ -47,9 +47,13 @@ export default function Footer() {
             <p className="text-[14px] leading-relaxed mb-4">
               {t('description')}
             </p>
-            <div className="text-[13px] text-white/40 space-y-0.5">
-              <div className="text-white/60 font-medium">{t('company')}</div>
-              <div>{t('reg')}</div>
+            <div className="text-[13px] text-white/50 space-y-0.5">
+              <div className="text-white/70 font-medium">{t('company')}</div>
+              <div>Sepamäe tee 11-2</div>
+              <div>74009 Leppneeme küla</div>
+              <div>Viimsi vald, Harju maakond</div>
+              <a href="tel:+3725033978" className="block hover:text-white transition-colors pt-1">+372 503 3978</a>
+              <div className="pt-1 text-white/30">{t('reg')}</div>
             </div>
           </div>
 
@@ -100,22 +104,9 @@ export default function Footer() {
           {/* Veerg 4 — Kontakt */}
           <div>
             <div className="text-white font-semibold text-[14px] uppercase tracking-wider mb-4">{t('contactTitle')}</div>
-            <div className="space-y-3 mb-5">
-              <div className="flex items-start gap-2.5 text-[14px]">
-                <MapPin size={14} className="flex-shrink-0 mt-0.5" />
-                <span>
-                  Sepamäe tee 11-2<br />
-                  74009 Leppneeme küla<br />
-                  Viimsi vald, Harju maakond
-                </span>
-              </div>
-              <a href="tel:+3725033978" className="flex items-center gap-2.5 text-[14px] hover:text-white transition-colors">
-                <Phone size={14} className="flex-shrink-0" /> +372 503 3978
-              </a>
-            </div>
 
             {/* Meeskond */}
-            <div className="border-t border-white/10 pt-4 space-y-3">
+            <div className="space-y-3">
               {team.map(({ name, eUser, phone, tel }) => (
                 <div key={name} className="text-[13px]">
                   <div className="text-white/50 mb-0.5">{name}</div>
