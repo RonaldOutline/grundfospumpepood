@@ -92,10 +92,10 @@ function SeasonalPromo() {
   return (
     <section className="bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="rounded-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-5 shadow-xl min-h-[340px]">
+        <div className="rounded-2xl overflow-hidden flex flex-col lg:flex-row shadow-xl min-h-[380px]">
 
-          {/* Vasakpoolne osa — pakkumine */}
-          <div className="lg:col-span-3 relative bg-gradient-to-br from-[#003366] via-[#004d80] to-[#005a99] p-8 lg:p-10 flex flex-col justify-between overflow-hidden">
+          {/* Vasakpoolne osa — pakkumine (40%) */}
+          <div className="lg:w-2/5 relative bg-gradient-to-br from-[#003366] via-[#004d80] to-[#005a99] p-8 lg:p-10 flex flex-col justify-between overflow-hidden">
             {/* Kaunistused */}
             <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full translate-x-24 -translate-y-24 pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-56 h-56 bg-[#01a0dc]/10 rounded-full -translate-x-16 translate-y-16 pointer-events-none" />
@@ -145,15 +145,15 @@ function SeasonalPromo() {
             </div>
           </div>
 
-          {/* Parempoolne osa — taustafoto */}
-          <div className="hidden lg:block lg:col-span-2 relative">
+          {/* Parempoolne osa — taustafoto (60%) */}
+          <div className="hidden lg:block lg:flex-1 relative overflow-hidden">
             <img
               src="/aiapump.jpg"
               alt="Aiatoimetused"
               className="absolute inset-0 w-full h-full object-cover"
             />
             {/* Pehmendab üleminekut vasaku veeruga */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#003366]/50 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#003366]/40 to-transparent pointer-events-none" />
           </div>
 
         </div>
