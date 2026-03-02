@@ -1,40 +1,10 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import { AuthProvider } from '@/lib/auth-context'
+import { ReactNode } from 'react'
 
-const inter = Inter({ subsets: ['latin'] })
+type Props = { children: ReactNode }
 
-export const metadata: Metadata = {
-  title: {
-    default: 'iPumps — Grundfos pumbad Eestis',
-    template: '%s | iPumps',
-  },
-  description: 'Grundfos pumpade ametlik edasimüüja Eestis. 321 toodet laos — küte, jahutus, puurkaevud, drenaaž ja palju muud.',
-  keywords: ['Grundfos', 'pumbad', 'küte', 'jahutus', 'puurkaev', 'drenaaž', 'tsirkulatsioonipump'],
-  openGraph: {
-    siteName: 'iPumps',
-    locale: 'et_EE',
-    type: 'website',
-  },
-}
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return (
-    <html lang="et">
-      <body className={inter.className}>
-        <AuthProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-        </AuthProvider>
-      </body>
-    </html>
-  )
+// Minimal root layout required by Next.js.
+// The real layout with <html>/<body> and all providers lives in app/[locale]/layout.tsx.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function RootLayout({ children }: Props) {
+  return children as any
 }

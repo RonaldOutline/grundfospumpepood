@@ -1,21 +1,29 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import Link from 'next/link'
 import {
   Flame, Snowflake, Thermometer, Drill, Waves,
   ArrowUpCircle, Filter, CircleDot,
   Search, ShoppingCart, User, ChevronDown,
   Phone, Mail, Menu, X, ChevronRight,
-  LayoutDashboard, ShoppingBag, LogOut, Settings
+  LayoutDashboard, ShoppingBag, LogOut, Settings,
 } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 import { supabase } from '@/lib/supabase'
 import ObfuscatedEmail from './ObfuscatedEmail'
+import { useLocale } from 'next-intl'
+import { Link, usePathname, useRouter } from '@/i18n/routing'
 
 // ─── ANDMED ────────────────────────────────────────────────────────────────
 
-const languages = ['ET', 'EN', 'LV', 'LT', 'PL', 'RU']
+const languageOptions = [
+  { code: 'et', label: 'ET', flag: '🇪🇪' },
+  { code: 'en', label: 'EN', flag: '🇬🇧' },
+  { code: 'lv', label: 'LV', flag: '🇱🇻' },
+  { code: 'lt', label: 'LT', flag: '🇱🇹' },
+  { code: 'pl', label: 'PL', flag: '🇵🇱' },
+  { code: 'ru', label: 'RU', flag: '🇷🇺' },
+]
 
 const categories = [
   { name: 'Küte',            icon: Flame,         count: 155, slug: 'kute' },
@@ -44,7 +52,6 @@ function getCartCount(): number {
 
 export default function Header() {
   const [menuOpen, setMenuOpen]         = useState(false)
-  const [lang, setLang]                 = useState('ET')
   const [langOpen, setLangOpen]         = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [seriesOpen, setSeriesOpen]     = useState(false)
@@ -56,6 +63,18 @@ export default function Header() {
   const userMenuRef = useRef<HTMLDivElement>(null)
 
   const { user, profile, signOut } = useAuth()
+
+  // next-intl locale-aware routing
+  const locale   = useLocale()
+  const router   = useRouter()
+  const pathname = usePathname()
+
+  const currentLang = languageOptions.find(l => l.code === locale) ?? languageOptions[0]
+
+  const switchLocale = (newLocale: string) => {
+    router.push(pathname, { locale: newLocale as 'et' | 'en' | 'ru' | 'lv' | 'lt' | 'pl' })
+    setLangOpen(false)
+  }
 
   // Laadi tooteseeria dropdowni jaoks
   useEffect(() => {
@@ -89,6 +108,14 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
+  const handleSearch = (q: string) => {
+    if (q.trim()) {
+      router.push(`/tooted?q=${encodeURIComponent(q.trim())}`)
+      setSearchOpen(false)
+      setSearchQuery('')
+    }
+  }
+
   return (
     <header className="bg-[#003366] sticky top-0 z-50 shadow-lg">
 
@@ -114,21 +141,24 @@ export default function Header() {
             <div className="relative" data-lang-dropdown>
               <button
                 onClick={() => setLangOpen(!langOpen)}
-                className="flex items-center gap-1 text-white/80 hover:text-white transition-colors font-medium"
+                className="flex items-center gap-1.5 text-white/80 hover:text-white transition-colors font-medium"
               >
-                {lang} <ChevronDown size={11} />
+                <span>{currentLang.flag}</span>
+                <span>{currentLang.label}</span>
+                <ChevronDown size={11} />
               </button>
               {langOpen && (
-                <div className="absolute right-0 top-7 bg-white rounded-lg shadow-xl py-1 z-50 min-w-[64px] border border-gray-100">
-                  {languages.map(l => (
+                <div className="absolute right-0 top-7 bg-white rounded-lg shadow-xl py-1 z-50 min-w-[90px] border border-gray-100">
+                  {languageOptions.map(l => (
                     <button
-                      key={l}
-                      onClick={() => { setLang(l); setLangOpen(false) }}
-                      className={`w-full px-3 py-1.5 text-left text-[15px] hover:bg-blue-50 transition-colors ${
-                        l === lang ? 'text-[#003366] font-bold' : 'text-gray-700'
+                      key={l.code}
+                      onClick={() => switchLocale(l.code)}
+                      className={`w-full px-3 py-1.5 text-left text-[15px] hover:bg-blue-50 transition-colors flex items-center gap-2 ${
+                        l.code === locale ? 'text-[#003366] font-bold' : 'text-gray-700'
                       }`}
                     >
-                      {l}
+                      <span>{l.flag}</span>
+                      <span>{l.label}</span>
                     </button>
                   ))}
                 </div>
@@ -143,9 +173,9 @@ export default function Header() {
         <div className="flex items-center gap-4 h-16">
 
           {/* Logo */}
-          <a href="/" className="flex items-center flex-shrink-0">
+          <Link href="/" className="flex items-center flex-shrink-0">
             <img src="/ipumps-logo-white.svg" alt="iPumps" className="h-8 w-auto" />
-          </a>
+          </Link>
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-1 flex-1">
@@ -168,7 +198,7 @@ export default function Header() {
                   </div>
                   <div className="grid grid-cols-2 gap-0.5 px-2">
                     {categories.map(cat => (
-                      <a
+                      <Link
                         key={cat.slug}
                         href={`/tooted?tegevusala=${cat.slug}`}
                         className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-blue-50 transition-colors group"
@@ -178,7 +208,7 @@ export default function Header() {
                           <div className="text-[15px] font-medium text-gray-800 leading-tight">{cat.name}</div>
                           <div className="text-[13px] text-gray-400">{cat.count} toodet</div>
                         </div>
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -198,22 +228,22 @@ export default function Header() {
 
               {seriesOpen && (
                 <div className="absolute top-full left-0 w-72 bg-white rounded-xl shadow-2xl py-2 z-50 border border-gray-100">
-                  <a href="/tooted" className="flex items-center gap-2 px-4 py-2.5 text-[15px] font-semibold text-[#003366] hover:bg-blue-50 transition-colors">
+                  <Link href="/tooted" className="flex items-center gap-2 px-4 py-2.5 text-[15px] font-semibold text-[#003366] hover:bg-blue-50 transition-colors">
                     Kõik tooted →
-                  </a>
+                  </Link>
                   {series.length > 0 && (
                     <>
                       <div className="mx-3 my-1 border-t border-gray-100" />
                       <div className="px-4 py-1 text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Tooteseeria</div>
                       <div className="max-h-72 overflow-y-auto">
                         {series.map(s => (
-                          <a
+                          <Link
                             key={s.slug}
                             href={`/tooted?seeria=${s.slug}`}
                             className="block px-4 py-2 text-[15px] text-gray-700 hover:bg-blue-50 hover:text-[#003366] transition-colors"
                           >
                             {s.name_et}
-                          </a>
+                          </Link>
                         ))}
                       </div>
                     </>
@@ -221,12 +251,19 @@ export default function Header() {
                 </div>
               )}
             </div>
-            <a href="https://ipumps.ee/kontakt/" target="_blank" rel="noopener noreferrer"
-              className="text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10">
+
+            <a
+              href="https://ipumps.ee/kontakt/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10"
+            >
               Projektimüük
             </a>
-            <Link href="/leht/kontakt"
-              className="text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10">
+            <Link
+              href="/leht/kontakt"
+              className="text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10"
+            >
               Kontakt
             </Link>
           </nav>
@@ -243,9 +280,7 @@ export default function Header() {
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                     onKeyDown={e => {
-                      if (e.key === 'Enter' && searchQuery.trim()) {
-                        window.location.href = `/tooted?q=${encodeURIComponent(searchQuery.trim())}`
-                      }
+                      if (e.key === 'Enter') handleSearch(searchQuery)
                       if (e.key === 'Escape') setSearchOpen(false)
                     }}
                     placeholder="Otsi tooteid, SKU, parameetreid..."
@@ -283,10 +318,14 @@ export default function Header() {
                   <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-xl shadow-xl py-2 z-50 border border-gray-100">
                     {(profile?.role === 'superadmin' || profile?.role === 'manager') && (
                       <>
-                        <Link href="/haldus" onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center gap-2.5 px-4 py-2.5 text-[14px] text-[#003366] font-medium hover:bg-blue-50 transition-colors">
+                        {/* /haldus is not locale-routed — use plain anchor */}
+                        <a
+                          href="/haldus"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2.5 text-[14px] text-[#003366] font-medium hover:bg-blue-50 transition-colors"
+                        >
                           <Settings size={14} /> Haldus paneel
-                        </Link>
+                        </a>
                         <div className="border-t border-gray-100 my-1" />
                       </>
                     )}
@@ -317,14 +356,14 @@ export default function Header() {
             )}
 
             {/* Ostukorv */}
-            <a href="/ostukorv" className="relative p-2.5 text-white/80 hover:text-white transition-colors hover:bg-white/10 rounded-lg">
+            <Link href="/ostukorv" className="relative p-2.5 text-white/80 hover:text-white transition-colors hover:bg-white/10 rounded-lg">
               <ShoppingCart size={18} />
               {cartCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-[#01a0dc] text-white text-[11px] w-5 h-5 rounded-full flex items-center justify-center font-bold leading-none">
                   {cartCount > 99 ? '99+' : cartCount}
                 </span>
               )}
-            </a>
+            </Link>
 
             {/* Mobiili hamburgeri nupp */}
             <button
@@ -351,8 +390,9 @@ export default function Header() {
                   className="flex-1 bg-transparent text-white placeholder-white/40 text-[15px] px-3 py-2.5 outline-none"
                   onKeyDown={e => {
                     if (e.key === 'Enter') {
-                      const val = (e.target as HTMLInputElement).value.trim()
-                      if (val) window.location.href = `/tooted?q=${encodeURIComponent(val)}`
+                      const val = (e.target as HTMLInputElement).value
+                      handleSearch(val)
+                      setMenuOpen(false)
                     }
                   }}
                 />
@@ -363,32 +403,64 @@ export default function Header() {
               Elamud ja Ärihooned
             </div>
             {categories.map(cat => (
-              <a
+              <Link
                 key={cat.slug}
                 href={`/tooted?tegevusala=${cat.slug}`}
                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                onClick={() => setMenuOpen(false)}
               >
                 <cat.icon size={16} />
                 <span className="text-[15px]">{cat.name}</span>
                 <span className="ml-auto text-[13px] text-white/30">{cat.count}</span>
                 <ChevronRight size={14} className="text-white/20" />
-              </a>
+              </Link>
             ))}
 
             <div className="border-t border-white/10 pt-2 mt-1">
-              <a href="/tooted"
-                className="block px-3 py-2.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors text-[15px]">
+              <Link href="/tooted"
+                className="block px-3 py-2.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors text-[15px]"
+                onClick={() => setMenuOpen(false)}
+              >
                 Tooted
-              </a>
-              <a href="https://ipumps.ee/kontakt/" target="_blank" rel="noopener noreferrer"
-                className="block px-3 py-2.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors text-[15px]">
+              </Link>
+              <a
+                href="https://ipumps.ee/kontakt/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block px-3 py-2.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors text-[15px]"
+              >
                 Projektimüük
               </a>
               <Link href="/leht/kontakt"
-                className="block px-3 py-2.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors text-[15px]">
+                className="block px-3 py-2.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors text-[15px]"
+                onClick={() => setMenuOpen(false)}
+              >
                 Kontakt
               </Link>
             </div>
+
+            {/* Keelevalik mobiilis */}
+            <div className="border-t border-white/10 pt-2 mt-1">
+              <div className="text-[13px] font-semibold text-white/40 uppercase tracking-wider px-2 pb-1">
+                Keel
+              </div>
+              <div className="flex flex-wrap gap-1 px-2">
+                {languageOptions.map(l => (
+                  <button
+                    key={l.code}
+                    onClick={() => { switchLocale(l.code); setMenuOpen(false) }}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[14px] font-medium transition-colors ${
+                      l.code === locale
+                        ? 'bg-white text-[#003366]'
+                        : 'text-white/70 hover:text-white hover:bg-white/10'
+                    }`}
+                  >
+                    {l.flag} {l.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
           </div>
         </div>
       )}

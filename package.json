@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "translate": "node scripts/translate.mjs"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.3.2",
@@ -16,6 +17,7 @@
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.575.0",
     "next": "16.1.6",
+    "next-intl": "^4.8.3",
     "node-fetch": "^3.3.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",
