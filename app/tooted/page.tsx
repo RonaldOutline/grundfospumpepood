@@ -346,6 +346,13 @@ function TootedPageContent() {
   const [tegevusalad, setTegevusalad]       = useState<Category[]>([])
   const [seeriad, setSeeriad]               = useState<Category[]>([])
 
+  // ── Sünkroniseeri tegevusala URL parameetriga (soft navigation) ────────
+  useEffect(() => {
+    setSelectedAla(searchParams.get('tegevusala') || '')
+    setSelectedSeeria('')
+    setPage(1)
+  }, [searchParams])
+
   // ── Lae kategooriad ────────────────────────────────────────────────────
   useEffect(() => {
     async function loadCategories() {
