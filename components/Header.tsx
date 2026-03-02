@@ -12,7 +12,7 @@ import { useAuth } from '@/lib/auth-context'
 import { supabase } from '@/lib/supabase'
 import ObfuscatedEmail from './ObfuscatedEmail'
 import { useLocale } from 'next-intl'
-import { Link, usePathname, useRouter } from '@/i18n/routing'
+import { Link, usePathname, useRouter } from '@/i18n/navigation'
 
 // ─── ANDMED ────────────────────────────────────────────────────────────────
 

@@ -1,5 +1,6 @@
+// Edge-Runtime safe — imported by middleware AND server/client code.
+// Contains ONLY the routing definition; no React/navigation imports.
 import { defineRouting } from 'next-intl/routing'
-import { createNavigation } from 'next-intl/navigation'
 
 export const routing = defineRouting({
   locales: ['et', 'en', 'ru', 'lv', 'lt', 'pl'] as const,
@@ -8,6 +9,3 @@ export const routing = defineRouting({
 })
 
 export type Locale = (typeof routing.locales)[number]
-
-export const { Link, redirect, usePathname, useRouter, getPathname } =
-  createNavigation(routing)
