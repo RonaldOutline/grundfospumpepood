@@ -347,11 +347,14 @@ function TootedPageContent() {
   const [seeriad, setSeeriad]               = useState<Category[]>([])
 
   // ── Sünkroniseeri tegevusala URL parameetriga (soft navigation) ────────
+  // Depend on the string value, not the searchParams object reference
+  // (object reference changes every render, string only changes when URL changes)
+  const tegevusalaParam = searchParams.get('tegevusala') || ''
   useEffect(() => {
-    setSelectedAla(searchParams.get('tegevusala') || '')
+    setSelectedAla(tegevusalaParam)
     setSelectedSeeria('')
     setPage(1)
-  }, [searchParams])
+  }, [tegevusalaParam])
 
   // ── Lae kategooriad ────────────────────────────────────────────────────
   useEffect(() => {
