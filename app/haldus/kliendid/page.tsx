@@ -48,6 +48,7 @@ export default function KliendidPage() {
   const [page, setPage]       = useState(0)
   const [search, setSearch]   = useState('')
   const [loading, setLoading] = useState(true)
+  const [apiError, setApiError] = useState<string | null>(null)
 
   useEffect(() => {
     if (profile && !canManageOrders(profile.role)) router.replace('/haldus')
@@ -62,6 +63,10 @@ export default function KliendidPage() {
       const data = await res.json()
       setClients(data.clients ?? [])
       setTotal(data.total ?? 0)
+      setApiError(null)
+    } else {
+      const err = await res.json().catch(() => ({}))
+      setApiError(err.error ?? `Viga (${res.status})`)
     }
     setLoading(false)
   }, [page, search])
@@ -98,6 +103,17 @@ export default function KliendidPage() {
           className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-[15px] text-gray-900 outline-none focus:border-[#003366] bg-white"
         />
       </div>
+
+      {apiError && (
+        <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-[14px] text-red-700">
+          <strong>API viga:</strong> {apiError}
+          {apiError === 'Forbidden' && (
+            <span className="block mt-1 text-[13px] text-red-500">
+              Teie profiil puudub andmebaasist või rolliks on seatud &quot;customer&quot;. Parandage Supabase SQL editoris (vt allpool).
+            </span>
+          )}
+        </div>
+      )}
 
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">

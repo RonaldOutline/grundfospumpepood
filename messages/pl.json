@@ -303,7 +303,16 @@
     "countryLT": "Litwa",
     "countryFI": "Finlandia",
     "paymentVia": "Płatność przez",
-    "secureBankLink": "— bezpieczny link bankowy"
+    "secureBankLink": "— bezpieczny link bankowy",
+    "couponPlaceholder": "Wpisz kod kuponu",
+    "couponApply": "Zastosuj",
+    "couponRemove": "Usuń kupon",
+    "couponNotFound": "Kod kuponu nie został znaleziony",
+    "couponInactive": "Ten kupon nie jest aktywny",
+    "couponNotYetValid": "Ten kupon nie jest jeszcze ważny",
+    "couponExpired": "Ten kupon wygasł",
+    "couponLimitReached": "Limit użycia kuponu został osiągnięty",
+    "couponMinOrder": "Minimalna kwota zamówienia to {amount} €"
   },
   "account": {
     "login": "Zaloguj się",

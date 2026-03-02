@@ -303,7 +303,16 @@
     "countryLT": "Lithuania",
     "countryFI": "Finland",
     "paymentVia": "Payment via",
-    "secureBankLink": "— secure bank link"
+    "secureBankLink": "— secure bank link",
+    "couponPlaceholder": "Enter coupon code",
+    "couponApply": "Apply",
+    "couponRemove": "Remove coupon",
+    "couponNotFound": "Coupon code not found",
+    "couponInactive": "This coupon is not active",
+    "couponNotYetValid": "This coupon is not valid yet",
+    "couponExpired": "This coupon has expired",
+    "couponLimitReached": "Coupon usage limit reached",
+    "couponMinOrder": "Minimum order amount is {amount} €"
   },
   "account": {
     "login": "Log in",

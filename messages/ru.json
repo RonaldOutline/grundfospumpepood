@@ -303,7 +303,16 @@
     "countryLT": "Литва",
     "countryFI": "Финляндия",
     "paymentVia": "Оплата через",
-    "secureBankLink": "— безопасная банковская ссылка"
+    "secureBankLink": "— безопасная банковская ссылка",
+    "couponPlaceholder": "Введите код купона",
+    "couponApply": "Применить",
+    "couponRemove": "Удалить купон",
+    "couponNotFound": "Код купона не найден",
+    "couponInactive": "Этот купон не активен",
+    "couponNotYetValid": "Этот купон ещё не действителен",
+    "couponExpired": "Срок действия купона истёк",
+    "couponLimitReached": "Лимит использования купона исчерпан",
+    "couponMinOrder": "Минимальная сумма заказа {amount} €"
   },
   "account": {
     "login": "Вход",

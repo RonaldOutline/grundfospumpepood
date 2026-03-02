@@ -303,7 +303,16 @@
     "countryLT": "Lietuva",
     "countryFI": "Suomija",
     "paymentVia": "Mokėjimas per",
-    "secureBankLink": "— saugi banko nuoroda"
+    "secureBankLink": "— saugi banko nuoroda",
+    "couponPlaceholder": "Įveskite kupono kodą",
+    "couponApply": "Taikyti",
+    "couponRemove": "Pašalinti kuponą",
+    "couponNotFound": "Kupono kodas nerastas",
+    "couponInactive": "Šis kuponas neaktyvus",
+    "couponNotYetValid": "Šis kuponas dar negalioja",
+    "couponExpired": "Šio kupono galiojimas pasibaigė",
+    "couponLimitReached": "Kupono naudojimo limitas pasiektas",
+    "couponMinOrder": "Minimali užsakymo suma yra {amount} €"
   },
   "account": {
     "login": "Prisijungti",

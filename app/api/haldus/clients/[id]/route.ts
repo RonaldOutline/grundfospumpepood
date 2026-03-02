@@ -90,7 +90,9 @@ export async function PATCH(
   }
 
   const body = await req.json().catch(() => ({}))
-  const { status, role, action } = body as { status?: string; role?: string; action?: string }
+  const { status, role, action, full_name, phone } = body as {
+    status?: string; role?: string; action?: string; full_name?: string; phone?: string | null
+  }
 
   // Confirm email action (superadmin only)
   if (action === 'confirm_email') {
@@ -107,7 +109,7 @@ export async function PATCH(
     return NextResponse.json({ error: 'Forbidden: role change requires superadmin' }, { status: 403 })
   }
 
-  const updates: Record<string, string> = {}
+  const updates: Record<string, string | null> = {}
   if (status !== undefined) {
     if (!['active', 'blocked'].includes(status)) {
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
@@ -120,6 +122,8 @@ export async function PATCH(
     }
     updates.role = role
   }
+  if (full_name !== undefined) updates.full_name = full_name?.trim() || null
+  if (phone !== undefined) updates.phone = phone?.trim() || null
 
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ error: 'Nothing to update' }, { status: 400 })

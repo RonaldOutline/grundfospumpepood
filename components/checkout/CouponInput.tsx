@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Tag, X, Loader2, Check } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { useTranslations } from 'next-intl'
 
 interface AppliedCoupon {
   id: string
@@ -19,6 +20,7 @@ interface CouponInputProps {
 }
 
 export default function CouponInput({ subtotal, onApply, applied }: CouponInputProps) {
+  const t = useTranslations('checkout')
   const [input, setInput]     = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
@@ -35,36 +37,36 @@ export default function CouponInput({ subtotal, onApply, applied }: CouponInputP
       .single()
 
     if (dbErr || !data) {
-      setError('Kupongikoodi ei leitud')
+      setError(t('couponNotFound'))
       setLoading(false)
       return
     }
 
     // Valideerimine
     if (!data.active) {
-      setError('See kupong ei ole aktiivne')
+      setError(t('couponInactive'))
       setLoading(false)
       return
     }
 
     const now = Date.now()
     if (data.valid_from && new Date(data.valid_from).getTime() > now) {
-      setError('See kupong ei ole veel kehtiv')
+      setError(t('couponNotYetValid'))
       setLoading(false)
       return
     }
     if (data.valid_until && new Date(data.valid_until).getTime() < now) {
-      setError('See kupong on aegunud')
+      setError(t('couponExpired'))
       setLoading(false)
       return
     }
     if (data.usage_limit !== null && data.used_count >= data.usage_limit) {
-      setError('Kupongi kasutuslimiit on täis')
+      setError(t('couponLimitReached'))
       setLoading(false)
       return
     }
     if (data.min_order_amount > 0 && subtotal < data.min_order_amount) {
-      setError(`Minimaalne ostusumma on ${Number(data.min_order_amount).toFixed(2).replace('.', ',')} €`)
+      setError(t('couponMinOrder', { amount: Number(data.min_order_amount).toFixed(2).replace('.', ',') }))
       setLoading(false)
       return
     }
@@ -100,7 +102,7 @@ export default function CouponInput({ subtotal, onApply, applied }: CouponInputP
           type="button"
           onClick={() => onApply(null)}
           className="text-green-600 hover:text-green-800 transition-colors"
-          title="Eemalda kupong"
+          title={t('couponRemove')}
         >
           <X size={16} />
         </button>
@@ -118,7 +120,7 @@ export default function CouponInput({ subtotal, onApply, applied }: CouponInputP
             value={input}
             onChange={e => { setInput(e.target.value.toUpperCase()); setError('') }}
             onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleApply())}
-            placeholder="Sisesta kupongikood"
+            placeholder={t('couponPlaceholder')}
             className={`w-full pl-9 pr-3 py-3 border rounded-xl text-[15px] text-gray-900 outline-none transition-colors ${
               error ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-[#003366]'
             }`}
@@ -130,7 +132,7 @@ export default function CouponInput({ subtotal, onApply, applied }: CouponInputP
           disabled={loading || !input.trim()}
           className="px-4 py-3 bg-[#003366] text-white font-semibold rounded-xl hover:bg-[#004080] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[15px] flex items-center gap-2"
         >
-          {loading ? <Loader2 size={15} className="animate-spin" /> : 'Rakenda'}
+          {loading ? <Loader2 size={15} className="animate-spin" /> : t('couponApply')}
         </button>
       </div>
       {error && <p className="text-[13px] text-red-600">{error}</p>}

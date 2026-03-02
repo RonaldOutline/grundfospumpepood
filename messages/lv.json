@@ -303,7 +303,16 @@
     "countryLT": "Lietuva",
     "countryFI": "Somija",
     "paymentVia": "Maksājums caur",
-    "secureBankLink": "— droša bankas saite"
+    "secureBankLink": "— droša bankas saite",
+    "couponPlaceholder": "Ievadiet kupona kodu",
+    "couponApply": "Pielietot",
+    "couponRemove": "Noņemt kuponu",
+    "couponNotFound": "Kupona kods nav atrasts",
+    "couponInactive": "Šis kupons nav aktīvs",
+    "couponNotYetValid": "Šis kupons vēl nav derīgs",
+    "couponExpired": "Šī kupona derīguma termiņš ir beidzies",
+    "couponLimitReached": "Kupona izmantošanas limits sasniegts",
+    "couponMinOrder": "Minimālā pasūtījuma summa ir {amount} €"
   },
   "account": {
     "login": "Pierakstīties",

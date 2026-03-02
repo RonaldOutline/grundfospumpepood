@@ -65,6 +65,8 @@ export default function KlientDetailPage() {
   const [saving, setSaving]       = useState(false)
   const [saveMsg, setSaveMsg]     = useState('')
   const [newRole, setNewRole]     = useState('')
+  const [editName, setEditName]   = useState('')
+  const [editPhone, setEditPhone] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
 
   useEffect(() => {
@@ -79,6 +81,8 @@ export default function KlientDetailPage() {
       const data = await res.json()
       setClient(data.profile)
       setNewRole(data.profile.role)
+      setEditName(data.profile.full_name ?? '')
+      setEditPhone(data.profile.phone ?? '')
       setOrders(data.orders ?? [])
       setEmailConfirmed(!!data.emailConfirmedAt)
       setLoading(false)
@@ -115,6 +119,23 @@ export default function KlientDetailPage() {
     if (res.ok) {
       setEmailConfirmed(true)
       setSaveMsg('Email kinnitatud.')
+    } else {
+      setSaveMsg('Viga!')
+    }
+    setSaving(false)
+    setTimeout(() => setSaveMsg(''), 3000)
+  }
+
+  async function handleSaveProfile() {
+    setSaving(true); setSaveMsg('')
+    const res = await fetch(`/api/haldus/clients/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ full_name: editName, phone: editPhone }),
+    })
+    if (res.ok) {
+      setClient(c => c ? { ...c, full_name: editName || null, phone: editPhone || null } : c)
+      setSaveMsg('Profiil salvestatud.')
     } else {
       setSaveMsg('Viga!')
     }
@@ -236,34 +257,57 @@ export default function KlientDetailPage() {
         <div className="space-y-5">
 
           {/* Profiil */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-2 text-[14px]">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-3 text-[14px]">
             <h2 className="font-semibold text-gray-900 mb-3">Profiil</h2>
             <div>
               <span className="text-gray-500">E-post</span>
               <p className="font-medium text-gray-900">{client.email}</p>
             </div>
-            {client.phone && (
-              <div>
-                <span className="text-gray-500">Telefon</span>
-                <p className="font-medium text-gray-900">{client.phone}</p>
-              </div>
-            )}
             <div>
-              <span className="text-gray-500">Roll</span>
-              <p className="font-medium text-gray-900">{ROLE_LABELS[client.role] ?? client.role}</p>
+              <label className="text-gray-500 block mb-1">Täisnimi</label>
+              <input
+                type="text"
+                value={editName}
+                onChange={e => setEditName(e.target.value)}
+                placeholder="Nimi puudub"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-[14px] text-gray-900 focus:border-[#003366] outline-none transition-colors"
+              />
             </div>
             <div>
-              <span className="text-gray-500">Liitus</span>
-              <p className="font-medium text-gray-900">{new Date(client.created_at).toLocaleDateString('et-EE')}</p>
+              <label className="text-gray-500 block mb-1">Telefon</label>
+              <input
+                type="tel"
+                value={editPhone}
+                onChange={e => setEditPhone(e.target.value)}
+                placeholder="+372 ..."
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-[14px] text-gray-900 focus:border-[#003366] outline-none transition-colors"
+              />
             </div>
-            {emailConfirmed !== null && (
-              <div>
-                <span className="text-gray-500">Email</span>
-                <p className={`font-medium text-[13px] ${emailConfirmed ? 'text-green-700' : 'text-amber-600'}`}>
-                  {emailConfirmed ? 'Kinnitatud' : 'Kinnitamata'}
-                </p>
+            <button
+              onClick={handleSaveProfile}
+              disabled={saving}
+              className="w-full px-4 py-2 text-[14px] font-semibold bg-[#003366] text-white rounded-xl hover:bg-[#004080] transition-colors disabled:opacity-50"
+            >
+              {saving ? 'Salvestatakse...' : 'Salvesta andmed'}
+            </button>
+            <div className="pt-2 border-t border-gray-50 space-y-1">
+              <div className="flex justify-between">
+                <span className="text-gray-500">Roll</span>
+                <span className="font-medium text-gray-900">{ROLE_LABELS[client.role] ?? client.role}</span>
               </div>
-            )}
+              <div className="flex justify-between">
+                <span className="text-gray-500">Liitus</span>
+                <span className="font-medium text-gray-900">{new Date(client.created_at).toLocaleDateString('et-EE')}</span>
+              </div>
+              {emailConfirmed !== null && (
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Email</span>
+                  <span className={`font-medium text-[13px] ${emailConfirmed ? 'text-green-700' : 'text-amber-600'}`}>
+                    {emailConfirmed ? 'Kinnitatud' : 'Kinnitamata'}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Haldustoimingud */}

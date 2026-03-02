@@ -303,7 +303,16 @@
     "countryLT": "Leedu",
     "countryFI": "Soome",
     "paymentVia": "Makse läbi",
-    "secureBankLink": "— turvaline pangalink"
+    "secureBankLink": "— turvaline pangalink",
+    "couponPlaceholder": "Sisesta kupongikood",
+    "couponApply": "Rakenda",
+    "couponRemove": "Eemalda kupong",
+    "couponNotFound": "Kupongikoodi ei leitud",
+    "couponInactive": "See kupong ei ole aktiivne",
+    "couponNotYetValid": "See kupong ei ole veel kehtiv",
+    "couponExpired": "See kupong on aegunud",
+    "couponLimitReached": "Kupongi kasutuslimiit on täis",
+    "couponMinOrder": "Minimaalne ostusumma on {amount} €"
   },
   "account": {
     "login": "Logi sisse",
