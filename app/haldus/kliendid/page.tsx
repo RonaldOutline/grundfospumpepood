@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Search, Users } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
-import { supabase } from '@/lib/supabase'
 
 const canManageOrders = (role: string) => ['manager', 'superadmin'].includes(role)
 
@@ -18,8 +17,15 @@ const ROLE_LABELS: Record<string, string> = {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  active:  'bg-green-100 text-green-700',
-  blocked: 'bg-red-100 text-red-600',
+  active:       'bg-green-100 text-green-700',
+  blocked:      'bg-red-100 text-red-600',
+  unconfirmed:  'bg-amber-100 text-amber-700',
+}
+
+const STATUS_LABELS: Record<string, string> = {
+  active:       'Aktiivne',
+  blocked:      'Blokeeritud',
+  unconfirmed:  'Kinnitamata',
 }
 
 interface Client {
@@ -30,6 +36,7 @@ interface Client {
   role: string
   status: string | null
   created_at: string
+  unconfirmed?: boolean
 }
 
 export default function KliendidPage() {
@@ -48,19 +55,14 @@ export default function KliendidPage() {
 
   const load = useCallback(async () => {
     setLoading(true)
-    let q = supabase
-      .from('profiles')
-      .select('id, email, full_name, phone, role, status, created_at', { count: 'exact' })
-      .order('created_at', { ascending: false })
-      .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1)
-
-    if (search.trim()) {
-      q = q.or(`full_name.ilike.%${search.trim()}%,email.ilike.%${search.trim()}%`)
+    const params = new URLSearchParams({ page: String(page) })
+    if (search.trim()) params.set('search', search.trim())
+    const res = await fetch(`/api/haldus/clients?${params}`)
+    if (res.ok) {
+      const data = await res.json()
+      setClients(data.clients ?? [])
+      setTotal(data.total ?? 0)
     }
-
-    const { data, count } = await q
-    setClients(data ?? [])
-    setTotal(count ?? 0)
     setLoading(false)
   }, [page, search])
 
@@ -128,7 +130,7 @@ export default function KliendidPage() {
                   </td>
                   <td className="px-4 py-3 text-center">
                     <span className={`px-2 py-0.5 rounded-full text-[12px] font-semibold ${STATUS_COLORS[c.status ?? 'active'] ?? 'bg-gray-100 text-gray-600'}`}>
-                      {c.status === 'blocked' ? 'Blokeeritud' : 'Aktiivne'}
+                      {STATUS_LABELS[c.status ?? 'active'] ?? c.status}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-gray-500 text-[13px]">
