@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
-import { ArrowLeft, ShoppingBag } from 'lucide-react'
+import { ArrowLeft, ShoppingBag, MailCheck } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 
 const canManageOrders   = (role: string) => ['manager', 'superadmin'].includes(role)
@@ -56,10 +56,11 @@ export default function KlientDetailPage() {
   const router      = useRouter()
   const { id }      = useParams<{ id: string }>()
 
-  const [client, setClient]   = useState<Client | null>(null)
-  const [orders, setOrders]   = useState<Order[]>([])
-  const [loading, setLoading] = useState(true)
-  const [notFound, setNotFound] = useState(false)
+  const [client, setClient]         = useState<Client | null>(null)
+  const [orders, setOrders]         = useState<Order[]>([])
+  const [loading, setLoading]       = useState(true)
+  const [notFound, setNotFound]     = useState(false)
+  const [emailConfirmed, setEmailConfirmed] = useState<boolean | null>(null)
 
   const [saving, setSaving]     = useState(false)
   const [saveMsg, setSaveMsg]   = useState('')
@@ -78,6 +79,7 @@ export default function KlientDetailPage() {
       setClient(data.profile)
       setNewRole(data.profile.role)
       setOrders(data.orders ?? [])
+      setEmailConfirmed(!!data.emailConfirmedAt)
       setLoading(false)
     }
     load()
@@ -95,6 +97,23 @@ export default function KlientDetailPage() {
     if (res.ok) {
       setClient(c => c ? { ...c, status: newStatus } : c)
       setSaveMsg(newStatus === 'blocked' ? 'Klient blokeeritud.' : 'Klient aktiveeritud.')
+    } else {
+      setSaveMsg('Viga!')
+    }
+    setSaving(false)
+    setTimeout(() => setSaveMsg(''), 3000)
+  }
+
+  async function handleConfirmEmail() {
+    setSaving(true); setSaveMsg('')
+    const res = await fetch(`/api/haldus/clients/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'confirm_email' }),
+    })
+    if (res.ok) {
+      setEmailConfirmed(true)
+      setSaveMsg('Email kinnitatud.')
     } else {
       setSaveMsg('Viga!')
     }
@@ -224,6 +243,14 @@ export default function KlientDetailPage() {
               <span className="text-gray-500">Liitus</span>
               <p className="font-medium text-gray-900">{new Date(client.created_at).toLocaleDateString('et-EE')}</p>
             </div>
+            {emailConfirmed !== null && (
+              <div>
+                <span className="text-gray-500">Email</span>
+                <p className={`font-medium text-[13px] ${emailConfirmed ? 'text-green-700' : 'text-amber-600'}`}>
+                  {emailConfirmed ? 'Kinnitatud' : 'Kinnitamata'}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Haldustoimingud */}
@@ -244,6 +271,23 @@ export default function KlientDetailPage() {
                 {saving ? 'Töötleb...' : client.status === 'blocked' ? 'Aktiveeri klient' : 'Blokeeri klient'}
               </button>
             </div>
+
+            {/* Email kinnitus — ainult superadmin, ainult kui kinnitamata */}
+            {canManageProducts(profile?.role ?? '') && emailConfirmed === false && (
+              <div className="pt-2 border-t border-gray-100">
+                <button
+                  onClick={handleConfirmEmail}
+                  disabled={saving}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-[14px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 rounded-xl hover:bg-amber-100 transition-colors disabled:opacity-50"
+                >
+                  <MailCheck size={15} />
+                  {saving ? 'Töötleb...' : 'Kinnita email käsitsi'}
+                </button>
+                <p className="text-[12px] text-gray-400 mt-1.5">
+                  Kasuta kui klient ei saanud kinnituskirja.
+                </p>
+              </div>
+            )}
 
             {/* Roll — ainult superadmin */}
             {canManageProducts(profile?.role ?? '') && (

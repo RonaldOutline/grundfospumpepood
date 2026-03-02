@@ -27,19 +27,26 @@ export async function GET(
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const [profileRes, ordersRes] = await Promise.all([
+  const [profileRes, ordersRes, authRes] = await Promise.all([
     supabaseAdmin.from('profiles').select('*').eq('id', id).single(),
     supabaseAdmin.from('orders')
       .select('id, montonio_order_id, status, total, created_at')
       .eq('user_id', id)
       .order('created_at', { ascending: false }),
+    supabaseAdmin.auth.admin.getUserById(id),
   ])
 
   if (profileRes.error || !profileRes.data) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }
 
-  return NextResponse.json({ profile: profileRes.data, orders: ordersRes.data ?? [] })
+  const emailConfirmedAt = authRes.data?.user?.email_confirmed_at ?? null
+
+  return NextResponse.json({
+    profile: profileRes.data,
+    orders: ordersRes.data ?? [],
+    emailConfirmedAt,
+  })
 }
 
 export async function PATCH(
@@ -54,7 +61,17 @@ export async function PATCH(
   }
 
   const body = await req.json().catch(() => ({}))
-  const { status, role } = body as { status?: string; role?: string }
+  const { status, role, action } = body as { status?: string; role?: string; action?: string }
+
+  // Confirm email action (superadmin only)
+  if (action === 'confirm_email') {
+    if (caller.role !== 'superadmin') {
+      return NextResponse.json({ error: 'Forbidden: requires superadmin' }, { status: 403 })
+    }
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(id, { email_confirm: true })
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ ok: true })
+  }
 
   // Managers can only toggle block status, not change roles
   if (role !== undefined && caller.role !== 'superadmin') {
