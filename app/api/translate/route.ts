@@ -1,3 +1,4 @@
+import Anthropic from '@anthropic-ai/sdk'
 import { NextRequest, NextResponse } from 'next/server'
 
 const LOCALES = ['en', 'ru', 'lv', 'lt', 'pl'] as const
@@ -12,17 +13,13 @@ const LOCALE_NAMES: Record<string, string> = {
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const SERVICE_KEY  = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
+const anthropic = new Anthropic()
+
 async function translateText(text: string, targetLang: string): Promise<string | null> {
   if (!text?.trim()) return null
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY!,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
+  try {
+    const response = await anthropic.messages.create({
+      model: 'claude-haiku-4-5',
       max_tokens: 4096,
       messages: [{
         role: 'user',
@@ -33,14 +30,13 @@ Return only the translated text, no explanation.
 
 ${text}`,
       }],
-    }),
-  })
-  if (!res.ok) {
-    console.error(`Anthropic error ${res.status}:`, await res.text())
+    })
+    const block = response.content[0]
+    return block.type === 'text' ? block.text.trim() : null
+  } catch (e) {
+    console.error('Anthropic error:', e)
     return null
   }
-  const data = await res.json()
-  return data.content?.[0]?.text?.trim() ?? null
 }
 
 async function updateDB(table: string, id: number, patch: Record<string, string | null>) {
@@ -81,7 +77,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  const { table, id, fields } = body
+  const { table, id: rawId, fields } = body
+  const id = Number(rawId)
   if (!table || !id || !fields || typeof fields !== 'object') {
     return NextResponse.json({ error: 'Required: table, id, fields' }, { status: 400 })
   }
