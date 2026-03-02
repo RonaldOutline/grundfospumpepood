@@ -4,11 +4,12 @@ import { useState } from 'react'
 import {
   Flame, Snowflake, Thermometer, Drill, Waves,
   ArrowUpCircle, Filter, CircleDot,
-  Search, ShoppingCart, ChevronRight,
+  Search, ChevronRight,
   Phone, MapPin, Truck, Wrench, Shield, Clock
 } from 'lucide-react'
 import ObfuscatedEmail from '@/components/ObfuscatedEmail'
 import PumpCalculator from '@/components/PumpCalculator'
+import FeaturedProductsSlider from '@/components/FeaturedProductsSlider'
 
 // ─── ANDMED ────────────────────────────────────────────────────────────────
 
@@ -21,13 +22,6 @@ const categories = [
   { name: 'Salvkaevud',     icon: CircleDot,      count: 22,  slug: 'salvkaevud',                        color: 'from-green-500/20 to-emerald-500/10' },
   { name: 'Rõhutõste',      icon: ArrowUpCircle,  count: 23,  slug: 'rohutoste',                         color: 'from-violet-500/20 to-purple-500/10' },
   { name: 'Reovesi',        icon: Filter,         count: 9,   slug: 'reovesi',                           color: 'from-slate-500/20 to-gray-500/10' },
-]
-
-const featuredProducts = [
-  { name: 'MAGNA3 25-40 180',    price: '490.08€', category: 'Küte',          image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', href: '/tooted?q=MAGNA3+25-40', badge: 'Bestseller' },
-  { name: 'UP20-15N 150',        price: '262.84€', category: 'Soe tarbevesi', image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', href: '/tooted?q=UP20-15N',     badge: null },
-  { name: 'SCALA1 3-25',         price: '422€',    category: 'Rõhutõste',     image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', href: '/tooted?q=SCALA1',       badge: 'Uus' },
-  { name: 'COMFORT 15-14 B TDT', price: '199.36€', category: 'Soe tarbevesi', image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', href: '/tooted?q=COMFORT+15-14', badge: null },
 ]
 
 const benefits = [
@@ -190,50 +184,6 @@ function CategoriesSection() {
               </div>
               <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
                 <ChevronRight size={14} className="text-[#003366]" />
-              </div>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function FeaturedProducts() {
-  return (
-    <section className="py-12 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <div className="text-[13px] font-semibold text-[#01a0dc] uppercase tracking-widest mb-1">Populaarsed</div>
-            <h2 className="text-2xl font-bold text-gray-900">Esiletõstetud tooted</h2>
-          </div>
-          <a href="/tooted" className="text-[15px] text-[#003366] hover:underline font-medium">Vaata kõiki →</a>
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {featuredProducts.map(product => (
-            <a key={product.href} href={product.href}
-              className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-[#003366]/20 hover:shadow-lg transition-all duration-300">
-              <div className="relative bg-gray-50 p-6 flex items-center justify-center h-44">
-                {product.badge && (
-                  <span className="absolute top-3 left-3 text-[13px] font-bold px-2 py-0.5 rounded-full bg-[#01a0dc] text-white">
-                    {product.badge}
-                  </span>
-                )}
-                <img src={product.image} alt={product.name}
-                  className="h-28 object-contain group-hover:scale-105 transition-transform duration-300" />
-              </div>
-              <div className="p-4">
-                <div className="text-[13px] text-gray-400 mb-1">{product.category}</div>
-                <div className="font-semibold text-gray-800 text-[15px] leading-tight mb-3 group-hover:text-[#003366] transition-colors line-clamp-2">
-                  {product.name}
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-bold text-[#003366]">{product.price}</span>
-                  <button className="bg-[#003366] hover:bg-[#01a0dc] text-white p-2 rounded-lg transition-colors">
-                    <ShoppingCart size={14} />
-                  </button>
-                </div>
               </div>
             </a>
           ))}
@@ -412,7 +362,7 @@ export default function HomePage() {
       <HeroSearch />
       <SeasonalPromo />
       <CategoriesSection />
-      <FeaturedProducts />
+      <FeaturedProductsSlider />
       <PumpCalculator />
       <InstallationBlock />
       <LocationBlock />
