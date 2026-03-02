@@ -3,8 +3,8 @@
 import { useState, useEffect, use } from 'react'
 import { supabase } from '@/lib/supabase'
 import {
-  ShoppingCart, ChevronRight, Package, Truck, Shield,
-  Phone, ZoomIn, Check, Share2, Printer
+  ChevronRight, Package, Truck, Shield,
+  Phone, ZoomIn, Check, Share2, Printer, ShoppingCart
 } from 'lucide-react'
 
 // ─── TÜÜBID ────────────────────────────────────────────────────────────────
@@ -87,86 +87,6 @@ function addToCart(product: Product, qty: number) {
 
 function getCartCount(): number {
   return getCart().reduce((sum, i) => sum + i.qty, 0)
-}
-
-// ─── PÄIS ──────────────────────────────────────────────────────────────────
-
-function Header() {
-  const [cartCount, setCartCount] = useState(0)
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-
-  useEffect(() => {
-    setCartCount(getCartCount())
-    const handler = () => setCartCount(getCartCount())
-    window.addEventListener('cart_updated', handler)
-    return () => window.removeEventListener('cart_updated', handler)
-  }, [])
-
-  const tegevusalad = [
-    'Küte', 'Jahutus', 'Sooja tarbevesi', 'Puurkaevud',
-    'Drenaaž', 'Salvkaevud', 'Rõhutõste', 'Reovesi',
-  ]
-
-  return (
-    <header className="bg-[#003366] sticky top-0 z-50 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        <a href="/" className="flex items-center flex-shrink-0">
-          <img src="/ipumps-logo-white.svg" alt="iPumps" className="h-8 w-auto" />
-        </a>
-
-        <nav className="hidden lg:flex items-center gap-1">
-          {/* Dropdown */}
-          <div
-            className="relative"
-            onMouseEnter={() => setDropdownOpen(true)}
-            onMouseLeave={() => setDropdownOpen(false)}
-          >
-            <button
-              className="flex items-center gap-1 text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10"
-            >
-              Elamud ja Ärihooned
-              <svg className="w-4 h-4 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            {dropdownOpen && (
-              <div className="absolute top-full left-0 bg-white rounded-lg shadow-xl py-2 min-w-[200px] border border-gray-100">
-                {tegevusalad.map(ala => (
-                  <a
-                    key={ala}
-                    href={`/tooted?tegevusala=${encodeURIComponent(ala)}`}
-                    className="block px-4 py-2 text-gray-700 hover:bg-blue-50 text-[15px] transition-colors"
-                  >
-                    {ala}
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {[
-            { label: 'Tooted', href: '/tooted' },
-            { label: 'Projektimüük', href: 'https://ipumps.ee/kontakt/' },
-            { label: 'Kontakt', href: '/#kontakt' },
-          ].map(item => (
-            <a key={item.label} href={item.href}
-              className="text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10">
-              {item.label}
-            </a>
-          ))}
-        </nav>
-
-        <a href="/ostukorv" className="relative p-2.5 text-white/80 hover:text-white transition-colors hover:bg-white/10 rounded-lg">
-          <ShoppingCart size={20} />
-          {cartCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 bg-[#01a0dc] text-white text-[11px] w-5 h-5 rounded-full flex items-center justify-center font-bold">
-              {cartCount > 99 ? '99+' : cartCount}
-            </span>
-          )}
-        </a>
-      </div>
-    </header>
-  )
 }
 
 // ─── LEIVAKÜLJED ───────────────────────────────────────────────────────────
@@ -506,39 +426,32 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
   if (loading) {
     return (
-      <>
-        <Header />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center text-gray-400">
-            <div className="w-10 h-10 border-2 border-[#003366] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <div className="text-[15px]">Laadin toodet...</div>
-          </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center text-gray-400">
+          <div className="w-10 h-10 border-2 border-[#003366] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <div className="text-[15px]">Laadin toodet...</div>
         </div>
-      </>
+      </div>
     )
   }
 
   if (!product) {
     return (
-      <>
-        <Header />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-5xl mb-4">🔍</div>
-            <h1 className="text-xl font-bold text-gray-800 mb-2">Toodet ei leitud</h1>
-            <p className="text-[15px] text-gray-500 mb-5">See toode ei ole saadaval või on eemaldatud.</p>
-            <a href="/tooted" className="bg-[#003366] text-white px-6 py-3 rounded-xl font-semibold text-[15px] hover:bg-[#004080] transition-colors">
-              Vaata kõiki tooteid
-            </a>
-          </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-5xl mb-4">🔍</div>
+          <h1 className="text-xl font-bold text-gray-800 mb-2">Toodet ei leitud</h1>
+          <p className="text-[15px] text-gray-500 mb-5">See toode ei ole saadaval või on eemaldatud.</p>
+          <a href="/tooted" className="bg-[#003366] text-white px-6 py-3 rounded-xl font-semibold text-[15px] hover:bg-[#004080] transition-colors">
+            Vaata kõiki tooteid
+          </a>
         </div>
-      </>
+      </div>
     )
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      <Header />
+    <div className="min-h-screen bg-gray-50">
       <Breadcrumb product={product} />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -567,18 +480,6 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         {/* Seotud tooted */}
         <RelatedProducts products={related} />
       </div>
-
-      {/* Footer */}
-      <footer className="bg-[#001f40] text-white/60 mt-16">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-[15px]">
-          <span>© 2025 iPumps OÜ</span>
-          <div className="flex gap-4">
-            <a href="/" className="hover:text-white transition-colors">Avaleht</a>
-            <a href="/tooted" className="hover:text-white transition-colors">Tooted</a>
-            <a href="/#kontakt" className="hover:text-white transition-colors">Kontakt</a>
-          </div>
-        </div>
-      </footer>
-    </main>
+    </div>
   )
 }

@@ -54,9 +54,9 @@ const slides = [
 
 const featuredProducts = [
   { name: 'MAGNA3 25-40 180',    price: '490.08€', category: 'Küte',            image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', slug: 'magna3-25-40-180', badge: 'Bestseller' },
-  { name: 'UP20-15N 150',        price: '262.84€', category: 'Sooja tarbevesi', image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', slug: 'up20-15n-150',    badge: null },
+  { name: 'UP20-15N 150',        price: '262.84€', category: 'Soe tarbevesi',   image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', slug: 'up20-15n-150',    badge: null },
   { name: 'SCALA1 3-25',         price: '422€',    category: 'Rõhutõste',       image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', slug: 'scala1-3-25',    badge: 'Uus' },
-  { name: 'COMFORT 15-14 B TDT', price: '199.36€', category: 'Sooja tarbevesi', image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', slug: 'comfort-15-14',  badge: null },
+  { name: 'COMFORT 15-14 B TDT', price: '199.36€', category: 'Soe tarbevesi',   image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg', slug: 'comfort-15-14',  badge: null },
 ]
 
 const benefits = [

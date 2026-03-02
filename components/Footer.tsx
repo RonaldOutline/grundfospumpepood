@@ -6,9 +6,9 @@ import { Phone, Mail, MapPin } from 'lucide-react'
 const categories = [
   { name: 'Küte',            slug: 'kute' },
   { name: 'Jahutus',         slug: 'jahutus' },
-  { name: 'Sooja tarbevesi', slug: 'sooja-tarbevee-tsirkulatsioonipump' },
+  { name: 'Soe tarbevesi',   slug: 'sooja-tarbevee-tsirkulatsioonipump' },
   { name: 'Puurkaevud',      slug: 'puurkaevud' },
-  { name: 'Drenaaž',         slug: 'drenaa' },
+  { name: 'Drenaaž',         slug: 'drenaaz' },
   { name: 'Salvkaevud',      slug: 'salvkaevud' },
   { name: 'Rõhutõste',       slug: 'rohutoste' },
   { name: 'Reovesi',         slug: 'reovesi' },
