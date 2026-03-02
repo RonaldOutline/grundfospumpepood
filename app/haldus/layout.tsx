@@ -2,12 +2,12 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/lib/auth-context'
+import { AuthProvider, useAuth } from '@/lib/auth-context'
 import HaldusNav from '@/components/haldus/HaldusNav'
 
 const canManageOrders = (role: string) => ['manager', 'superadmin'].includes(role)
 
-export default function HaldusLayout({ children }: { children: React.ReactNode }) {
+function HaldusContent({ children }: { children: React.ReactNode }) {
   const { user, profile, loading } = useAuth()
   const router = useRouter()
 
@@ -38,5 +38,13 @@ export default function HaldusLayout({ children }: { children: React.ReactNode }
         </div>
       </div>
     </div>
+  )
+}
+
+export default function HaldusLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <AuthProvider>
+      <HaldusContent>{children}</HaldusContent>
+    </AuthProvider>
   )
 }
