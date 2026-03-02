@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { ShoppingCart, ChevronRight, Search, Loader2, Check, RotateCcw } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { useTranslations } from 'next-intl'
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -19,23 +20,23 @@ interface Product {
   short_description_et: string | null
 }
 
-// ─── Constants ───────────────────────────────────────────────────────────────
+// ─── Constants (slugs only — labels come from translations) ──────────────────
 
 const TEGEVUSALAD = [
-  { label: 'Küte',          slug: 'kute' },
-  { label: 'Jahutus',       slug: 'jahutus' },
-  { label: 'Drenaaž',       slug: 'drenaaz' },
-  { label: 'Soe tarbevesi', slug: 'sooja-tarbevee-tsirkulatsioonipump' },
-  { label: 'Puurkaevud',    slug: 'puurkaevud' },
-  { label: 'Reovesi',       slug: 'reovesi' },
-  { label: 'Salvkaevud',    slug: 'salvkaevud' },
-  { label: 'Rõhutõste',     slug: 'rohutoste' },
+  { nameKey: 'heating',  slug: 'kute' },
+  { nameKey: 'cooling',  slug: 'jahutus' },
+  { nameKey: 'drainage', slug: 'drenaaz' },
+  { nameKey: 'hotWater', slug: 'sooja-tarbevee-tsirkulatsioonipump' },
+  { nameKey: 'borewell', slug: 'puurkaevud' },
+  { nameKey: 'sewage',   slug: 'reovesi' },
+  { nameKey: 'wells',    slug: 'salvkaevud' },
+  { nameKey: 'pressure', slug: 'rohutoste' },
 ]
 
 const TEMP_OPTIONS = [
-  { label: 'Külm vesi (kuni 35°C)',          threshold: 35  },
-  { label: 'Soe vesi (kuni 95°C)',           threshold: 95  },
-  { label: 'Kuum vesi / küte (kuni 110°C)',  threshold: 110 },
+  { labelKey: 'temp1' as const, threshold: 35  },
+  { labelKey: 'temp2' as const, threshold: 95  },
+  { labelKey: 'temp3' as const, threshold: 110 },
 ]
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -73,6 +74,7 @@ function addToCart(product: Product) {
 // ─── Mini Product Card ────────────────────────────────────────────────────────
 
 function MiniProductCard({ product }: { product: Product }) {
+  const t = useTranslations('calculator')
   const [added, setAdded] = useState(false)
   const price = product.sale_price ?? product.price
 
@@ -93,7 +95,7 @@ function MiniProductCard({ product }: { product: Product }) {
         )}
         <span className={`absolute top-2 right-2 flex items-center gap-1 text-[12px] font-medium px-1.5 py-0.5 rounded-full ${product.in_stock ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
           <span className={`w-1.5 h-1.5 rounded-full ${product.in_stock ? 'bg-green-500' : 'bg-gray-400'}`} />
-          {product.in_stock ? 'Laos' : 'Otsas'}
+          {product.in_stock ? t('inStock' as never) : t('noResults' as never)}
         </span>
         <img
           src={product.image_url || '/placeholder.png'}
@@ -157,6 +159,9 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function PumpCalculator() {
+  const t    = useTranslations('calculator')
+  const tCat = useTranslations('categories')
+
   // ── Form state ────────────────────────────────────────────────────────────
   const [tegevusala, setTegevusala] = useState('')
   const [minHead,    setMinHead]    = useState('')
@@ -331,11 +336,9 @@ export default function PumpCalculator() {
 
         {/* Heading */}
         <div className="mb-8">
-          <div className="text-[13px] font-semibold text-[#01a0dc] uppercase tracking-widest mb-1">Kalkulaator</div>
-          <h2 className="text-2xl font-bold text-gray-900">Leia sobiv pump</h2>
-          <p className="text-[15px] text-gray-500 mt-1">
-            Vasta mõnele lihtsale küsimusele ja me soovitame sulle sobivaimad pumbad.
-          </p>
+          <div className="text-[13px] font-semibold text-[#01a0dc] uppercase tracking-widest mb-1">{t('label')}</div>
+          <h2 className="text-2xl font-bold text-gray-900">{t('title')}</h2>
+          <p className="text-[15px] text-gray-500 mt-1">{t('description')}</p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6 items-start">
@@ -346,33 +349,33 @@ export default function PumpCalculator() {
 
               {/* Header row */}
               <div className="flex items-center justify-between">
-                <span className="font-bold text-gray-900 text-[16px]">Parameetrid</span>
+                <span className="font-bold text-gray-900 text-[16px]">{t('parameters')}</span>
                 {(tegevusala || activeFilters > 0) && (
                   <button onClick={reset} className="flex items-center gap-1 text-[13px] text-gray-400 hover:text-red-500 transition-colors">
-                    <RotateCcw size={12} /> Lähtesta
+                    <RotateCcw size={12} /> {t('reset')}
                   </button>
                 )}
               </div>
 
               {/* 1 · Tegevusala */}
               <div>
-                <FieldLabel>1. Tegevusala</FieldLabel>
+                <FieldLabel>{t('field1')}</FieldLabel>
                 <select
                   value={tegevusala}
                   onChange={e => setTegevusala(e.target.value)}
                   className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[15px] text-gray-800 bg-white outline-none focus:border-[#003366] transition-colors"
                 >
-                  <option value="" disabled>Vali tegevusala</option>
+                  <option value="" disabled>{t('selectArea')}</option>
                   {TEGEVUSALAD.map(a => (
-                    <option key={a.slug} value={a.slug}>{a.label}</option>
+                    <option key={a.slug} value={a.slug}>{tCat(a.nameKey)}</option>
                   ))}
                 </select>
               </div>
 
               {/* 2 · Max Head */}
               <div>
-                <FieldLabel>2. Kõrgus (m)</FieldLabel>
-                <label className="block text-[13px] text-gray-500 mb-1.5">Kui kõrgele peab pump vett tõstma?</label>
+                <FieldLabel>{t('field2')}</FieldLabel>
+                <label className="block text-[13px] text-gray-500 mb-1.5">{t('heightHint')}</label>
                 <input
                   type="number" min="0" step="0.5"
                   value={minHead}
@@ -385,17 +388,17 @@ export default function PumpCalculator() {
               {/* 3 · Flow / Area */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <FieldLabel>3. {flowMode === 'direct' ? 'Vooluhulk (m³/h)' : 'Pindala (m²)'}</FieldLabel>
+                  <FieldLabel>{flowMode === 'direct' ? t('field3flow') : t('field3area')}</FieldLabel>
                   <button
                     onClick={() => { setFlowMode(m => m === 'direct' ? 'area' : 'direct'); setFlowInput(''); setAreaInput('') }}
                     className="text-[12px] text-[#01a0dc] hover:underline flex-shrink-0 -mt-0.5"
                   >
-                    {flowMode === 'direct' ? 'Arvuta pindalast' : 'Sisesta otse'}
+                    {flowMode === 'direct' ? t('calcFromArea') : t('enterDirect')}
                   </button>
                 </div>
                 {flowMode === 'direct' ? (
                   <>
-                    <label className="block text-[13px] text-gray-500 mb-1.5">Ligikaudne vooluhulk</label>
+                    <label className="block text-[13px] text-gray-500 mb-1.5">{t('flowHint')}</label>
                     <input
                       type="number" min="0" step="0.1"
                       value={flowInput}
@@ -406,7 +409,7 @@ export default function PumpCalculator() {
                   </>
                 ) : (
                   <>
-                    <label className="block text-[13px] text-gray-500 mb-1.5">Ruumi / hoone pindala</label>
+                    <label className="block text-[13px] text-gray-500 mb-1.5">{t('areaHint')}</label>
                     <input
                       type="number" min="0" step="10"
                       value={areaInput}
@@ -425,14 +428,14 @@ export default function PumpCalculator() {
 
               {/* 4 · Phase */}
               <div>
-                <FieldLabel>4. Toitepinge</FieldLabel>
+                <FieldLabel>{t('field4')}</FieldLabel>
                 <div className="flex gap-2">
                   <ToggleBtn active={phase === '1'} onClick={() => setPhase(p => p === '1' ? '' : '1')}>
-                    <div className="font-semibold">Ühefaasiline</div>
+                    <div className="font-semibold">{t('singlePhase')}</div>
                     <div className="text-[11px] opacity-70 mt-0.5">1×230V</div>
                   </ToggleBtn>
                   <ToggleBtn active={phase === '3'} onClick={() => setPhase(p => p === '3' ? '' : '3')}>
-                    <div className="font-semibold">Kolmefaasiline</div>
+                    <div className="font-semibold">{t('threePhase')}</div>
                     <div className="text-[11px] opacity-70 mt-0.5">3×400V</div>
                   </ToggleBtn>
                 </div>
@@ -440,7 +443,7 @@ export default function PumpCalculator() {
 
               {/* 5 · Liquid temperature */}
               <div>
-                <FieldLabel>5. Vedeliku temperatuur</FieldLabel>
+                <FieldLabel>{t('field5')}</FieldLabel>
                 <div className="space-y-2">
                   {TEMP_OPTIONS.map(opt => (
                     <button
@@ -452,7 +455,7 @@ export default function PumpCalculator() {
                           : 'bg-white text-gray-600 border-gray-200 hover:border-[#003366]'
                       }`}
                     >
-                      {opt.label}
+                      {t(opt.labelKey)}
                     </button>
                   ))}
                 </div>
@@ -460,15 +463,15 @@ export default function PumpCalculator() {
 
               {/* 6 · Location */}
               <div>
-                <FieldLabel>6. Paigalduskoht</FieldLabel>
+                <FieldLabel>{t('field6')}</FieldLabel>
                 <div className="flex gap-2">
                   <ToggleBtn active={location === 'indoor'} onClick={() => setLocation(l => l === 'indoor' ? '' : 'indoor')}>
                     <div className="text-lg mb-0.5">🏠</div>
-                    <div className="font-medium text-[12px]">Siseruumid</div>
+                    <div className="font-medium text-[12px]">{t('indoor')}</div>
                   </ToggleBtn>
                   <ToggleBtn active={location === 'outdoor'} onClick={() => setLocation(l => l === 'outdoor' ? '' : 'outdoor')}>
                     <div className="text-lg mb-0.5">🌧️</div>
-                    <div className="font-medium text-[12px]">Välitingimused</div>
+                    <div className="font-medium text-[12px]">{t('outdoor')}</div>
                   </ToggleBtn>
                 </div>
               </div>
@@ -485,10 +488,8 @@ export default function PumpCalculator() {
                 <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-4">
                   <Search size={28} className="text-[#003366]/30" />
                 </div>
-                <div className="font-semibold text-gray-500 mb-1 text-[16px]">Alusta tegevusala valikuga</div>
-                <div className="text-[14px] max-w-xs">
-                  Vali tegevusala ja täida vähemalt üks lisaparameeter — näitame sulle sobivaimad pumbad.
-                </div>
+                <div className="font-semibold text-gray-500 mb-1 text-[16px]">{t('startHint')}</div>
+                <div className="text-[14px] max-w-xs">{t('startDescription')}</div>
               </div>
             )}
 
@@ -496,7 +497,7 @@ export default function PumpCalculator() {
             {loading && (
               <div className="flex flex-col items-center justify-center py-20 gap-3 text-gray-400">
                 <Loader2 size={32} className="text-[#003366] animate-spin" />
-                <span className="text-[14px]">Otsin sobivaid pumpe…</span>
+                <span className="text-[14px]">{t('searching')}</span>
               </div>
             )}
 
@@ -504,13 +505,11 @@ export default function PumpCalculator() {
             {queried && !loading && products.length === 0 && (
               <div className="flex flex-col items-center justify-center text-center py-16 bg-white rounded-2xl border border-gray-100">
                 <div className="text-4xl mb-4">🔍</div>
-                <div className="font-semibold text-gray-700 text-[16px] mb-2">Tulemusi ei leitud</div>
-                <div className="text-[14px] text-gray-400 max-w-sm mb-5">
-                  Valitud kriteeriumitele vastavaid pumpu ei leitud — palun muutke otsingutingimusi.
-                </div>
+                <div className="font-semibold text-gray-700 text-[16px] mb-2">{t('noResults')}</div>
+                <div className="text-[14px] text-gray-400 max-w-sm mb-5">{t('noResultsHint')}</div>
                 <button onClick={reset}
                   className="flex items-center gap-2 text-[14px] text-[#003366] hover:underline font-medium">
-                  <RotateCcw size={14} /> Lähtesta filtrid
+                  <RotateCcw size={14} /> {t('resetFilters')}
                 </button>
               </div>
             )}
@@ -522,18 +521,18 @@ export default function PumpCalculator() {
                 <div className="flex items-center justify-between mb-4">
                   <div className="text-[15px] text-gray-600">
                     {total > 6
-                      ? <>Näitan <span className="font-semibold text-gray-900">6 / {total}</span> sobivast tootest</>
-                      : <><span className="font-semibold text-gray-900">{total}</span> sobivat toodet</>
+                      ? <><span className="font-semibold text-gray-900">{t('showingOf', { shown: 6, total })}</span></>
+                      : <><span className="font-semibold text-gray-900">{total}</span> {t('suitableProducts')}</>
                     }
                     {selectedAla && (
                       <span className="ml-1.5 bg-[#003366]/10 text-[#003366] text-[13px] font-medium px-2 py-0.5 rounded-full">
-                        {selectedAla.label}
+                        {tCat(selectedAla.nameKey)}
                       </span>
                     )}
                   </div>
                   <a href={viewAllUrl}
                     className="flex items-center gap-1 text-[14px] text-[#003366] hover:text-[#01a0dc] font-medium transition-colors">
-                    Vaata kõiki <ChevronRight size={14} />
+                    {t('viewAll')} <ChevronRight size={14} />
                   </a>
                 </div>
 
@@ -547,7 +546,7 @@ export default function PumpCalculator() {
                   <div className="mt-6 text-center">
                     <a href={viewAllUrl}
                       className="inline-flex items-center gap-2 bg-[#003366] hover:bg-[#004080] text-white px-7 py-3 rounded-xl font-semibold text-[15px] transition-colors shadow-sm">
-                      Vaata kõiki {total} sobivat toodet
+                      {t('viewAllSuitable', { total })}
                       <ChevronRight size={16} />
                     </a>
                   </div>

@@ -3,16 +3,17 @@
 import Link from 'next/link'
 import { Phone, Mail, MapPin } from 'lucide-react'
 import ObfuscatedEmail from './ObfuscatedEmail'
+import { useTranslations } from 'next-intl'
 
-const categories = [
-  { name: 'Küte',            slug: 'kute' },
-  { name: 'Jahutus',         slug: 'jahutus' },
-  { name: 'Soe tarbevesi',   slug: 'sooja-tarbevee-tsirkulatsioonipump' },
-  { name: 'Puurkaevud',      slug: 'puurkaevud' },
-  { name: 'Drenaaž',         slug: 'drenaaz' },
-  { name: 'Salvkaevud',      slug: 'salvkaevud' },
-  { name: 'Rõhutõste',       slug: 'rohutoste' },
-  { name: 'Reovesi',         slug: 'reovesi' },
+const categoryKeys = [
+  { nameKey: 'heating',  slug: 'kute' },
+  { nameKey: 'cooling',  slug: 'jahutus' },
+  { nameKey: 'hotWater', slug: 'sooja-tarbevee-tsirkulatsioonipump' },
+  { nameKey: 'borewell', slug: 'puurkaevud' },
+  { nameKey: 'drainage', slug: 'drenaaz' },
+  { nameKey: 'wells',    slug: 'salvkaevud' },
+  { nameKey: 'pressure', slug: 'rohutoste' },
+  { nameKey: 'sewage',   slug: 'reovesi' },
 ]
 
 const team = [
@@ -21,13 +22,16 @@ const team = [
   { name: 'Jüri',  eUser: 'juri',  phone: null,            tel: null },
 ]
 
-const legalLinks = [
-  { label: 'Privaatsuspoliitika', href: '/leht/privaatsuspoliitika' },
-  { label: 'Ostutingimused',      href: '/leht/ostutingimused' },
-  { label: 'Tagastamine',         href: '/leht/tagastamine' },
+const legalHrefs = [
+  { labelKey: 'privacy', href: '/leht/privaatsuspoliitika' },
+  { labelKey: 'terms',   href: '/leht/ostutingimused' },
+  { labelKey: 'returns', href: '/leht/tagastamine' },
 ]
 
 export default function Footer() {
+  const t    = useTranslations('footer')
+  const tCat = useTranslations('categories')
+
   return (
     <footer className="bg-[#001f40] text-white/70">
       <div className="max-w-7xl mx-auto px-4 py-12">
@@ -41,25 +45,25 @@ export default function Footer() {
               <img src="/ipumps-logo-white.svg" alt="iPumps" className="h-7 w-auto" />
             </div>
             <p className="text-[14px] leading-relaxed mb-4">
-              Grundfos pumpade ametlik edasimüüja Eestis. Tooted, paigaldus ja hooldus.
+              {t('description')}
             </p>
             <div className="text-[13px] text-white/40 space-y-0.5">
-              <div className="text-white/60 font-medium">Intelligent Pump Solutions OÜ</div>
-              <div>Reg: 11417625 · KMKR: EE101173603</div>
+              <div className="text-white/60 font-medium">{t('company')}</div>
+              <div>{t('reg')}</div>
             </div>
           </div>
 
           {/* Veerg 2 — Tegevusalad */}
           <div>
-            <div className="text-white font-semibold text-[14px] uppercase tracking-wider mb-4">Tegevusalad</div>
+            <div className="text-white font-semibold text-[14px] uppercase tracking-wider mb-4">{t('categories')}</div>
             <div className="space-y-2">
-              {categories.map(cat => (
+              {categoryKeys.map(cat => (
                 <a
                   key={cat.slug}
                   href={`/tooted?tegevusala=${cat.slug}`}
                   className="block text-[14px] hover:text-white transition-colors"
                 >
-                  {cat.name}
+                  {tCat(cat.nameKey)}
                 </a>
               ))}
             </div>
@@ -67,26 +71,26 @@ export default function Footer() {
 
           {/* Veerg 3 — Lingid */}
           <div>
-            <div className="text-white font-semibold text-[14px] uppercase tracking-wider mb-4">Ettevõte</div>
+            <div className="text-white font-semibold text-[14px] uppercase tracking-wider mb-4">{t('enterprise')}</div>
             <div className="space-y-2">
               <a
                 href="https://ipumps.ee/kontakt/"
                 target="_blank" rel="noopener noreferrer"
                 className="block text-[14px] hover:text-white transition-colors"
               >
-                Projektimüük
+                {t('projectSales')}
               </a>
               <Link href="/leht/kontakt" className="block text-[14px] hover:text-white transition-colors">
-                Kontakt
+                {t('contact')}
               </Link>
             </div>
 
             <div className="mt-6">
-              <div className="text-white font-semibold text-[14px] uppercase tracking-wider mb-4">Õiguslik</div>
+              <div className="text-white font-semibold text-[14px] uppercase tracking-wider mb-4">{t('legal')}</div>
               <div className="space-y-2">
-                {legalLinks.map(({ label, href }) => (
+                {legalHrefs.map(({ labelKey, href }) => (
                   <Link key={href} href={href} className="block text-[14px] hover:text-white transition-colors">
-                    {label}
+                    {t(labelKey)}
                   </Link>
                 ))}
               </div>
@@ -95,7 +99,7 @@ export default function Footer() {
 
           {/* Veerg 4 — Kontakt */}
           <div>
-            <div className="text-white font-semibold text-[14px] uppercase tracking-wider mb-4">Kontakt</div>
+            <div className="text-white font-semibold text-[14px] uppercase tracking-wider mb-4">{t('contactTitle')}</div>
             <div className="space-y-3 mb-5">
               <div className="flex items-start gap-2.5 text-[14px]">
                 <MapPin size={14} className="flex-shrink-0 mt-0.5" />
@@ -133,11 +137,11 @@ export default function Footer() {
 
         {/* ── Alumine riba ──────────────────────────────────────────────── */}
         <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-[13px]">
-          <span>© {new Date().getFullYear()} Intelligent Pump Solutions OÜ. Kõik õigused kaitstud.</span>
+          <span>© {new Date().getFullYear()} {t('company')}. {t('copyright')}</span>
           <div className="flex flex-wrap gap-4">
-            {legalLinks.map(({ label, href }) => (
+            {legalHrefs.map(({ labelKey, href }) => (
               <Link key={href} href={href} className="hover:text-white transition-colors">
-                {label}
+                {t(labelKey)}
               </Link>
             ))}
           </div>

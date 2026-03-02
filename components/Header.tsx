@@ -11,7 +11,7 @@ import {
 import { useAuth } from '@/lib/auth-context'
 import { supabase } from '@/lib/supabase'
 import ObfuscatedEmail from './ObfuscatedEmail'
-import { useLocale } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Link, usePathname, useRouter } from '@/i18n/navigation'
 
 // ─── ANDMED ────────────────────────────────────────────────────────────────
@@ -26,14 +26,14 @@ const languageOptions = [
 ]
 
 const categories = [
-  { name: 'Küte',            icon: Flame,         count: 155, slug: 'kute' },
-  { name: 'Jahutus',         icon: Snowflake,      count: 155, slug: 'jahutus' },
-  { name: 'Soe tarbevesi',   icon: Thermometer,    count: 48,  slug: 'sooja-tarbevee-tsirkulatsioonipump' },
-  { name: 'Puurkaevud',      icon: Drill,          count: 43,  slug: 'puurkaevud' },
-  { name: 'Drenaaž',         icon: Waves,          count: 31,  slug: 'drenaaz' },
-  { name: 'Salvkaevud',      icon: CircleDot,      count: 22,  slug: 'salvkaevud' },
-  { name: 'Rõhutõste',       icon: ArrowUpCircle,  count: 23,  slug: 'rohutoste' },
-  { name: 'Reovesi',         icon: Filter,         count: 9,   slug: 'reovesi' },
+  { nameKey: 'heating',  icon: Flame,         count: 155, slug: 'kute' },
+  { nameKey: 'cooling',  icon: Snowflake,      count: 155, slug: 'jahutus' },
+  { nameKey: 'hotWater', icon: Thermometer,    count: 48,  slug: 'sooja-tarbevee-tsirkulatsioonipump' },
+  { nameKey: 'borewell', icon: Drill,          count: 43,  slug: 'puurkaevud' },
+  { nameKey: 'drainage', icon: Waves,          count: 31,  slug: 'drenaaz' },
+  { nameKey: 'wells',    icon: CircleDot,      count: 22,  slug: 'salvkaevud' },
+  { nameKey: 'pressure', icon: ArrowUpCircle,  count: 23,  slug: 'rohutoste' },
+  { nameKey: 'sewage',   icon: Filter,         count: 9,   slug: 'reovesi' },
 ]
 
 // ─── OSTUKORV HELPER ───────────────────────────────────────────────────────
@@ -68,6 +68,9 @@ export default function Header() {
   const locale   = useLocale()
   const router   = useRouter()
   const pathname = usePathname()
+
+  const t    = useTranslations('nav')
+  const tCat = useTranslations('categories')
 
   const currentLang = languageOptions.find(l => l.code === locale) ?? languageOptions[0]
 
@@ -135,7 +138,7 @@ export default function Header() {
           </div>
 
           <div className="flex items-center gap-3 text-[15px] text-white/60">
-            <span>E-R 8:00–17:00</span>
+            <span>{t('workingHours')}</span>
 
             {/* Keelevalik */}
             <div className="relative" data-lang-dropdown>
@@ -187,14 +190,14 @@ export default function Header() {
               onMouseLeave={() => setDropdownOpen(false)}
             >
               <button className="flex items-center gap-1 text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10">
-                Elamud ja Ärihooned
+                {t('buildings')}
                 <ChevronDown size={14} className={`transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {dropdownOpen && (
                 <div className="absolute top-full left-0 w-80 bg-white rounded-xl shadow-2xl py-3 z-50 border border-gray-100">
                   <div className="px-4 pb-2 text-[15px] font-semibold text-gray-400 uppercase tracking-wider">
-                    Tegevusalad
+                    {tCat('subtitle')}
                   </div>
                   <div className="grid grid-cols-2 gap-0.5 px-2">
                     {categories.map(cat => (
@@ -205,8 +208,8 @@ export default function Header() {
                       >
                         <cat.icon size={16} className="text-[#003366] group-hover:text-[#01a0dc] flex-shrink-0 transition-colors" />
                         <div>
-                          <div className="text-[15px] font-medium text-gray-800 leading-tight">{cat.name}</div>
-                          <div className="text-[13px] text-gray-400">{cat.count} toodet</div>
+                          <div className="text-[15px] font-medium text-gray-800 leading-tight">{tCat(cat.nameKey)}</div>
+                          <div className="text-[13px] text-gray-400">{cat.count} {tCat('products')}</div>
                         </div>
                       </Link>
                     ))}
@@ -222,19 +225,19 @@ export default function Header() {
               onMouseLeave={() => setSeriesOpen(false)}
             >
               <button className="flex items-center gap-1 text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10">
-                Tooted
+                {t('products')}
                 <ChevronDown size={14} className={`transition-transform duration-200 ${seriesOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {seriesOpen && (
                 <div className="absolute top-full left-0 w-72 bg-white rounded-xl shadow-2xl py-2 z-50 border border-gray-100">
                   <Link href="/tooted" className="flex items-center gap-2 px-4 py-2.5 text-[15px] font-semibold text-[#003366] hover:bg-blue-50 transition-colors">
-                    Kõik tooted →
+                    {t('allProducts')}
                   </Link>
                   {series.length > 0 && (
                     <>
                       <div className="mx-3 my-1 border-t border-gray-100" />
-                      <div className="px-4 py-1 text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Tooteseeria</div>
+                      <div className="px-4 py-1 text-[13px] font-semibold text-gray-400 uppercase tracking-wider">{t('productSeries')}</div>
                       <div className="max-h-72 overflow-y-auto">
                         {series.map(s => (
                           <Link
@@ -258,13 +261,13 @@ export default function Header() {
               rel="noopener noreferrer"
               className="text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10"
             >
-              Projektimüük
+              {t('projectSales')}
             </a>
             <Link
               href="/leht/kontakt"
               className="text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10"
             >
-              Kontakt
+              {t('contact')}
             </Link>
           </nav>
 
@@ -283,7 +286,7 @@ export default function Header() {
                       if (e.key === 'Enter') handleSearch(searchQuery)
                       if (e.key === 'Escape') setSearchOpen(false)
                     }}
-                    placeholder="Otsi tooteid, SKU, parameetreid..."
+                    placeholder={t('searchPlaceholder')}
                     className="bg-transparent text-white placeholder-white/40 text-[15px] px-3 py-2 w-64 outline-none"
                   />
                   <button onClick={() => setSearchOpen(false)} className="p-2 text-white/60 hover:text-white transition-colors">
@@ -296,7 +299,7 @@ export default function Header() {
                   className="flex items-center gap-2 text-white/80 hover:text-white px-3 py-2 rounded-lg text-[15px] transition-colors hover:bg-white/10"
                 >
                   <Search size={16} />
-                  <span className="text-white/40">Otsi...</span>
+                  <span className="text-white/40">{t('search')}</span>
                 </button>
               )}
             </div>
@@ -310,7 +313,7 @@ export default function Header() {
                 >
                   <User size={16} />
                   <span className="hidden sm:inline max-w-[120px] truncate">
-                    {profile?.full_name?.split(' ')[0] || 'Konto'}
+                    {profile?.full_name?.split(' ')[0] || t('account')}
                   </span>
                   <ChevronDown size={12} className={`transition-transform duration-200 ${userMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
@@ -324,23 +327,23 @@ export default function Header() {
                           onClick={() => setUserMenuOpen(false)}
                           className="flex items-center gap-2.5 px-4 py-2.5 text-[14px] text-[#003366] font-medium hover:bg-blue-50 transition-colors"
                         >
-                          <Settings size={14} /> Haldus paneel
+                          <Settings size={14} /> {t('adminPanel')}
                         </a>
                         <div className="border-t border-gray-100 my-1" />
                       </>
                     )}
                     <Link href="/konto" onClick={() => setUserMenuOpen(false)}
                       className="flex items-center gap-2.5 px-4 py-2.5 text-[14px] text-gray-700 hover:bg-blue-50 hover:text-[#003366] transition-colors">
-                      <LayoutDashboard size={14} /> Ülevaade
+                      <LayoutDashboard size={14} /> {t('accountOverview')}
                     </Link>
                     <Link href="/konto/tellimused" onClick={() => setUserMenuOpen(false)}
                       className="flex items-center gap-2.5 px-4 py-2.5 text-[14px] text-gray-700 hover:bg-blue-50 hover:text-[#003366] transition-colors">
-                      <ShoppingBag size={14} /> Tellimused
+                      <ShoppingBag size={14} /> {t('orders')}
                     </Link>
                     <div className="border-t border-gray-100 my-1" />
                     <button onClick={() => { signOut(); setUserMenuOpen(false) }}
                       className="w-full flex items-center gap-2.5 px-4 py-2.5 text-[14px] text-red-500 hover:bg-red-50 transition-colors">
-                      <LogOut size={14} /> Logi välja
+                      <LogOut size={14} /> {t('logout')}
                     </button>
                   </div>
                 )}
@@ -351,7 +354,7 @@ export default function Header() {
                 className="flex items-center gap-1.5 px-3 py-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg text-[15px] font-medium transition-colors"
               >
                 <User size={16} />
-                <span className="hidden sm:inline">Logi sisse</span>
+                <span className="hidden sm:inline">{t('login')}</span>
               </Link>
             )}
 
@@ -386,7 +389,7 @@ export default function Header() {
               <div className="flex items-center bg-white/10 rounded-lg overflow-hidden">
                 <Search size={15} className="ml-3 text-white/40 flex-shrink-0" />
                 <input
-                  placeholder="Otsi tooteid..."
+                  placeholder={t('searchProducts')}
                   className="flex-1 bg-transparent text-white placeholder-white/40 text-[15px] px-3 py-2.5 outline-none"
                   onKeyDown={e => {
                     if (e.key === 'Enter') {
@@ -400,7 +403,7 @@ export default function Header() {
             </div>
 
             <div className="text-[13px] font-semibold text-white/40 uppercase tracking-wider px-2 pt-1 pb-1">
-              Elamud ja Ärihooned
+              {t('buildings')}
             </div>
             {categories.map(cat => (
               <Link
@@ -410,7 +413,7 @@ export default function Header() {
                 onClick={() => setMenuOpen(false)}
               >
                 <cat.icon size={16} />
-                <span className="text-[15px]">{cat.name}</span>
+                <span className="text-[15px]">{tCat(cat.nameKey)}</span>
                 <span className="ml-auto text-[13px] text-white/30">{cat.count}</span>
                 <ChevronRight size={14} className="text-white/20" />
               </Link>
@@ -421,7 +424,7 @@ export default function Header() {
                 className="block px-3 py-2.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors text-[15px]"
                 onClick={() => setMenuOpen(false)}
               >
-                Tooted
+                {t('products')}
               </Link>
               <a
                 href="https://ipumps.ee/kontakt/"
@@ -429,13 +432,13 @@ export default function Header() {
                 rel="noopener noreferrer"
                 className="block px-3 py-2.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors text-[15px]"
               >
-                Projektimüük
+                {t('projectSales')}
               </a>
               <Link href="/leht/kontakt"
                 className="block px-3 py-2.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors text-[15px]"
                 onClick={() => setMenuOpen(false)}
               >
-                Kontakt
+                {t('contact')}
               </Link>
             </div>
 

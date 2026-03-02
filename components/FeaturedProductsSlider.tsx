@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { useTranslations } from 'next-intl'
 
 interface Product {
   id: number
@@ -17,6 +18,8 @@ interface Product {
 }
 
 export default function FeaturedProductsSlider() {
+  const t = useTranslations('featured')
+
   const [products, setProducts] = useState<Product[]>([])
   const [page,     setPage]     = useState(0)
   const [animate,  setAnimate]  = useState(true)
@@ -55,7 +58,6 @@ export default function FeaturedProductsSlider() {
   const totalPages = products.length > 0 ? Math.ceil(products.length / visible) : 0
 
   // Duplicate the array so the last real page seamlessly wraps to the first
-  // e.g. 8 items → [p0..p7, p0..p7] = 16 cards, 4 "phantom" pages at the end
   const slides = [...products, ...products]
 
   // ── Auto-advance every 3 s ────────────────────────────────────────────────
@@ -66,9 +68,6 @@ export default function FeaturedProductsSlider() {
   }, [products.length])
 
   // ── Infinite-loop reset ───────────────────────────────────────────────────
-  // When page reaches totalPages the viewport shows the cloned cards which
-  // look identical to page 0. After the transition finishes, jump to page 0
-  // without animation (same visual → no visible jump).
   useEffect(() => {
     if (page !== totalPages || totalPages === 0) return
     const id = setTimeout(() => { setAnimate(false); setPage(0) }, 680)
@@ -87,17 +86,9 @@ export default function FeaturedProductsSlider() {
 
   const prev = () => {
     setAnimate(true)
-    // Navigate backwards: if on page 0, jump to the real last page
     setPage(p => (p <= 0 ? totalPages - 1 : p - 1))
   }
   const next = () => { setAnimate(true); setPage(p => p + 1) }
-
-  // ── translateX logic ──────────────────────────────────────────────────────
-  // Each card has flex-basis = 100% / visible (e.g. 25% for 4-visible).
-  // The flex track has width: 100% (= container width).
-  // translateX(-100%) therefore always equals exactly one container width
-  // = one full "page" of `visible` cards, regardless of the visible count.
-  // So: translateX = -(page * 100%) in all responsive variants.
 
   return (
     <section className="py-12 bg-gray-50">
@@ -106,8 +97,8 @@ export default function FeaturedProductsSlider() {
         {/* Section header */}
         <div className="flex items-end justify-between mb-8">
           <div>
-            <div className="text-[13px] font-semibold text-[#01a0dc] uppercase tracking-widest mb-1">Populaarsed</div>
-            <h2 className="text-2xl font-bold text-gray-900">Esiletõstetud tooted</h2>
+            <div className="text-[13px] font-semibold text-[#01a0dc] uppercase tracking-widest mb-1">{t('popular')}</div>
+            <h2 className="text-2xl font-bold text-gray-900">{t('title')}</h2>
           </div>
           <div className="flex items-center gap-3">
             {/* Prev / Next buttons */}
@@ -126,7 +117,7 @@ export default function FeaturedProductsSlider() {
               </button>
             </div>
             <a href="/tooted" className="text-[15px] text-[#003366] hover:underline font-medium hidden sm:block">
-              Vaata kõiki →
+              {t('viewAll')}
             </a>
           </div>
         </div>
@@ -177,7 +168,7 @@ export default function FeaturedProductsSlider() {
                           )}
                           <span className={`absolute top-3 right-3 flex items-center gap-1 text-[12px] font-medium px-2 py-0.5 rounded-full ${product.in_stock ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
                             <span className={`w-1.5 h-1.5 rounded-full ${product.in_stock ? 'bg-green-500' : 'bg-gray-400'}`} />
-                            {product.in_stock ? 'Laos' : 'Otsas'}
+                            {product.in_stock ? t('inStock') : t('outOfStock')}
                           </span>
                           <img
                             src={product.image_url || '/placeholder.png'}
@@ -207,7 +198,7 @@ export default function FeaturedProductsSlider() {
                               )}
                             </div>
                             <span className="text-[13px] text-[#01a0dc] font-semibold group-hover:underline flex-shrink-0">
-                              Vaata →
+                              {t('view')}
                             </span>
                           </div>
                         </div>
