@@ -219,7 +219,11 @@
     "notFound": "Toodet ei leitud",
     "notFoundHint": "See toode ei ole saadaval või on eemaldatud.",
     "viewAllProducts": "Vaata kõiki tooteid",
-    "vatExcl": "+ KM"
+    "vatExcl": "+ KM",
+    "weightKg": "Kaal (kg)",
+    "lengthCm": "Pikkus (cm)",
+    "widthCm": "Laius (cm)",
+    "heightCm": "Kõrgus (cm)"
   },
   "cart": {
     "title": "Ostukorv",

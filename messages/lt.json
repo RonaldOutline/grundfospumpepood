@@ -219,7 +219,11 @@
     "notFound": "Produktas nerastas",
     "notFoundHint": "Šis produktas neprieinamas arba buvo pašalintas.",
     "viewAllProducts": "Žiūrėti visus produktus",
-    "vatExcl": "+ PVM"
+    "vatExcl": "+ PVM",
+    "weightKg": "Svoris (kg)",
+    "lengthCm": "Ilgis (cm)",
+    "widthCm": "Plotis (cm)",
+    "heightCm": "Aukštis (cm)"
   },
   "cart": {
     "title": "Pirkinių krepšelis",

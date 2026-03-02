@@ -219,7 +219,11 @@
     "notFound": "Nie znaleziono produktu",
     "notFoundHint": "Ten produkt jest niedostępny lub został usunięty.",
     "viewAllProducts": "Zobacz wszystkie produkty",
-    "vatExcl": "+ VAT"
+    "vatExcl": "+ VAT",
+    "weightKg": "Waga (kg)",
+    "lengthCm": "Długość (cm)",
+    "widthCm": "Szerokość (cm)",
+    "heightCm": "Wysokość (cm)"
   },
   "cart": {
     "title": "Koszyk",

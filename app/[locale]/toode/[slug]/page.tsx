@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from 'react'
 import { supabase } from '@/lib/supabase'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import {
   ChevronRight, Package, Truck, Shield,
   Phone, ZoomIn, Check, Share2, Printer, ShoppingCart
@@ -16,7 +16,17 @@ interface Product {
   slug: string
   name: string
   short_description_et: string
+  short_description_en: string | null
+  short_description_ru: string | null
+  short_description_lv: string | null
+  short_description_lt: string | null
+  short_description_pl: string | null
   description_et: string
+  description_en: string | null
+  description_ru: string | null
+  description_lv: string | null
+  description_lt: string | null
+  description_pl: string | null
   price: number
   sale_price: number | null
   image_url: string
@@ -147,6 +157,9 @@ function ProductGallery({ image, name }: { image: string; name: string }) {
 function ProductInfo({ product }: { product: Product }) {
   const t = useTranslations('product')
   const tBenefits = useTranslations('benefits')
+  const locale = useLocale()
+  const shortDesc = (product[`short_description_${locale}` as keyof Product] as string | null)
+    || product.short_description_et
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)
 
@@ -180,9 +193,9 @@ function ProductInfo({ product }: { product: Product }) {
       </h1>
 
       {/* Lühikirjeldus */}
-      {product.short_description_et && (
+      {shortDesc && (
         <p className="text-[15px] text-gray-600 leading-relaxed border-l-2 border-[#01a0dc] pl-4">
-          {product.short_description_et}
+          {shortDesc}
         </p>
       )}
 
@@ -289,10 +302,10 @@ function AttributesTable({ attributes, product }: { attributes: Attribute[]; pro
   const [showAll, setShowAll] = useState(false)
 
   const physicalAttrs: Attribute[] = []
-  if (product.weight_kg) physicalAttrs.push({ attribute_name: 'Kaal (kg)', attribute_value: String(product.weight_kg) })
-  if (product.length_cm) physicalAttrs.push({ attribute_name: 'Pikkus (cm)', attribute_value: String(product.length_cm) })
-  if (product.width_cm) physicalAttrs.push({ attribute_name: 'Laius (cm)', attribute_value: String(product.width_cm) })
-  if (product.height_cm) physicalAttrs.push({ attribute_name: 'Kõrgus (cm)', attribute_value: String(product.height_cm) })
+  if (product.weight_kg) physicalAttrs.push({ attribute_name: t('weightKg'), attribute_value: String(product.weight_kg) })
+  if (product.length_cm) physicalAttrs.push({ attribute_name: t('lengthCm'), attribute_value: String(product.length_cm) })
+  if (product.width_cm) physicalAttrs.push({ attribute_name: t('widthCm'), attribute_value: String(product.width_cm) })
+  if (product.height_cm) physicalAttrs.push({ attribute_name: t('heightCm'), attribute_value: String(product.height_cm) })
 
   const allAttrs = [...physicalAttrs, ...attributes]
   const visibleAttrs = showAll ? allAttrs : allAttrs.slice(0, 16)
@@ -381,6 +394,7 @@ function RelatedProducts({ products }: { products: RelatedProduct[] }) {
 export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
   const t = useTranslations('product')
+  const locale = useLocale()
 
   const [product, setProduct] = useState<Product | null>(null)
   const [attributes, setAttributes] = useState<Attribute[]>([])
@@ -465,16 +479,19 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
         {/* Kirjeldus + atribuudid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {product.description_et && (
+          {(() => {
+            const desc = (product[`description_${locale}` as keyof Product] as string | null) || product.description_et
+            return desc ? (
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
                 <h2 className="font-bold text-gray-900 text-[17px]">{t('descriptionTitle')}</h2>
               </div>
               <div className="p-6 text-[15px] text-gray-600 leading-relaxed">
-                {product.description_et}
+                {desc}
               </div>
             </div>
-          )}
+            ) : null
+          })()}
           <AttributesTable attributes={attributes} product={product} />
         </div>
 

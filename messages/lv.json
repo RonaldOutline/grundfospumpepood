@@ -219,7 +219,11 @@
     "notFound": "Produkts nav atrasts",
     "notFoundHint": "Šis produkts nav pieejams vai ir noņemts.",
     "viewAllProducts": "Skatīt visus produktus",
-    "vatExcl": "+ PVN"
+    "vatExcl": "+ PVN",
+    "weightKg": "Svars (kg)",
+    "lengthCm": "Garums (cm)",
+    "widthCm": "Platums (cm)",
+    "heightCm": "Augstums (cm)"
   },
   "cart": {
     "title": "Iepirkumu grozs",

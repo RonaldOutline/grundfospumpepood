@@ -219,7 +219,11 @@
     "notFound": "Товар не найден",
     "notFoundHint": "Этот товар недоступен или был удалён.",
     "viewAllProducts": "Смотреть все товары",
-    "vatExcl": "+ НДС"
+    "vatExcl": "+ НДС",
+    "weightKg": "Масса (кг)",
+    "lengthCm": "Длина (см)",
+    "widthCm": "Ширина (см)",
+    "heightCm": "Высота (см)"
   },
   "cart": {
     "title": "Корзина",
