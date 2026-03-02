@@ -5,7 +5,12 @@ import { defineRouting } from 'next-intl/routing'
 export const routing = defineRouting({
   locales: ['et', 'en', 'ru', 'lv', 'lt', 'pl'] as const,
   defaultLocale: 'et',
+  // Always show locale prefix in URL (/en/, /et/, etc.)
   localePrefix: 'always',
+  // Detect browser language via Accept-Language header and remember
+  // choice in NEXT_LOCALE cookie. Falls back to defaultLocale if the
+  // browser language is not in the supported locales list.
+  localeDetection: true,
 })
 
 export type Locale = (typeof routing.locales)[number]
