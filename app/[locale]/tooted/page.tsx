@@ -39,6 +39,20 @@ const PAGE_SIZE = 48
 const DB_TO_URL: Record<string, string> = { 'drenaa': 'drenaaz' }
 const URL_TO_DB: Record<string, string> = { 'drenaaz': 'drenaa' }
 
+// ─── SLUG → TRANSLATION KEY ────────────────────────────────────────────────
+type CatNameKey = 'heating' | 'cooling' | 'hotWater' | 'borewell' | 'drainage' | 'wells' | 'pressure' | 'sewage' | 'title'
+const SLUG_TO_CAT_KEY: Partial<Record<string, CatNameKey>> = {
+  'elamud-ja-arihooned': 'title',
+  'kute': 'heating',
+  'jahutus': 'cooling',
+  'puurkaevud': 'borewell',
+  'drenaa': 'drainage',
+  'salvkaevud': 'wells',
+  'rohutoste': 'pressure',
+  'sooja-tarbevee-tsirkulatsioonipump': 'hotWater',
+  'reovesi': 'sewage',
+}
+
 // ─── KATEGOORIA HIERARHIA ──────────────────────────────────────────────────
 async function getDescendantSlugs(rootSlug: string): Promise<string[]> {
   const dbRoot = URL_TO_DB[rootSlug] ?? rootSlug
@@ -200,8 +214,16 @@ function CategoryTree({ categories, selected, onSelect, title }: {
   title: string
 }) {
   const tCommon = useTranslations('common')
+  const tCat = useTranslations('categories')
+  const tNav = useTranslations('nav')
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
   const toggle = (slug: string) => setExpanded(prev => ({ ...prev, [slug]: !prev[slug] }))
+
+  const catName = (slug: string, fallback: string): string => {
+    if (slug === 'tooted') return tNav('products')
+    const key = SLUG_TO_CAT_KEY[slug]
+    return key ? tCat(key) : fallback
+  }
 
   const renderCat = (cat: Category, depth = 0) => {
     const hasChildren = (cat.children?.length ?? 0) > 0
@@ -217,7 +239,7 @@ function CategoryTree({ categories, selected, onSelect, title }: {
               isSelected ? 'bg-[#003366] text-white font-medium' : 'hover:bg-gray-100 text-gray-700'
             }`}
           >
-            {cat.name_et}
+            {catName(cat.slug, cat.name_et)}
           </button>
           {hasChildren && (
             <button onClick={() => toggle(cat.slug)}
@@ -354,6 +376,14 @@ function TootedPageContent({
 }) {
   const t = useTranslations('products')
   const tCommon = useTranslations('common')
+  const tCat = useTranslations('categories')
+  const tNav = useTranslations('nav')
+
+  const catName = (slug: string, fallback: string): string => {
+    if (slug === 'tooted') return tNav('products')
+    const key = SLUG_TO_CAT_KEY[slug]
+    return key ? tCat(key) : fallback
+  }
 
   const SORT_OPTIONS = [
     { value: 'name_asc',   label: t('sortNameAsc') },
@@ -481,9 +511,10 @@ function TootedPageContent({
   const handleSetAla    = (v: string) => { setSelectedAla(DB_TO_URL[v] ?? v); setSelectedSeeria(''); setPage(1) }
   const handleSetSeeria = (v: string) => { setSelectedSeeria(v); setSelectedAla('');    setPage(1) }
 
-  const activeCatName = tegevusalad.find(c => (DB_TO_URL[c.slug] ?? c.slug) === selectedAla)?.name_et
-    || seeriad.find(c => c.slug === selectedSeeria)?.name_et
-    || seeriad.flatMap(c => c.children || []).find(c => c.slug === selectedSeeria)?.name_et
+  const activeCatRaw = tegevusalad.find(c => (DB_TO_URL[c.slug] ?? c.slug) === selectedAla)
+    ?? seeriad.find(c => c.slug === selectedSeeria)
+    ?? seeriad.flatMap(c => c.children || []).find(c => c.slug === selectedSeeria)
+  const activeCatName = activeCatRaw ? catName(activeCatRaw.slug, activeCatRaw.name_et) : undefined
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -567,18 +598,25 @@ function TootedPageContent({
         {activeFiltersCount > 0 && (
           <div className="flex flex-wrap items-center gap-2 mb-5">
             <span className="text-[15px] text-gray-500">{t('filters')}:</span>
-            {selectedAla && (
-              <span className="flex items-center gap-1.5 bg-[#003366]/10 text-[#003366] text-[15px] font-medium px-3 py-1 rounded-full">
-                {tegevusalad.find(c => (DB_TO_URL[c.slug] ?? c.slug) === selectedAla)?.name_et}
-                <button onClick={() => handleSetAla('')}><X size={13} /></button>
-              </span>
-            )}
-            {selectedSeeria && (
-              <span className="flex items-center gap-1.5 bg-[#003366]/10 text-[#003366] text-[15px] font-medium px-3 py-1 rounded-full">
-                {seeriad.find(c => c.slug === selectedSeeria)?.name_et || seeriad.flatMap(c => c.children || []).find(c => c.slug === selectedSeeria)?.name_et}
-                <button onClick={() => handleSetSeeria('')}><X size={13} /></button>
-              </span>
-            )}
+            {selectedAla && (() => {
+              const c = tegevusalad.find(c => (DB_TO_URL[c.slug] ?? c.slug) === selectedAla)
+              return c ? (
+                <span className="flex items-center gap-1.5 bg-[#003366]/10 text-[#003366] text-[15px] font-medium px-3 py-1 rounded-full">
+                  {catName(c.slug, c.name_et)}
+                  <button onClick={() => handleSetAla('')}><X size={13} /></button>
+                </span>
+              ) : null
+            })()}
+            {selectedSeeria && (() => {
+              const c = seeriad.find(c => c.slug === selectedSeeria)
+                ?? seeriad.flatMap(c => c.children || []).find(c => c.slug === selectedSeeria)
+              return c ? (
+                <span className="flex items-center gap-1.5 bg-[#003366]/10 text-[#003366] text-[15px] font-medium px-3 py-1 rounded-full">
+                  {catName(c.slug, c.name_et)}
+                  <button onClick={() => handleSetSeeria('')}><X size={13} /></button>
+                </span>
+              ) : null
+            })()}
             {inStockOnly && (
               <span className="flex items-center gap-1.5 bg-green-50 text-green-700 text-[15px] font-medium px-3 py-1 rounded-full">
                 {t('inStockBadge')} <button onClick={() => setInStockOnly(false)}><X size={13} /></button>

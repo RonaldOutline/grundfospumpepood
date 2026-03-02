@@ -33,6 +33,20 @@ interface Category {
 
 const PAGE_SIZE = 48
 
+// ─── SLUG → TRANSLATION KEY ────────────────────────────────────────────────
+type CatNameKey = 'heating' | 'cooling' | 'hotWater' | 'borewell' | 'drainage' | 'wells' | 'pressure' | 'sewage' | 'title'
+const SLUG_TO_CAT_KEY: Partial<Record<string, CatNameKey>> = {
+  'elamud-ja-arihooned': 'title',
+  'kute': 'heating',
+  'jahutus': 'cooling',
+  'puurkaevud': 'borewell',
+  'drenaa': 'drainage',
+  'salvkaevud': 'wells',
+  'rohutoste': 'pressure',
+  'sooja-tarbevee-tsirkulatsioonipump': 'hotWater',
+  'reovesi': 'sewage',
+}
+
 // ─── OSTUKORV ──────────────────────────────────────────────────────────────
 
 function addToCart(product: Product) {
@@ -169,7 +183,14 @@ export default function KategooriaPage({ params }: { params: Promise<{ slug: str
   const { slug } = use(params)
   const t = useTranslations('products')
   const tNav = useTranslations('nav')
+  const tCat = useTranslations('categories')
   const router = useRouter()
+
+  const catName = (slug: string, fallback: string): string => {
+    if (slug === 'tooted') return tNav('products')
+    const key = SLUG_TO_CAT_KEY[slug]
+    return key ? tCat(key) : fallback
+  }
   const searchParams = useSearchParams()
 
   const SORT_OPTIONS = [
@@ -322,17 +343,17 @@ export default function KategooriaPage({ params }: { params: Promise<{ slug: str
                 <ChevronRight size={14} />
                 {i < breadcrumb.length - 1 ? (
                   <Link href={`/kategooria/${bc.slug}`} className="hover:text-[#003366] transition-colors">
-                    {bc.name_et}
+                    {catName(bc.slug, bc.name_et)}
                   </Link>
                 ) : (
-                  <span className="text-gray-700 font-medium">{bc.name_et}</span>
+                  <span className="text-gray-700 font-medium">{catName(bc.slug, bc.name_et)}</span>
                 )}
               </span>
             ))}
           </nav>
 
           <h1 className="text-2xl md:text-3xl font-bold text-[#003366]">
-            {category?.name_et || slug}
+            {category ? catName(category.slug, category.name_et) : slug}
           </h1>
           <p className="text-[15px] text-gray-500 mt-1">
             {loading ? t('loading') : t('productCount', { count: total })}
@@ -346,7 +367,7 @@ export default function KategooriaPage({ params }: { params: Promise<{ slug: str
               {subcategories.map(sub => (
                 <Link key={sub.slug} href={`/kategooria/${sub.slug}`}
                   className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-[15px] font-medium text-gray-700 hover:border-[#003366] hover:text-[#003366] transition-colors shadow-sm">
-                  {sub.name_et}
+                  {catName(sub.slug, sub.name_et)}
                 </Link>
               ))}
             </div>
