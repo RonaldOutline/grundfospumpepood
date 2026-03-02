@@ -20,7 +20,7 @@ const CATEGORIES = [
 
 type CategoryType = typeof CATEGORIES[number]['type']
 
-const VALID_SLUGS = new Set(CATEGORIES.map(c => c.slug))
+const VALID_SLUGS = new Set<string>(CATEGORIES.map(c => c.slug))
 const SLUG_TO_TYPE = Object.fromEntries(CATEGORIES.map(c => [c.slug, c.type])) as Record<string, CategoryType>
 
 /**
