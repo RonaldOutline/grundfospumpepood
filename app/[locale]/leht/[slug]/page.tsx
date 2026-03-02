@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import ContactForm from '@/components/ContactForm'
+import { getTranslations } from 'next-intl/server'
 
 interface Column { title: string; text: string }
 
@@ -48,6 +49,7 @@ export default async function PublicPage(
   const { slug } = await params
   const page = await getPage(slug)
   if (!page) notFound()
+  const tCommon = await getTranslations('common')
 
   const isContact = page.template === 'contact'
 
@@ -102,8 +104,8 @@ export default async function PublicPage(
 
             {/* Kontaktvorm */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-1">Saada meile sõnum</h2>
-              <p className="text-[14px] text-gray-500 mb-6">Vastame esimesel tööpäeval.</p>
+              <h2 className="text-xl font-bold text-gray-900 mb-1">{tCommon('contactFormTitle')}</h2>
+              <p className="text-[14px] text-gray-500 mb-6">{tCommon('contactFormSubtitle')}</p>
               <ContactForm pageId={page.id} />
             </div>
           </>

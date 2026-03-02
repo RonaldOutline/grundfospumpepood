@@ -185,7 +185,8 @@
     "prev": "← Ankstesnis",
     "next": "Kitas →",
     "loading": "Kraunama...",
-    "sort": "Rūšiuoti"
+    "sort": "Rūšiuoti",
+    "searchInCategory": "Ieškoti šioje kategorijoje..."
   },
   "product": {
     "inStock": "Sandėlyje",
@@ -299,7 +300,8 @@
     "sending": "Siunčiama...",
     "resetLinkSent": "Nuoroda išsiųsta",
     "resetLinkSentDesc": "Išsiuntėme slaptažodžio atkūrimo nuorodą į {email}.",
-    "errorPasswordReset": "Klaida atkuriant slaptažodį. Patikrinkite el. pašto adresą."
+    "errorPasswordReset": "Klaida atkuriant slaptažodį. Patikrinkite el. pašto adresą.",
+    "overview": "Apžvalga"
   },
   "common": {
     "loading": "Kraunasi...",
@@ -325,6 +327,8 @@
     "notFoundMessage": "Ieškomi puslapis neegzistuoja.",
     "backToHome": "Grįžti į pagrindinį puslapį",
     "home": "Pradžia",
-    "all": "Visi"
+    "all": "Visi",
+    "contactFormTitle": "Parašykite mums",
+    "contactFormSubtitle": "Atsakysime pirmą darbo dieną."
   }
 }

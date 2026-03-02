@@ -185,7 +185,8 @@
     "prev": "← Poprzednia",
     "next": "Następna →",
     "loading": "Ładowanie...",
-    "sort": "Sortuj"
+    "sort": "Sortuj",
+    "searchInCategory": "Szukaj w tej kategorii..."
   },
   "product": {
     "inStock": "Na magazynie",
@@ -299,7 +300,8 @@
     "sending": "Wysyłanie...",
     "resetLinkSent": "Link wysłany",
     "resetLinkSentDesc": "Wysłaliśmy link do resetowania hasła na {email}.",
-    "errorPasswordReset": "Błąd resetowania hasła. Sprawdź adres e-mail."
+    "errorPasswordReset": "Błąd resetowania hasła. Sprawdź adres e-mail.",
+    "overview": "Przegląd"
   },
   "common": {
     "loading": "Ładowanie...",
@@ -325,6 +327,8 @@
     "notFoundMessage": "Szukana strona nie istnieje.",
     "backToHome": "Wróć na stronę główną",
     "home": "Strona główna",
-    "all": "Wszystkie"
+    "all": "Wszystkie",
+    "contactFormTitle": "Napisz do nas",
+    "contactFormSubtitle": "Odpowiemy pierwszego dnia roboczego."
   }
 }

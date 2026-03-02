@@ -185,7 +185,8 @@
     "prev": "← Previous",
     "next": "Next →",
     "loading": "Loading...",
-    "sort": "Sort"
+    "sort": "Sort",
+    "searchInCategory": "Search in this category..."
   },
   "product": {
     "inStock": "In stock",
@@ -299,7 +300,8 @@
     "sending": "Sending...",
     "resetLinkSent": "Check link sent",
     "resetLinkSentDesc": "We sent a password reset link to {email}.",
-    "errorPasswordReset": "Error resetting password. Check your email address."
+    "errorPasswordReset": "Error resetting password. Check your email address.",
+    "overview": "Overview"
   },
   "common": {
     "loading": "Loading...",
@@ -325,6 +327,8 @@
     "notFoundMessage": "The page you are looking for does not exist.",
     "backToHome": "Back to homepage",
     "home": "Home",
-    "all": "All"
+    "all": "All",
+    "contactFormTitle": "Send us a message",
+    "contactFormSubtitle": "We respond on the first working day."
   }
 }

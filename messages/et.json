@@ -185,7 +185,8 @@
     "prev": "← Eelmine",
     "next": "Järgmine →",
     "loading": "Laadin...",
-    "sort": "Sorteeri"
+    "sort": "Sorteeri",
+    "searchInCategory": "Otsi selles kategoorias..."
   },
   "product": {
     "inStock": "Laos",
@@ -299,7 +300,8 @@
     "sending": "Saatmine...",
     "resetLinkSent": "Kontrollimislink saadetud",
     "resetLinkSentDesc": "Saatsime parooli lähtestamise lingi aadressile {email}.",
-    "errorPasswordReset": "Viga parooli lähtestamisel. Kontrolli e-posti aadressi."
+    "errorPasswordReset": "Viga parooli lähtestamisel. Kontrolli e-posti aadressi.",
+    "overview": "Ülevaade"
   },
   "common": {
     "loading": "Laeb...",
@@ -325,6 +327,8 @@
     "notFoundMessage": "Otsitud lehekülge ei eksisteeri.",
     "backToHome": "Tagasi avalehele",
     "home": "Avaleht",
-    "all": "Kõik"
+    "all": "Kõik",
+    "contactFormTitle": "Saada meile sõnum",
+    "contactFormSubtitle": "Vastame esimesel tööpäeval."
   }
 }

@@ -185,7 +185,8 @@
     "prev": "← Iepriekšējā",
     "next": "Nākamā →",
     "loading": "Ielāde...",
-    "sort": "Kārtot"
+    "sort": "Kārtot",
+    "searchInCategory": "Meklēt šajā kategorijā..."
   },
   "product": {
     "inStock": "Noliktavā",
@@ -299,7 +300,8 @@
     "sending": "Sūtīšana...",
     "resetLinkSent": "Saite nosūtīta",
     "resetLinkSentDesc": "Esam nosūtījuši paroles atiestatīšanas saiti uz {email}.",
-    "errorPasswordReset": "Kļūda atiestatot paroli. Pārbaudiet e-pasta adresi."
+    "errorPasswordReset": "Kļūda atiestatot paroli. Pārbaudiet e-pasta adresi.",
+    "overview": "Pārskats"
   },
   "common": {
     "loading": "Ielāde...",
@@ -325,6 +327,8 @@
     "notFoundMessage": "Meklētā lapa neeksistē.",
     "backToHome": "Atpakaļ uz sākumlapu",
     "home": "Sākums",
-    "all": "Visi"
+    "all": "Visi",
+    "contactFormTitle": "Sūtiet mums ziņojumu",
+    "contactFormSubtitle": "Atbildēsim pirmajā darba dienā."
   }
 }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, use } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useTranslations } from 'next-intl'
 import {
   ChevronRight, Package, Truck, Shield,
   Phone, ZoomIn, Check, Share2, Printer, ShoppingCart
@@ -63,7 +64,6 @@ function getCart(): CartItem[] {
 
 function saveCart(items: CartItem[]) {
   localStorage.setItem('ipumps_cart', JSON.stringify(items))
-  // Dispatch event et Header saaks count'i uuendada
   window.dispatchEvent(new Event('cart_updated'))
 }
 
@@ -85,19 +85,16 @@ function addToCart(product: Product, qty: number) {
   saveCart(cart)
 }
 
-function getCartCount(): number {
-  return getCart().reduce((sum, i) => sum + i.qty, 0)
-}
-
 // ─── LEIVAKÜLJED ───────────────────────────────────────────────────────────
 
 function Breadcrumb({ product }: { product: Product }) {
+  const tNav = useTranslations('nav')
   return (
     <nav className="bg-gray-50 border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-2 text-[15px] text-gray-500 flex-wrap">
-        <a href="/" className="hover:text-[#003366] transition-colors">Avaleht</a>
+        <a href="/" className="hover:text-[#003366] transition-colors">{tNav('home')}</a>
         <ChevronRight size={14} className="text-gray-300" />
-        <a href="/tooted" className="hover:text-[#003366] transition-colors">Tooted</a>
+        <a href="/tooted" className="hover:text-[#003366] transition-colors">{tNav('products')}</a>
         <ChevronRight size={14} className="text-gray-300" />
         <span className="text-gray-800 font-medium truncate max-w-xs">{product.name}</span>
       </div>
@@ -148,6 +145,8 @@ function ProductGallery({ image, name }: { image: string; name: string }) {
 // ─── TOOTE INFO ────────────────────────────────────────────────────────────
 
 function ProductInfo({ product }: { product: Product }) {
+  const t = useTranslations('product')
+  const tBenefits = useTranslations('benefits')
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)
 
@@ -162,11 +161,17 @@ function ProductInfo({ product }: { product: Product }) {
     ? Math.round((1 - product.sale_price / product.price) * 100)
     : null
 
+  const benefits = [
+    { icon: Truck,   text: tBenefits('shipping') },
+    { icon: Shield,  text: tBenefits('warranty') },
+    { icon: Package, text: t('original') },
+  ]
+
   return (
     <div className="flex flex-col gap-5">
       {/* SKU */}
       <div className="text-[15px] text-gray-400">
-        Tootekood: <span className="font-mono text-gray-600">{product.sku}</span>
+        {t('productCode')}: <span className="font-mono text-gray-600">{product.sku}</span>
       </div>
 
       {/* Nimi */}
@@ -196,14 +201,14 @@ function ProductInfo({ product }: { product: Product }) {
             </span>
           </>
         )}
-        <span className="text-[15px] text-gray-400">+ KM</span>
+        <span className="text-[15px] text-gray-400">{t('vatExcl')}</span>
       </div>
 
       {/* Laoseis */}
       <div className="flex items-center gap-2">
         <div className={`w-2.5 h-2.5 rounded-full ${product.in_stock ? 'bg-green-500' : 'bg-red-400'}`} />
         <span className={`text-[15px] font-medium ${product.in_stock ? 'text-green-700' : 'text-red-600'}`}>
-          {product.in_stock ? 'Laos olemas' : 'Laost otsas'}
+          {product.in_stock ? t('inStockFull') : t('outOfStockFull')}
         </span>
       </div>
 
@@ -232,8 +237,8 @@ function ProductInfo({ product }: { product: Product }) {
           }`}
         >
           {added
-            ? <><Check size={18} /> Lisatud!</>
-            : <><ShoppingCart size={18} /> Lisa ostukorvi</>
+            ? <><Check size={18} /> {t('added')}</>
+            : <><ShoppingCart size={18} /> {t('addToCart')}</>
           }
         </button>
       </div>
@@ -243,16 +248,12 @@ function ProductInfo({ product }: { product: Product }) {
         href="/#kontakt"
         className="flex items-center justify-center gap-2 py-3 px-6 rounded-xl border-2 border-[#003366] text-[#003366] hover:bg-[#003366] hover:text-white font-semibold text-[15px] transition-all"
       >
-        <Phone size={16} /> Küsi hinnapakkumist
+        <Phone size={16} /> {t('requestQuote')}
       </a>
 
-      {/* Eelised — FIX: bg-opacity-10 i.o. /8 */}
+      {/* Eelised */}
       <div className="grid grid-cols-3 gap-3 pt-2 border-t border-gray-100">
-        {[
-          { icon: Truck, text: 'Kiire tarne' },
-          { icon: Shield, text: 'Garantii' },
-          { icon: Package, text: 'Originaaltoode' },
-        ].map(b => (
+        {benefits.map(b => (
           <div key={b.text} className="flex flex-col items-center gap-1.5 text-center">
             <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center">
               <b.icon size={16} className="text-[#003366]" />
@@ -268,13 +269,13 @@ function ProductInfo({ product }: { product: Product }) {
           onClick={() => navigator.share?.({ title: product.name, url: window.location.href }).catch(() => {})}
           className="flex items-center gap-1.5 text-[15px] text-gray-400 hover:text-[#003366] transition-colors"
         >
-          <Share2 size={15} /> Jaga
+          <Share2 size={15} /> {t('share')}
         </button>
         <button
           onClick={() => window.print()}
           className="flex items-center gap-1.5 text-[15px] text-gray-400 hover:text-[#003366] transition-colors"
         >
-          <Printer size={15} /> Prindi
+          <Printer size={15} /> {t('print')}
         </button>
       </div>
     </div>
@@ -284,6 +285,7 @@ function ProductInfo({ product }: { product: Product }) {
 // ─── ATRIBUUDID ────────────────────────────────────────────────────────────
 
 function AttributesTable({ attributes, product }: { attributes: Attribute[]; product: Product }) {
+  const t = useTranslations('product')
   const [showAll, setShowAll] = useState(false)
 
   const physicalAttrs: Attribute[] = []
@@ -304,8 +306,8 @@ function AttributesTable({ attributes, product }: { attributes: Attribute[]; pro
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
-        <h2 className="font-bold text-gray-900 text-[17px]">Tehnilised andmed</h2>
-        <span className="text-[15px] text-gray-400">{allAttrs.length} parameetrit</span>
+        <h2 className="font-bold text-gray-900 text-[17px]">{t('specs')}</h2>
+        <span className="text-[15px] text-gray-400">{allAttrs.length} {t('parameters')}</span>
       </div>
       <div className="p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8">
@@ -329,7 +331,7 @@ function AttributesTable({ attributes, product }: { attributes: Attribute[]; pro
             onClick={() => setShowAll(!showAll)}
             className="mt-4 w-full py-2.5 border border-gray-200 rounded-xl text-[15px] text-gray-500 hover:border-[#003366] hover:text-[#003366] transition-colors font-medium"
           >
-            {showAll ? 'Peida' : `Näita kõiki ${allAttrs.length} parameetrit`}
+            {showAll ? t('hide') : t('showAllParams', { count: allAttrs.length })}
           </button>
         )}
       </div>
@@ -340,11 +342,12 @@ function AttributesTable({ attributes, product }: { attributes: Attribute[]; pro
 // ─── SEOTUD TOOTED ─────────────────────────────────────────────────────────
 
 function RelatedProducts({ products }: { products: RelatedProduct[] }) {
+  const t = useTranslations('product')
   if (products.length === 0) return null
 
   return (
     <div className="mt-10">
-      <h2 className="text-xl font-bold text-gray-900 mb-5">Sarnased tooted</h2>
+      <h2 className="text-xl font-bold text-gray-900 mb-5">{t('relatedProductsTitle')}</h2>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {products.map(p => (
           <a key={p.slug} href={`/toode/${p.slug}`}
@@ -377,6 +380,7 @@ function RelatedProducts({ products }: { products: RelatedProduct[] }) {
 // FIX: Next.js 15+ async params — kasutame React.use()
 export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
+  const t = useTranslations('product')
 
   const [product, setProduct] = useState<Product | null>(null)
   const [attributes, setAttributes] = useState<Attribute[]>([])
@@ -387,7 +391,6 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
     async function loadProduct() {
       setLoading(true)
 
-      // Lae toode
       const { data: prod } = await supabase
         .from('products')
         .select('*')
@@ -397,7 +400,6 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
       if (!prod) { setLoading(false); return }
       setProduct(prod)
 
-      // Lae atribuudid
       const { data: attrs } = await supabase
         .from('product_attributes')
         .select('attribute_name, attribute_value')
@@ -406,7 +408,6 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
       setAttributes(attrs || [])
 
-      // FIX: seotud tooted category_id põhiselt (mitte category_slug)
       if (prod.category_id) {
         const { data: relProds } = await supabase
           .from('products')
@@ -429,7 +430,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center text-gray-400">
           <div className="w-10 h-10 border-2 border-[#003366] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <div className="text-[15px]">Laadin toodet...</div>
+          <div className="text-[15px]">{t('loading')}</div>
         </div>
       </div>
     )
@@ -440,10 +441,10 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="text-5xl mb-4">🔍</div>
-          <h1 className="text-xl font-bold text-gray-800 mb-2">Toodet ei leitud</h1>
-          <p className="text-[15px] text-gray-500 mb-5">See toode ei ole saadaval või on eemaldatud.</p>
+          <h1 className="text-xl font-bold text-gray-800 mb-2">{t('notFound')}</h1>
+          <p className="text-[15px] text-gray-500 mb-5">{t('notFoundHint')}</p>
           <a href="/tooted" className="bg-[#003366] text-white px-6 py-3 rounded-xl font-semibold text-[15px] hover:bg-[#004080] transition-colors">
-            Vaata kõiki tooteid
+            {t('viewAllProducts')}
           </a>
         </div>
       </div>
@@ -467,7 +468,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
           {product.description_et && (
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
-                <h2 className="font-bold text-gray-900 text-[17px]">Toote kirjeldus</h2>
+                <h2 className="font-bold text-gray-900 text-[17px]">{t('descriptionTitle')}</h2>
               </div>
               <div className="p-6 text-[15px] text-gray-600 leading-relaxed">
                 {product.description_et}
