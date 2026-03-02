@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import {
@@ -324,28 +324,45 @@ export default function TootedPage() {
   return <Suspense><TootedPageOuter /></Suspense>
 }
 
-// Reads tegevusala from URL and passes it as a key+prop so TootedPageContent
-// always remounts fresh when the URL param changes (fixes Suspense hydration race).
+// Reads all URL params and passes them as initial props so TootedPageContent
+// always remounts fresh when tegevusala changes (fixes Suspense hydration race).
+// All other filter changes update the URL via router.replace inside TootedPageContent.
 function TootedPageOuter() {
   const searchParams = useSearchParams()
   const tegevusala = searchParams.get('tegevusala') || ''
-  return <TootedPageContent key={tegevusala} tegevusala={tegevusala} />
+  return (
+    <TootedPageContent
+      key={tegevusala}
+      initAla={tegevusala}
+      initQ={searchParams.get('q') || ''}
+      initSeeria={searchParams.get('seeria') || ''}
+      initLaos={searchParams.get('laos') === '1'}
+      initMin={searchParams.get('min') || ''}
+      initMax={searchParams.get('max') || ''}
+      initSort={searchParams.get('sort') || 'name_asc'}
+      initPage={Number(searchParams.get('lk') || '1')}
+    />
+  )
 }
 
-function TootedPageContent({ tegevusala }: { tegevusala: string }) {
-  const searchParams = useSearchParams()
+function TootedPageContent({
+  initAla, initQ, initSeeria, initLaos, initMin, initMax, initSort, initPage,
+}: {
+  initAla: string; initQ: string; initSeeria: string; initLaos: boolean
+  initMin: string; initMax: string; initSort: string; initPage: number
+}) {
+  const router = useRouter()
 
-  const [selectedAla, setSelectedAla]       = useState(tegevusala)
-
-  const [inputQuery, setInputQuery]         = useState(searchParams.get('q') || '')
-  const [query, setQuery]                   = useState(searchParams.get('q') || '')
-  const [selectedSeeria, setSelectedSeeria] = useState('')
-  const [inStockOnly, setInStockOnly]       = useState(false)
-  const [priceMin, setPriceMin]             = useState('')
-  const [priceMax, setPriceMax]             = useState('')
-  const [sortBy, setSortBy]                 = useState('name_asc')
+  const [selectedAla, setSelectedAla]       = useState(initAla)
+  const [inputQuery, setInputQuery]         = useState(initQ)
+  const [query, setQuery]                   = useState(initQ)
+  const [selectedSeeria, setSelectedSeeria] = useState(initSeeria)
+  const [inStockOnly, setInStockOnly]       = useState(initLaos)
+  const [priceMin, setPriceMin]             = useState(initMin)
+  const [priceMax, setPriceMax]             = useState(initMax)
+  const [sortBy, setSortBy]                 = useState(initSort)
   const [viewMode, setViewMode]             = useState<'grid' | 'list'>('grid')
-  const [page, setPage]                     = useState(1)
+  const [page, setPage]                     = useState(initPage)
   const [sortOpen, setSortOpen]             = useState(false)
   const [filtersOpen, setFiltersOpen]       = useState(false)
 
@@ -380,6 +397,21 @@ function TootedPageContent({ tegevusala }: { tegevusala: string }) {
     const t = setTimeout(() => { setQuery(inputQuery); setPage(1) }, 350)
     return () => clearTimeout(t)
   }, [inputQuery])
+
+  // ── Sünkroniseeri filtrid URL-iga (turundus / jagamine) ────────────────
+  useEffect(() => {
+    const p = new URLSearchParams()
+    if (selectedAla)           p.set('tegevusala', selectedAla)
+    if (selectedSeeria)        p.set('seeria', selectedSeeria)
+    if (query.trim())          p.set('q', query.trim())
+    if (inStockOnly)           p.set('laos', '1')
+    if (priceMin)              p.set('min', priceMin)
+    if (priceMax)              p.set('max', priceMax)
+    if (sortBy !== 'name_asc') p.set('sort', sortBy)
+    if (page > 1)              p.set('lk', String(page))
+    const qs = p.toString()
+    router.replace(qs ? `/tooted?${qs}` : '/tooted', { scroll: false })
+  }, [selectedAla, selectedSeeria, query, inStockOnly, priceMin, priceMax, sortBy, page, router])
 
   // ── Lae tooted ─────────────────────────────────────────────────────────
   const loadProducts = useCallback(async () => {
