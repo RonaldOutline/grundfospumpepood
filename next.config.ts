@@ -2,6 +2,16 @@ import type { NextConfig } from 'next'
 import path from 'path'
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'grundfospumpepood.vercel.app' }],
+        destination: 'https://ipumps.outline.ee/:path*',
+        permanent: false,
+      },
+    ]
+  },
   serverExternalPackages: ['@react-pdf/renderer'],
   images: {
     remotePatterns: [
