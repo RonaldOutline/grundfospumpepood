@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Phone, Mail, MapPin } from 'lucide-react'
+import ObfuscatedEmail from './ObfuscatedEmail'
 
 const categories = [
   { name: 'Küte',            slug: 'kute' },
@@ -15,9 +16,9 @@ const categories = [
 ]
 
 const team = [
-  { name: 'Rivo',  email: 'rivo@ipumps.ee',  phone: '+372 510 2376', tel: '+3725102376' },
-  { name: 'Karol', email: 'karol@ipumps.ee', phone: '+372 503 3978', tel: '+3725033978' },
-  { name: 'Jüri',  email: 'juri@ipumps.ee',  phone: null,            tel: null },
+  { name: 'Rivo',  eUser: 'rivo',  phone: '+372 510 2376', tel: '+3725102376' },
+  { name: 'Karol', eUser: 'karol', phone: '+372 503 3978', tel: '+3725033978' },
+  { name: 'Jüri',  eUser: 'juri',  phone: null,            tel: null },
 ]
 
 const legalLinks = [
@@ -111,12 +112,14 @@ export default function Footer() {
 
             {/* Meeskond */}
             <div className="border-t border-white/10 pt-4 space-y-3">
-              {team.map(({ name, email, phone, tel }) => (
+              {team.map(({ name, eUser, phone, tel }) => (
                 <div key={name} className="text-[13px]">
                   <div className="text-white/50 mb-0.5">{name}</div>
-                  <a href={`mailto:${email}`} className="flex items-center gap-1.5 hover:text-white transition-colors mb-0.5">
-                    <Mail size={12} className="flex-shrink-0" /> {email}
-                  </a>
+                  <ObfuscatedEmail
+                    user={eUser} domain="ipumps.ee"
+                    prefix={<Mail size={12} className="flex-shrink-0" />}
+                    className="flex items-center gap-1.5 hover:text-white transition-colors mb-0.5"
+                  />
                   {phone && tel && (
                     <a href={`tel:${tel}`} className="flex items-center gap-1.5 hover:text-white transition-colors">
                       <Phone size={12} className="flex-shrink-0" /> {phone}

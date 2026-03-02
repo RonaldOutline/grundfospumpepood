@@ -10,6 +10,8 @@ import {
   LayoutDashboard, ShoppingBag, LogOut, Settings
 } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
+import { supabase } from '@/lib/supabase'
+import ObfuscatedEmail from './ObfuscatedEmail'
 
 // ─── ANDMED ────────────────────────────────────────────────────────────────
 
@@ -41,17 +43,29 @@ function getCartCount(): number {
 // ─── HEADER ────────────────────────────────────────────────────────────────
 
 export default function Header() {
-  const [menuOpen, setMenuOpen]       = useState(false)
-  const [lang, setLang]               = useState('ET')
-  const [langOpen, setLangOpen]       = useState(false)
+  const [menuOpen, setMenuOpen]         = useState(false)
+  const [lang, setLang]                 = useState('ET')
+  const [langOpen, setLangOpen]         = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const [searchOpen, setSearchOpen]   = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [cartCount, setCartCount]     = useState(0)
+  const [seriesOpen, setSeriesOpen]     = useState(false)
+  const [series, setSeries]             = useState<{ slug: string; name_et: string }[]>([])
+  const [searchOpen, setSearchOpen]     = useState(false)
+  const [searchQuery, setSearchQuery]   = useState('')
+  const [cartCount, setCartCount]       = useState(0)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const userMenuRef = useRef<HTMLDivElement>(null)
 
   const { user, profile, signOut } = useAuth()
+
+  // Laadi tooteseeria dropdowni jaoks
+  useEffect(() => {
+    supabase
+      .from('categories')
+      .select('slug, name_et')
+      .eq('parent_slug', 'tooted')
+      .order('name_et')
+      .then(({ data }) => { if (data) setSeries(data) })
+  }, [])
 
   // Laadi cart count clientil + kuula muutusi
   useEffect(() => {
@@ -86,9 +100,11 @@ export default function Header() {
             <a href="tel:+3725033978" className="flex items-center gap-1 hover:text-white/80 transition-colors">
               <Phone size={11} /> +372 503 3978
             </a>
-            <a href="mailto:info@ipumps.ee" className="flex items-center gap-1 hover:text-white/80 transition-colors">
-              <Mail size={11} /> info@ipumps.ee
-            </a>
+            <ObfuscatedEmail
+              user="info" domain="ipumps.ee"
+              prefix={<Mail size={11} />}
+              className="flex items-center gap-1 hover:text-white/80 transition-colors"
+            />
           </div>
 
           <div className="flex items-center gap-3 text-[15px] text-white/60">
@@ -169,11 +185,42 @@ export default function Header() {
               )}
             </div>
 
-            {/* Ülejäänud lingid */}
-            <a href="/tooted"
-              className="text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10">
-              Tooted
-            </a>
+            {/* Tooted dropdown — Tooteseeria */}
+            <div
+              className="relative"
+              onMouseEnter={() => setSeriesOpen(true)}
+              onMouseLeave={() => setSeriesOpen(false)}
+            >
+              <button className="flex items-center gap-1 text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10">
+                Tooted
+                <ChevronDown size={14} className={`transition-transform duration-200 ${seriesOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {seriesOpen && (
+                <div className="absolute top-full left-0 w-72 bg-white rounded-xl shadow-2xl py-2 z-50 border border-gray-100">
+                  <a href="/tooted" className="flex items-center gap-2 px-4 py-2.5 text-[15px] font-semibold text-[#003366] hover:bg-blue-50 transition-colors">
+                    Kõik tooted →
+                  </a>
+                  {series.length > 0 && (
+                    <>
+                      <div className="mx-3 my-1 border-t border-gray-100" />
+                      <div className="px-4 py-1 text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Tooteseeria</div>
+                      <div className="max-h-72 overflow-y-auto">
+                        {series.map(s => (
+                          <a
+                            key={s.slug}
+                            href={`/tooted?seeria=${s.slug}`}
+                            className="block px-4 py-2 text-[15px] text-gray-700 hover:bg-blue-50 hover:text-[#003366] transition-colors"
+                          >
+                            {s.name_et}
+                          </a>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
             <a href="https://ipumps.ee/kontakt/" target="_blank" rel="noopener noreferrer"
               className="text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10">
               Projektimüük

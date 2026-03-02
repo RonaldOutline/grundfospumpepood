@@ -4,9 +4,10 @@ import { useState } from 'react'
 import {
   Flame, Snowflake, Thermometer, Drill, Waves,
   ArrowUpCircle, Filter, CircleDot,
-  Search, ShoppingCart, ChevronLeft, ChevronRight,
+  Search, ShoppingCart, ChevronRight,
   Phone, MapPin, Truck, Wrench, Shield, Clock
 } from 'lucide-react'
+import ObfuscatedEmail from '@/components/ObfuscatedEmail'
 
 // ─── ANDMED ────────────────────────────────────────────────────────────────
 
@@ -19,37 +20,6 @@ const categories = [
   { name: 'Salvkaevud',     icon: CircleDot,      count: 22,  slug: 'salvkaevud',                        color: 'from-green-500/20 to-emerald-500/10' },
   { name: 'Rõhutõste',      icon: ArrowUpCircle,  count: 23,  slug: 'rohutoste',                         color: 'from-violet-500/20 to-purple-500/10' },
   { name: 'Reovesi',        icon: Filter,         count: 9,   slug: 'reovesi',                           color: 'from-slate-500/20 to-gray-500/10' },
-]
-
-const slides = [
-  {
-    id: 1,
-    tag: 'Esiletõstetud',
-    title: 'MAGNA3 tsirkulatsioonipumbad',
-    desc: 'Energiatõhus lahendus kütte- ja jahutussüsteemidele. A+++ energiaklass.',
-    price: 'alates 490€',
-    cta: 'Vaata tooteid',
-    image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg',
-    slug: 'magna3',
-    featured: [
-      { name: 'MAGNA3 25-40',    price: '490€', image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg' },
-      { name: 'UPS Series 200',  price: '99€',  image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/UPS-Series-200.jpg' },
-    ],
-  },
-  {
-    id: 2,
-    tag: 'Populaarne',
-    title: 'Alpha ringluspumbad',
-    desc: 'Automaatse kohanemisega pump küttesüsteemidele. Parim hinna ja kvaliteedi suhe.',
-    price: 'alates 116€',
-    cta: 'Vaata tooteid',
-    image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg',
-    slug: 'alpha',
-    featured: [
-      { name: 'ALPHA1 25-40', price: '116€', image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg' },
-      { name: 'ALPHA2 GO',    price: '251€', image: 'https://outline.ee/kliendid/ipumps/wp-content/uploads/2025/09/MAGNA3.jpg' },
-    ],
-  },
 ]
 
 const featuredProducts = [
@@ -118,80 +88,74 @@ function HeroSearch() {
   )
 }
 
-function PromoSlider() {
-  const [current, setCurrent] = useState(0)
-  const prev = () => setCurrent(c => (c - 1 + slides.length) % slides.length)
-  const next = () => setCurrent(c => (c + 1) % slides.length)
-  const slide = slides[current]
-
+function SeasonalPromo() {
   return (
     <section className="bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="rounded-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-5 shadow-xl min-h-[340px]">
 
-          {/* Peamine bänner */}
-          <div className="lg:col-span-2 relative bg-gradient-to-br from-[#003366] to-[#004d99] rounded-2xl overflow-hidden min-h-[280px] flex items-center">
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute right-0 top-0 w-96 h-96 bg-white rounded-full translate-x-32 -translate-y-32" />
-            </div>
-            <div className="relative z-10 p-8 flex-1">
-              <span className="inline-block bg-[#01a0dc] text-white text-[13px] font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wide">
-                {slide.tag}
+          {/* Vasakpoolne osa — pakkumine */}
+          <div className="lg:col-span-3 relative bg-gradient-to-br from-[#003366] via-[#004d80] to-[#005a99] p-8 lg:p-10 flex flex-col justify-between overflow-hidden">
+            {/* Kaunistused */}
+            <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full translate-x-24 -translate-y-24 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-56 h-56 bg-[#01a0dc]/10 rounded-full -translate-x-16 translate-y-16 pointer-events-none" />
+
+            {/* Sisu */}
+            <div className="relative z-10">
+              <span className="inline-flex items-center gap-1.5 bg-green-400/20 text-green-300 border border-green-400/30 text-[13px] font-semibold px-3 py-1 rounded-full mb-5">
+                🌱 Hooaegne pakkumine
               </span>
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 leading-tight">{slide.title}</h2>
-              <p className="text-white/70 mb-6 text-[15px] leading-relaxed max-w-md">{slide.desc}</p>
-              <div className="flex items-center gap-4">
-                <span className="text-white/60 text-[15px]">{slide.price}</span>
-                <a
-                  href={`/tooted?q=${slide.slug}`}
-                  className="bg-[#01a0dc] hover:bg-[#0190c5] text-white px-6 py-2.5 rounded-lg text-[15px] font-semibold transition-colors"
-                >
-                  {slide.cta}
-                </a>
-              </div>
-            </div>
-            <div className="hidden md:block relative z-10 w-52 mr-6 flex-shrink-0">
-              <img src={slide.image} alt={slide.title} className="w-full h-48 object-contain drop-shadow-2xl" />
-            </div>
-
-            {/* Nooled ja punktid */}
-            <div className="absolute bottom-4 left-8 flex items-center gap-3">
-              <button onClick={prev} className="w-7 h-7 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white transition-colors">
-                <ChevronLeft size={14} />
-              </button>
-              <div className="flex gap-1.5">
-                {slides.map((_, i) => (
-                  <button key={i} onClick={() => setCurrent(i)}
-                    className={`h-1.5 rounded-full transition-all ${i === current ? 'bg-white w-4' : 'bg-white/40 w-1.5'}`} />
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 leading-tight">
+                Alusta varakult<br />aiatoimetustega
+              </h2>
+              <p className="text-white/70 text-[15px] leading-relaxed mb-5 max-w-sm">
+                Varusta end enne hooaega — JP veeautomaadid, aiasprinklerid ja
+                põhjavee lahendused on laos ja koheselt saadavad.
+              </p>
+              <ul className="space-y-2.5 mb-7">
+                {[
+                  '31 mudelit laos koheselt',
+                  'Tarne 1–2 tööpäevaga',
+                  'Tasuta tehniline nõustamine',
+                ].map(item => (
+                  <li key={item} className="flex items-center gap-2.5 text-white/80 text-[15px]">
+                    <div className="w-4 h-4 rounded-full bg-green-400/30 border border-green-400/50 flex items-center justify-center flex-shrink-0">
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                    </div>
+                    {item}
+                  </li>
                 ))}
-              </div>
-              <button onClick={next} className="w-7 h-7 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white transition-colors">
-                <ChevronRight size={14} />
-              </button>
+              </ul>
+            </div>
+
+            {/* Alumine rida: nupp + tootepilt */}
+            <div className="relative z-10 flex items-end justify-between gap-4">
+              <a
+                href="/tooted?seeria=jp-veeautomaat"
+                className="inline-flex items-center gap-2 bg-[#01a0dc] hover:bg-[#0190c5] text-white px-5 py-3 rounded-xl font-semibold text-[15px] transition-colors shadow-lg flex-shrink-0"
+              >
+                Vaata meie aialahenduste tooteid
+                <ChevronRight size={16} />
+              </a>
+              <img
+                src="/heroPump.png"
+                alt="JP veeautomaat"
+                className="h-28 md:h-36 object-contain drop-shadow-2xl -mb-2 flex-shrink-0"
+              />
             </div>
           </div>
 
-          {/* Featured tooted */}
-          <div className="flex flex-col gap-4">
-            {slide.featured.map((product, i) => (
-              <div key={i} className="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow border border-gray-100 cursor-pointer group">
-                <img src={product.image} alt={product.name} className="w-16 h-16 object-contain flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="text-[15px] font-semibold text-gray-800 truncate group-hover:text-[#003366] transition-colors">
-                    {product.name}
-                  </div>
-                  <div className="text-[#003366] font-bold text-base mt-1">{product.price}</div>
-                </div>
-                <button className="bg-[#003366] hover:bg-[#004080] text-white p-2 rounded-lg transition-colors flex-shrink-0">
-                  <ShoppingCart size={14} />
-                </button>
-              </div>
-            ))}
-            <a href="/tooted"
-              className="bg-white rounded-2xl p-4 border-2 border-dashed border-gray-200 hover:border-[#003366] transition-colors text-center text-[15px] text-gray-400 hover:text-[#003366] font-medium">
-              Vaata kõiki tooteid →
-            </a>
+          {/* Parempoolne osa — taustafoto */}
+          <div className="hidden lg:block lg:col-span-2 relative">
+            <img
+              src="/aiapump.jpg"
+              alt="Aiatoimetused"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            {/* Pehmendab üleminekut vasaku veeruga */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#003366]/50 to-transparent pointer-events-none" />
           </div>
+
         </div>
       </div>
     </section>
@@ -391,9 +355,10 @@ function LocationBlock() {
                   <a href="tel:+3725033978" className="block text-gray-500 text-[15px] hover:text-[#003366] transition-colors">
                     +372 503 3978
                   </a>
-                  <a href="mailto:info@ipumps.ee" className="block text-gray-500 text-[15px] hover:text-[#003366] transition-colors">
-                    info@ipumps.ee
-                  </a>
+                  <ObfuscatedEmail
+                    user="info" domain="ipumps.ee"
+                    className="block text-gray-500 text-[15px] hover:text-[#003366] transition-colors"
+                  />
                 </div>
               </div>
             </div>
@@ -444,7 +409,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       <HeroSearch />
-      <PromoSlider />
+      <SeasonalPromo />
       <CategoriesSection />
       <FeaturedProducts />
       <InstallationBlock />
