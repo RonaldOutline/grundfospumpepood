@@ -37,7 +37,8 @@ export default function FeaturedProductsSlider() {
       .eq('category_slug', FEATURED_SLUG)
     const items = (data ?? [])
       .map(r => r.product)
-      .filter((p): p is Product & { published: boolean } => !!p && (p as Product & { published: boolean }).published)
+      .filter(p => !!p && !Array.isArray(p) && (p as Product).published !== false)
+      .map(p => p as Product)
     setProducts(items)
   }
 
