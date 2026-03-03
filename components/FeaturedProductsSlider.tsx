@@ -15,6 +15,7 @@ interface Product {
   sale_price: number | null
   image_url: string | null
   in_stock: boolean
+  published?: boolean
 }
 
 export default function FeaturedProductsSlider() {
@@ -26,14 +27,36 @@ export default function FeaturedProductsSlider() {
   // Responsive: how many cards are visible at once
   const [visible,  setVisible]  = useState(4)
 
-  // ── Load first 8 products ─────────────────────────────────────────────────
+  // ── Load products from "esiletostetud" category ───────────────────────────
+  const FEATURED_SLUG = 'esiletostetud'
+
+  async function loadFeatured() {
+    const { data } = await supabase
+      .from('product_categories')
+      .select('product:products(id, slug, name, sku, price, sale_price, image_url, in_stock, published)')
+      .eq('category_slug', FEATURED_SLUG)
+    const items = (data ?? [])
+      .map(r => r.product)
+      .filter((p): p is Product & { published: boolean } => !!p && (p as Product & { published: boolean }).published)
+    setProducts(items)
+  }
+
   useEffect(() => {
-    supabase
-      .from('products')
-      .select('id, slug, name, sku, price, sale_price, image_url, in_stock')
-      .order('id')
-      .limit(8)
-      .then(({ data }) => { if (data) setProducts(data) })
+    loadFeatured()
+
+    // Real-time: kui kategooria tooteid muudetakse, uuenda slider kohe
+    const channel = supabase
+      .channel('featured-category')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'product_categories',
+        filter: `category_slug=eq.${FEATURED_SLUG}`,
+      }, () => { loadFeatured() })
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ── Responsive visible count ──────────────────────────────────────────────

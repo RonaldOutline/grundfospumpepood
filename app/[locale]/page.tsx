@@ -127,29 +127,34 @@ function SeasonalPromo() {
   return (
     <section className="bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="rounded-2xl overflow-hidden flex flex-col lg:flex-row shadow-xl min-h-[380px]">
+        <div className="rounded-2xl overflow-hidden shadow-xl min-h-[380px] relative">
 
-          {/* Vasakpoolne osa — pakkumine (40%) */}
-          <div className="lg:w-2/5 relative bg-gradient-to-br from-[#00c270] via-[#00a75d] to-[#007a44] p-8 lg:p-10 flex flex-col justify-between overflow-hidden">
-            {/* Kaunistused */}
-            <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full translate-x-24 -translate-y-24 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-56 h-56 bg-white/5 rounded-full -translate-x-16 translate-y-16 pointer-events-none" />
+          {/* Taustapilt — katab kogu ala, joondatud paremale-keskele */}
+          <img
+            src="/images/promo1.jpg"
+            alt="Pakkumine"
+            className="absolute inset-0 w-full h-full object-cover object-right-center"
+          />
 
-            {/* Sisu */}
-            <div className="relative z-10">
-              <span className="inline-flex items-center gap-1.5 bg-white/20 text-white/90 border border-white/30 text-[13px] font-semibold px-3 py-1 rounded-full mb-5">
+          {/* Gradient — tugevam vasakul (tekst loetav), hajub paremale */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#001f40]/88 via-[#001f40]/55 to-[#001f40]/10 pointer-events-none" />
+
+          {/* Sisu */}
+          <div className="relative z-10 lg:w-[45%] p-8 lg:p-10 flex flex-col justify-between min-h-[380px]">
+            <div>
+              <span className="inline-flex items-center gap-1.5 bg-white/15 text-white/90 border border-white/25 text-[13px] font-semibold px-3 py-1 rounded-full mb-5">
                 {t('badge')}
               </span>
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 leading-tight whitespace-pre-line">
                 {t('title')}
               </h2>
-              <p className="text-white/70 text-[15px] leading-relaxed mb-5 max-w-sm">
+              <p className="text-white/75 text-[15px] leading-relaxed mb-5 max-w-sm">
                 {t('description')}
               </p>
               <ul className="space-y-2.5 mb-7">
                 {(['bullet1', 'bullet2', 'bullet3'] as const).map(key => (
                   <li key={key} className="flex items-center gap-2.5 text-white/80 text-[15px]">
-                    <div className="w-4 h-4 rounded-full bg-white/30 border border-white/50 flex items-center justify-center flex-shrink-0">
+                    <div className="w-4 h-4 rounded-full bg-white/25 border border-white/40 flex items-center justify-center flex-shrink-0">
                       <div className="w-1.5 h-1.5 rounded-full bg-white" />
                     </div>
                     {t(key)}
@@ -158,32 +163,15 @@ function SeasonalPromo() {
               </ul>
             </div>
 
-            {/* Alumine rida: nupp + tootepilt */}
-            <div className="relative z-10 flex items-end justify-between gap-4">
+            <div>
               <a
                 href="/tooted?seeria=jp-veeautomaat"
-                className="inline-flex items-center gap-2 bg-[#01a0dc] hover:bg-[#0190c5] text-white px-5 py-3 rounded-xl font-semibold text-[15px] transition-colors shadow-lg flex-shrink-0"
+                className="inline-flex items-center gap-2 bg-[#01a0dc] hover:bg-[#0190c5] text-white px-5 py-3 rounded-xl font-semibold text-[15px] transition-colors shadow-lg"
               >
                 {t('cta')}
                 <ChevronRight size={16} />
               </a>
-              <img
-                src="/heroPump.png"
-                alt="JP veeautomaat"
-                className="h-28 md:h-36 object-contain drop-shadow-2xl -mb-2 flex-shrink-0"
-              />
             </div>
-          </div>
-
-          {/* Parempoolne osa — taustafoto (60%) */}
-          <div className="hidden lg:block lg:flex-1 relative overflow-hidden">
-            <img
-              src="/aiapump.jpg"
-              alt="Aiatoimetused"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-            {/* Pehmendab üleminekut vasaku veeruga */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#007a44]/40 to-transparent pointer-events-none" />
           </div>
 
         </div>
