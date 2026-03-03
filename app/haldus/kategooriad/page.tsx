@@ -126,49 +126,6 @@ export default function KategooriadPage() {
 
   if (!canManageProducts(profile?.role ?? '')) return null
 
-  const FormPanel = () => (
-    <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 space-y-3">
-      <h3 className="font-semibold text-gray-900">{editId ? 'Muuda kategooriat' : 'Lisa kategooria'}</h3>
-      {error && <p className="text-[14px] text-red-600">{error}</p>}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label className="block text-[14px] font-medium text-gray-700 mb-1">Nimi (ET) <span className="text-red-500">*</span></label>
-          <input value={form.name_et} onChange={e => setForm(f => ({...f, name_et: e.target.value}))}
-            className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-[15px] text-gray-900 outline-none focus:border-[#003366] bg-white" placeholder="Kategooria nimi" />
-        </div>
-        <div>
-          <label className="block text-[14px] font-medium text-gray-700 mb-1">Nimi (EN)</label>
-          <input value={form.name_en} onChange={e => setForm(f => ({...f, name_en: e.target.value}))}
-            className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-[15px] text-gray-900 outline-none focus:border-[#003366] bg-white" placeholder="Category name" />
-        </div>
-        {!editId && (
-          <div>
-            <label className="block text-[14px] font-medium text-gray-700 mb-1">Slug</label>
-            <input value={form.slug} onChange={e => { setForm(f => ({...f, slug: e.target.value})); setSlugCustom(true) }}
-              className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-[15px] text-gray-900 font-mono outline-none focus:border-[#003366] bg-white" placeholder="kategooria-slug" />
-          </div>
-        )}
-        <div>
-          <label className="block text-[14px] font-medium text-gray-700 mb-1">Vanem-kategooria</label>
-          <select value={form.parent_slug} onChange={e => setForm(f => ({...f, parent_slug: e.target.value}))}
-            className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-[15px] text-gray-900 outline-none focus:border-[#003366] bg-white">
-            <option value="">Ülemise taseme kategooria</option>
-            {categories.filter(c => c.id !== editId).map(c => (
-              <option key={c.slug} value={c.slug}>{c.name_et}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-      <div className="flex gap-2 pt-1">
-        <button onClick={cancelForm} className="px-4 py-2 text-[14px] font-medium text-gray-600 hover:bg-white rounded-xl transition-colors">Tühista</button>
-        <button onClick={handleSave} disabled={saving}
-          className="px-4 py-2 text-[14px] font-semibold bg-[#003366] text-white rounded-xl hover:bg-[#004080] transition-colors disabled:opacity-60">
-          {saving ? 'Salvestan...' : (editId ? 'Salvesta' : 'Lisa')}
-        </button>
-      </div>
-    </div>
-  )
-
   const CatRow = ({ cat, depth = 0 }: { cat: Category; depth?: number }) => {
     const kids  = children(cat.slug)
     const isExp = expanded.has(cat.slug)
@@ -226,7 +183,48 @@ export default function KategooriadPage() {
           </button>
         </div>
 
-        {(addOpen || editId) && <FormPanel />}
+        {(addOpen || editId) && (
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 space-y-3">
+            <h3 className="font-semibold text-gray-900">{editId ? 'Muuda kategooriat' : 'Lisa kategooria'}</h3>
+            {error && <p className="text-[14px] text-red-600">{error}</p>}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[14px] font-medium text-gray-700 mb-1">Nimi (ET) <span className="text-red-500">*</span></label>
+                <input value={form.name_et} onChange={e => setForm(f => ({...f, name_et: e.target.value}))}
+                  className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-[15px] text-gray-900 outline-none focus:border-[#003366] bg-white" placeholder="Kategooria nimi" />
+              </div>
+              <div>
+                <label className="block text-[14px] font-medium text-gray-700 mb-1">Nimi (EN)</label>
+                <input value={form.name_en} onChange={e => setForm(f => ({...f, name_en: e.target.value}))}
+                  className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-[15px] text-gray-900 outline-none focus:border-[#003366] bg-white" placeholder="Category name" />
+              </div>
+              {!editId && (
+                <div>
+                  <label className="block text-[14px] font-medium text-gray-700 mb-1">Slug</label>
+                  <input value={form.slug} onChange={e => { setForm(f => ({...f, slug: e.target.value})); setSlugCustom(true) }}
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-[15px] text-gray-900 font-mono outline-none focus:border-[#003366] bg-white" placeholder="kategooria-slug" />
+                </div>
+              )}
+              <div>
+                <label className="block text-[14px] font-medium text-gray-700 mb-1">Vanem-kategooria</label>
+                <select value={form.parent_slug} onChange={e => setForm(f => ({...f, parent_slug: e.target.value}))}
+                  className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-[15px] text-gray-900 outline-none focus:border-[#003366] bg-white">
+                  <option value="">Ülemise taseme kategooria</option>
+                  {categories.filter(c => c.id !== editId).map(c => (
+                    <option key={c.slug} value={c.slug}>{c.name_et}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="flex gap-2 pt-1">
+              <button onClick={cancelForm} className="px-4 py-2 text-[14px] font-medium text-gray-600 hover:bg-white rounded-xl transition-colors">Tühista</button>
+              <button onClick={handleSave} disabled={saving}
+                className="px-4 py-2 text-[14px] font-semibold bg-[#003366] text-white rounded-xl hover:bg-[#004080] transition-colors disabled:opacity-60">
+                {saving ? 'Salvestan...' : (editId ? 'Salvesta' : 'Lisa')}
+              </button>
+            </div>
+          </div>
+        )}
 
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           {loading ? (

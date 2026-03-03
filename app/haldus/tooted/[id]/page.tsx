@@ -59,7 +59,7 @@ export default function MuudaToode() {
   const [inStock, setInStock]   = useState(true)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [published, setPublished] = useState(true)
-  const [catSlug, setCatSlug]   = useState('')
+  const [catSlugs, setCatSlugs] = useState<string[]>([])
   const [weight, setWeight]     = useState('')
   const [length, setLength]     = useState('')
   const [width, setWidth]       = useState('')
@@ -98,7 +98,7 @@ export default function MuudaToode() {
       setLength(p.length_cm ? String(p.length_cm) : '')
       setWidth(p.width_cm  ? String(p.width_cm)  : '')
       setHeight(p.height_cm ? String(p.height_cm) : '')
-      setCatSlug(pcRes.data?.[0]?.category_slug ?? '')
+      setCatSlugs((pcRes.data ?? []).map(r => r.category_slug))
       setBulkPrices((bpRes.data ?? []) as BulkPriceRow[])
       setLoading(false)
     }
@@ -138,10 +138,12 @@ export default function MuudaToode() {
       }).catch(console.error)
     }
 
-    // Update category
+    // Update categories
     await supabase.from('product_categories').delete().eq('product_id', id)
-    if (catSlug) {
-      await supabase.from('product_categories').insert({ product_id: id, category_slug: catSlug })
+    if (catSlugs.length > 0) {
+      await supabase.from('product_categories').insert(
+        catSlugs.map(slug => ({ product_id: id, category_slug: slug }))
+      )
     }
 
     setSaving(false); setSaved(true)
@@ -367,12 +369,25 @@ export default function MuudaToode() {
             </div>
 
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-              <h2 className="font-semibold text-gray-900 mb-4">Kategooria</h2>
-              <select value={catSlug} onChange={e => setCatSlug(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-[15px] text-gray-900 outline-none focus:border-[#003366] bg-white">
-                <option value="">Kategooriata</option>
-                {categories.map(c => <option key={c.slug} value={c.slug}>{c.name_et}</option>)}
-              </select>
+              <h2 className="font-semibold text-gray-900 mb-3">Kategooriad</h2>
+              <div className="space-y-2">
+                {categories.map(c => (
+                  <label key={c.slug} className="flex items-center gap-2.5 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={catSlugs.includes(c.slug)}
+                      onChange={e => setCatSlugs(prev =>
+                        e.target.checked ? [...prev, c.slug] : prev.filter(s => s !== c.slug)
+                      )}
+                      className="w-4 h-4 rounded border-gray-300 text-[#003366] accent-[#003366]"
+                    />
+                    <span className="text-[15px] text-gray-700 group-hover:text-gray-900">{c.name_et}</span>
+                  </label>
+                ))}
+                {categories.length === 0 && (
+                  <p className="text-[14px] text-gray-400">Kategooriaid pole</p>
+                )}
+              </div>
             </div>
 
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
