@@ -80,16 +80,14 @@ export default function HaldusLehedPage() {
           </div>
         ) : (
           <>
-            <div className="hidden sm:grid grid-cols-[1fr_auto_auto_auto] gap-4 px-6 py-3 border-b border-gray-100 text-[12px] font-semibold text-gray-400 uppercase tracking-wider">
+            <div className="hidden sm:grid grid-cols-[1fr_auto_auto] gap-4 px-6 py-3 border-b border-gray-100 text-[12px] font-semibold text-gray-400 uppercase tracking-wider">
               <span>Pealkiri / slug</span>
-              <span className="text-center">Staatus</span>
               <span className="text-center">Menüüs</span>
               <span />
             </div>
             <div className="divide-y divide-gray-50">
               {pages.map(page => {
-                const isPublished = page.status === 'published'
-                const inNav       = !!page.show_in_nav
+                const inNav = !!page.show_in_nav
                 return (
                   <div key={page.id} className="flex items-center gap-4 px-6 py-4">
                     <div className="flex-1 min-w-0">
@@ -105,12 +103,6 @@ export default function HaldusLehedPage() {
                         {new Date(page.created_at).toLocaleDateString('et-EE')}
                       </div>
                     </div>
-
-                    <span className={`px-2.5 py-1 rounded-full text-[12px] font-semibold flex-shrink-0 ${
-                      isPublished ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600'
-                    }`}>
-                      {isPublished ? 'Avalik' : 'Mustand'}
-                    </span>
 
                     <span className={`px-2.5 py-1 rounded-full text-[12px] font-semibold flex-shrink-0 flex items-center gap-1 ${
                       inNav ? 'bg-purple-50 text-purple-600' : 'bg-gray-100 text-gray-400'
