@@ -379,7 +379,7 @@ export default function Header() {
                         key={s.slug}
                         href={`/tooted?seeria=${s.slug}`}
                         onClick={() => setMegaOpen(false)}
-                        className="block py-1.5 text-[13px] text-gray-700 hover:text-[#003366] transition-colors truncate"
+                        className="block px-2 py-1.5 rounded-md text-[13px] text-gray-700 hover:bg-blue-50 hover:text-[#003366] active:bg-blue-100 transition-colors truncate"
                       >
                         {s.name_et}
                       </Link>
