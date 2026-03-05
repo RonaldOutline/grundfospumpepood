@@ -7,12 +7,22 @@ import {
   Search, ShoppingCart, User, ChevronDown,
   Phone, Mail, Menu, X, ChevronRight,
   LayoutDashboard, ShoppingBag, LogOut, Settings,
+  ArrowRight, Package,
 } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 import { supabase } from '@/lib/supabase'
 import ObfuscatedEmail from './ObfuscatedEmail'
 import { useLocale, useTranslations } from 'next-intl'
 import { Link, usePathname, useRouter } from '@/i18n/navigation'
+
+interface CartItem {
+  id: number
+  slug: string
+  name: string
+  price: number
+  image_url: string | null
+  qty: number
+}
 
 // ─── ANDMED ────────────────────────────────────────────────────────────────
 
@@ -36,7 +46,7 @@ const categories = [
   { nameKey: 'sewage',   icon: Filter,         count: 9,   slug: 'reovesi' },
 ]
 
-// ─── OSTUKORV HELPER ───────────────────────────────────────────────────────
+// ─── OSTUKORV HELPERS ──────────────────────────────────────────────────────
 
 function getCartCount(): number {
   if (typeof window === 'undefined') return 0
@@ -48,17 +58,26 @@ function getCartCount(): number {
   }
 }
 
+function getCartItems(): CartItem[] {
+  if (typeof window === 'undefined') return []
+  try {
+    return JSON.parse(localStorage.getItem('ipumps_cart') || '[]')
+  } catch {
+    return []
+  }
+}
+
 // ─── HEADER ────────────────────────────────────────────────────────────────
 
 export default function Header() {
   const [menuOpen, setMenuOpen]         = useState(false)
   const [langOpen, setLangOpen]         = useState(false)
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-  const [seriesOpen, setSeriesOpen]     = useState(false)
+  const [megaOpen, setMegaOpen]         = useState(false)
   const [series, setSeries]             = useState<{ slug: string; name_et: string }[]>([])
   const [searchOpen, setSearchOpen]     = useState(false)
   const [searchQuery, setSearchQuery]   = useState('')
   const [cartCount, setCartCount]       = useState(0)
+  const [cartItems, setCartItems]       = useState<CartItem[]>([])
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const userMenuRef = useRef<HTMLDivElement>(null)
 
@@ -89,10 +108,11 @@ export default function Header() {
       .then(({ data }) => { if (data) setSeries(data) })
   }, [])
 
-  // Laadi cart count clientil + kuula muutusi
+  // Laadi cart count + items clientil + kuula muutusi
   useEffect(() => {
     setCartCount(getCartCount())
-    const handler = () => setCartCount(getCartCount())
+    setCartItems(getCartItems())
+    const handler = () => { setCartCount(getCartCount()); setCartItems(getCartItems()) }
     window.addEventListener('cart_updated', handler)
     return () => window.removeEventListener('cart_updated', handler)
   }, [])
@@ -171,108 +191,42 @@ export default function Header() {
         </div>
       </div>
 
-      {/* ── Main nav ────────────────────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center gap-4 h-16">
+      {/* ── Main nav + mega menu wrapper ────────────────────────────────── */}
+      <div
+        className="relative"
+        onMouseLeave={() => setMegaOpen(false)}
+      >
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center gap-4 h-16">
 
-          {/* Logo */}
-          <Link href="/" className="flex items-center flex-shrink-0">
-            <img src="/ipumps-logo-white.svg" alt="iPumps" className="h-8 w-auto" />
-          </Link>
-
-          {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-1 flex-1">
-
-            {/* Dropdown — Elamud ja Ärihooned */}
-            <div
-              className="relative"
-              onMouseEnter={() => setDropdownOpen(true)}
-              onMouseLeave={() => setDropdownOpen(false)}
-            >
-              <button className="flex items-center gap-1 text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10">
-                {t('buildings')}
-                <ChevronDown size={14} className={`transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              {dropdownOpen && (
-                <div className="absolute top-full left-0 w-80 bg-white rounded-xl shadow-2xl py-3 z-50 border border-gray-100">
-                  <div className="px-4 pb-2 text-[15px] font-semibold text-gray-400 uppercase tracking-wider">
-                    {tCat('subtitle')}
-                  </div>
-                  <div className="grid grid-cols-2 gap-0.5 px-2">
-                    {categories.map(cat => (
-                      <Link
-                        key={cat.slug}
-                        href={`/tooted?tegevusala=${cat.slug}`}
-                        className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-blue-50 transition-colors group"
-                      >
-                        <cat.icon size={16} className="text-[#003366] group-hover:text-[#01a0dc] flex-shrink-0 transition-colors" />
-                        <div>
-                          <div className="text-[15px] font-medium text-gray-800 leading-tight">{tCat(cat.nameKey)}</div>
-                          <div className="text-[13px] text-gray-400">{cat.count} {tCat('products')}</div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Tooted dropdown — Tooteseeria */}
-            <div
-              className="relative"
-              onMouseEnter={() => setSeriesOpen(true)}
-              onMouseLeave={() => setSeriesOpen(false)}
-            >
-              <button className="flex items-center gap-1 text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10">
-                {t('products')}
-                <ChevronDown size={14} className={`transition-transform duration-200 ${seriesOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              {seriesOpen && (
-                <div className="absolute top-full left-0 w-72 bg-white rounded-xl shadow-2xl py-2 z-50 border border-gray-100">
-                  <Link href="/tooted" className="flex items-center gap-2 px-4 py-2.5 text-[15px] font-semibold text-[#003366] hover:bg-blue-50 transition-colors">
-                    {t('allProducts')}
-                  </Link>
-                  {series.length > 0 && (
-                    <>
-                      <div className="mx-3 my-1 border-t border-gray-100" />
-                      <div className="px-4 py-1 text-[13px] font-semibold text-gray-400 uppercase tracking-wider">{t('productSeries')}</div>
-                      <div className="max-h-72 overflow-y-auto">
-                        {series.map(s => (
-                          <Link
-                            key={s.slug}
-                            href={`/tooted?seeria=${s.slug}`}
-                            className="block px-4 py-2 text-[15px] text-gray-700 hover:bg-blue-50 hover:text-[#003366] transition-colors"
-                          >
-                            {s.name_et}
-                          </Link>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <a
-              href="https://ipumps.ee/kontakt/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10"
-            >
-              {t('projectSales')}
-            </a>
-            <Link
-              href="/leht/kontakt"
-              className="text-white/90 hover:text-white px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10"
-            >
-              {t('contact')}
+            {/* Logo */}
+            <Link href="/" className="flex items-center flex-shrink-0">
+              <img src="/ipumps-logo-white.svg" alt="iPumps" className="h-8 w-auto" />
             </Link>
-          </nav>
 
-          {/* Parempoolsed nupud */}
-          <div className="flex items-center gap-1 ml-auto">
+            {/* Desktop nav */}
+            <nav
+              className="hidden lg:flex items-center gap-1 flex-1"
+              onMouseEnter={() => setMegaOpen(true)}
+            >
+              <button className={`flex items-center gap-1 px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10 ${megaOpen ? 'text-white' : 'text-white/90 hover:text-white'}`}>
+                {t('buildings')}
+                <ChevronDown size={14} className={`transition-transform duration-200 ${megaOpen ? 'rotate-180' : ''}`} />
+              </button>
+              <button className={`flex items-center gap-1 px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10 ${megaOpen ? 'text-white' : 'text-white/90 hover:text-white'}`}>
+                {t('products')}
+                <ChevronDown size={14} className={`transition-transform duration-200 ${megaOpen ? 'rotate-180' : ''}`} />
+              </button>
+              <button className={`px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10 ${megaOpen ? 'text-white' : 'text-white/90 hover:text-white'}`}>
+                {t('projectSales')}
+              </button>
+              <button className={`px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10 ${megaOpen ? 'text-white' : 'text-white/90 hover:text-white'}`}>
+                {t('contact')}
+              </button>
+            </nav>
+
+            {/* Parempoolsed nupud */}
+            <div className="flex items-center gap-1 ml-auto">
 
             {/* Otsing */}
             <div className="relative hidden md:block">
@@ -378,6 +332,158 @@ export default function Header() {
           </div>
         </div>
       </div>
+
+        {/* ── Mega menu ─────────────────────────────────────────────────── */}
+        {megaOpen && (
+          <div
+            className="hidden lg:block absolute w-full bg-white shadow-2xl border-t border-gray-100 z-50"
+            onMouseEnter={() => setMegaOpen(true)}
+          >
+            <div className="max-w-7xl mx-auto flex">
+
+              {/* 1 — Elamud ja ärihooned */}
+              <div className="flex-[3] bg-white p-5 border-r border-gray-100">
+                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3">{t('buildings')}</div>
+                <div className="grid grid-cols-2 gap-0.5">
+                  {categories.map(cat => (
+                    <Link
+                      key={cat.slug}
+                      href={`/tooted?tegevusala=${cat.slug}`}
+                      onClick={() => setMegaOpen(false)}
+                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg hover:bg-blue-50 transition-colors group"
+                    >
+                      <cat.icon size={16} className="text-[#003366] group-hover:text-[#01a0dc] flex-shrink-0 transition-colors" />
+                      <div>
+                        <div className="text-[14px] font-medium text-gray-800 leading-tight">{tCat(cat.nameKey)}</div>
+                        <div className="text-[12px] text-gray-400">{cat.count} {tCat('products')}</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* 2 — Tooted */}
+              <div className="flex-[3] bg-gray-50 p-5 border-r border-gray-100">
+                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3">{t('products')}</div>
+                <Link
+                  href="/tooted"
+                  onClick={() => setMegaOpen(false)}
+                  className="flex items-center gap-1.5 text-[14px] font-semibold text-[#003366] hover:text-[#01a0dc] transition-colors mb-3"
+                >
+                  {t('allProducts')} <ArrowRight size={13} />
+                </Link>
+                {series.length > 0 && (
+                  <div className="columns-2 gap-x-4">
+                    {series.map(s => (
+                      <Link
+                        key={s.slug}
+                        href={`/tooted?seeria=${s.slug}`}
+                        onClick={() => setMegaOpen(false)}
+                        className="block py-1.5 text-[13px] text-gray-700 hover:text-[#003366] transition-colors truncate"
+                      >
+                        {s.name_et}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* 3 — Projektimüük + Kontakt */}
+              <div className="flex-[2] bg-slate-50 p-5 border-r border-gray-100">
+                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3">{t('projectSales')}</div>
+                <a
+                  href="https://ipumps.ee/kontakt/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMegaOpen(false)}
+                  className="flex items-center gap-2 px-3 py-3 rounded-lg hover:bg-blue-50 transition-colors group mb-1"
+                >
+                  <div>
+                    <div className="text-[14px] font-semibold text-gray-800 group-hover:text-[#003366] transition-colors">{t('projectSales')}</div>
+                    <div className="text-[12px] text-gray-400 mt-0.5">ipumps.ee</div>
+                  </div>
+                  <ArrowRight size={13} className="ml-auto text-gray-300 group-hover:text-[#003366] transition-colors" />
+                </a>
+                <div className="my-2 border-t border-gray-200" />
+                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3">{t('contact')}</div>
+                <Link
+                  href="/leht/kontakt"
+                  onClick={() => setMegaOpen(false)}
+                  className="flex items-center gap-2 px-3 py-3 rounded-lg hover:bg-blue-50 transition-colors group"
+                >
+                  <div>
+                    <div className="text-[14px] font-semibold text-gray-800 group-hover:text-[#003366] transition-colors">{t('contact')}</div>
+                    <div className="text-[12px] text-gray-400 mt-0.5">info@ipumps.ee</div>
+                  </div>
+                  <ArrowRight size={13} className="ml-auto text-gray-300 group-hover:text-[#003366] transition-colors" />
+                </Link>
+              </div>
+
+              {/* 4 — Ostukorv */}
+              <div className="flex-[2] bg-blue-50 p-5">
+                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3">
+                  {t('cart') ?? 'Ostukorv'} {cartCount > 0 && <span className="text-[#01a0dc]">({cartCount})</span>}
+                </div>
+                {cartItems.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-4 text-gray-400 gap-2">
+                    <Package size={28} className="opacity-40" />
+                    <span className="text-[13px]">Ostukorv on tühi</span>
+                  </div>
+                ) : (
+                  <div className="space-y-2 mb-3 max-h-48 overflow-y-auto">
+                    {cartItems.slice(0, 5).map(item => (
+                      <Link
+                        key={item.id}
+                        href={`/toode/${item.slug}`}
+                        onClick={() => setMegaOpen(false)}
+                        className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-blue-100 transition-colors group"
+                      >
+                        {item.image_url ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={item.image_url} alt={item.name} className="w-9 h-9 object-contain rounded bg-white border border-gray-100 flex-shrink-0" />
+                        ) : (
+                          <div className="w-9 h-9 rounded bg-white border border-gray-100 flex-shrink-0 flex items-center justify-center">
+                            <Package size={14} className="text-gray-300" />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <div className="text-[12px] font-medium text-gray-800 truncate leading-tight">{item.name}</div>
+                          <div className="text-[11px] text-gray-500">{item.qty} tk · {(item.price * item.qty).toFixed(2)} €</div>
+                        </div>
+                      </Link>
+                    ))}
+                    {cartItems.length > 5 && (
+                      <div className="text-[12px] text-gray-400 px-2">+{cartItems.length - 5} toodet veel</div>
+                    )}
+                  </div>
+                )}
+                <div className="space-y-2 mt-3">
+                  {cartItems.length > 0 && (
+                    <div className="text-[13px] font-semibold text-gray-700 px-1 mb-1">
+                      Kokku: {cartItems.reduce((s, i) => s + i.price * i.qty, 0).toFixed(2)} €
+                    </div>
+                  )}
+                  <Link
+                    href="/ostukorv"
+                    onClick={() => setMegaOpen(false)}
+                    className="flex items-center justify-center gap-1.5 w-full border border-[#003366] text-[#003366] hover:bg-[#003366] hover:text-white px-4 py-2 rounded-lg text-[13px] font-semibold transition-colors"
+                  >
+                    <ShoppingCart size={14} /> Ostukorv
+                  </Link>
+                  <Link
+                    href="/checkout"
+                    onClick={() => setMegaOpen(false)}
+                    className="flex items-center justify-center gap-1.5 w-full bg-[#003366] hover:bg-[#004080] text-white px-4 py-2 rounded-lg text-[13px] font-semibold transition-colors"
+                  >
+                    <ArrowRight size={14} /> Kassasse
+                  </Link>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
+      </div>{/* /mega menu wrapper */}
 
       {/* ── Mobiilimenüü ────────────────────────────────────────────────── */}
       {menuOpen && (

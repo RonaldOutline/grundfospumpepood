@@ -35,6 +35,14 @@ export default function RichTextEditor({ value, onChange }: Props) {
     if (editorRef.current) onChange(editorRef.current.innerHTML)
   }
 
+  function handlePaste(e: React.ClipboardEvent<HTMLDivElement>) {
+    e.preventDefault()
+    const text = e.clipboardData.getData('text/plain')
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
+    document.execCommand('insertText', false, text)
+    if (editorRef.current) onChange(editorRef.current.innerHTML)
+  }
+
   function switchToLive() {
     if (editorRef.current) editorRef.current.innerHTML = value
     setMode('live')
@@ -94,6 +102,7 @@ export default function RichTextEditor({ value, onChange }: Props) {
         contentEditable
         suppressContentEditableWarning
         onInput={() => { if (editorRef.current) onChange(editorRef.current.innerHTML) }}
+        onPaste={handlePaste}
         className={`p-3 min-h-[120px] focus:outline-none text-[14px] leading-relaxed
           [&_b]:font-bold [&_strong]:font-bold
           [&_i]:italic [&_em]:italic

@@ -38,7 +38,6 @@ interface Props {
 
 export default function PageBuilderEditor({ mode, initialData }: Props) {
   const router = useRouter()
-  const [tab, setTab] = useState<'sisu' | 'seaded'>('sisu')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [ogUploading, setOgUploading] = useState(false)
@@ -131,8 +130,8 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
 
   async function save(targetStatus?: 'draft' | 'published') {
     setError('')
-    if (!title.trim()) { setError('Pealkiri on kohustuslik.'); setTab('seaded'); return }
-    if (!slug.trim())  { setError('Slug on kohustuslik.'); setTab('seaded'); return }
+    if (!title.trim()) { setError('Pealkiri on kohustuslik.'); return }
+    if (!slug.trim())  { setError('Slug on kohustuslik.'); return }
 
     setSaving(true)
 
@@ -186,32 +185,25 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
-  const tabCls = (t: 'sisu' | 'seaded') =>
-    `px-5 py-2.5 text-[14px] font-semibold border-b-2 transition-colors ${
-      tab === t
-        ? 'border-[#003366] text-[#003366]'
-        : 'border-transparent text-gray-500 hover:text-gray-700'
-    }`
-
   return (
-    <div className="space-y-0">
-      {/* Tabs */}
-      <div className="flex border-b border-gray-200 bg-white rounded-t-2xl px-2">
-        <button type="button" className={tabCls('sisu')} onClick={() => setTab('sisu')}>Sisu</button>
-        <button type="button" className={tabCls('seaded')} onClick={() => setTab('seaded')}>Seaded</button>
-        {mode === 'edit' && slug && (
-          <a
-            href={`/leht/${slug}`} target="_blank" rel="noopener noreferrer"
-            className="ml-auto flex items-center gap-1.5 px-4 py-2 text-[13px] text-gray-400 hover:text-[#003366] transition-colors self-center"
-          >
-            <ExternalLink size={14} /> Eelvaade
-          </a>
-        )}
-      </div>
+    <div className="space-y-4">
+      {/* Two-column layout */}
+      <div className="flex gap-4 items-start">
 
-      {/* ── TAB: SISU ──────────────────────────────────────────────────── */}
-      {tab === 'sisu' && (
-        <div className="bg-white rounded-b-2xl border border-t-0 border-gray-100 shadow-sm p-6 space-y-4">
+        {/* ── Left: Sisu ─────────────────────────────────────────────── */}
+        <div className="flex-1 min-w-0 bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-[15px] font-semibold text-gray-700">Sisu</h2>
+            {mode === 'edit' && slug && (
+              <a
+                href={`/leht/${slug}`} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-[13px] text-gray-400 hover:text-[#003366] transition-colors"
+              >
+                <ExternalLink size={14} /> Eelvaade
+              </a>
+            )}
+          </div>
+
           {sections.length === 0 && (
             <div className="text-center py-12 text-gray-400">
               <p className="text-[15px] mb-4">Lehel pole veel sektsioone.</p>
@@ -248,11 +240,11 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
             <Plus size={16} /> Lisa sektsioon
           </button>
         </div>
-      )}
 
-      {/* ── TAB: SEADED ────────────────────────────────────────────────── */}
-      {tab === 'seaded' && (
-        <div className="bg-white rounded-b-2xl border border-t-0 border-gray-100 shadow-sm p-6 space-y-6">
+        {/* ── Right: Seaded ──────────────────────────────────────────── */}
+        <div className="w-80 shrink-0 bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-5 sticky top-4">
+          <h2 className="text-[15px] font-semibold text-gray-700">Seaded</h2>
+
           {/* Pealkiri */}
           <div>
             <label className={lbl}>Pealkiri *</label>
@@ -276,7 +268,7 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
           </div>
 
           {/* Staatus + Nähtavus */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <label className={lbl}>Staatus</label>
               <select value={status} onChange={e => setStatus(e.target.value as 'draft'|'published')} className={inp}>
@@ -310,8 +302,8 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
           </div>
 
           {/* SEO */}
-          <div className="space-y-4 border-t border-gray-100 pt-6">
-            <h3 className="text-[14px] font-semibold text-gray-700">SEO</h3>
+          <div className="space-y-4 border-t border-gray-100 pt-4">
+            <h3 className="text-[13px] font-semibold text-gray-600 uppercase tracking-wide">SEO</h3>
 
             <div>
               <label className={lbl}>
@@ -337,7 +329,7 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
             </div>
 
             <div>
-              <label className={lbl}>OG pilt <span className="font-normal text-gray-400">(1200×630 soovituslik)</span></label>
+              <label className={lbl}>OG pilt <span className="font-normal text-gray-400">(1200×630)</span></label>
               {ogImage ? (
                 <div className="relative inline-block">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -348,8 +340,8 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
                   </button>
                 </div>
               ) : (
-                <label className={`flex items-center gap-2 border-2 border-dashed border-gray-200 rounded-xl p-4 cursor-pointer hover:border-[#003366]/40 transition-colors ${ogUploading ? 'opacity-50 pointer-events-none' : ''}`}>
-                  <ImageIcon size={18} className="text-gray-400" />
+                <label className={`flex items-center gap-2 border-2 border-dashed border-gray-200 rounded-xl p-3 cursor-pointer hover:border-[#003366]/40 transition-colors ${ogUploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                  <ImageIcon size={16} className="text-gray-400" />
                   <span className="text-[13px] text-gray-500">{ogUploading ? 'Laadin...' : 'Lae üles OG pilt'}</span>
                   <input type="file" accept="image/*" className="hidden"
                     onChange={e => { const f = e.target.files?.[0]; if (f) uploadOg(f) }} />
@@ -357,45 +349,45 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
               )}
               <div className="mt-2">
                 <input type="text" value={ogImage} onChange={e => setOgImage(e.target.value)}
-                  className={`${inp} text-[13px]`} placeholder="https://... (alternatiiv üleslaadimisele)" />
+                  className={`${inp} text-[13px]`} placeholder="https://..." />
               </div>
             </div>
           </div>
-        </div>
-      )}
 
-      {/* Error */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-2.5 text-[14px] text-red-700 mt-2">
-          {error}
-        </div>
-      )}
+          {/* Error */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-xl px-3 py-2 text-[13px] text-red-700">
+              {error}
+            </div>
+          )}
 
-      {/* Actions */}
-      <div className="flex items-center gap-3 pt-4">
-        <button
-          type="button"
-          onClick={() => save('published')}
-          disabled={saving}
-          className="bg-[#003366] hover:bg-[#004080] text-white px-6 py-2.5 rounded-xl font-semibold text-[15px] transition-colors disabled:opacity-60"
-        >
-          {saving ? 'Salvestamine...' : 'Avalda'}
-        </button>
-        <button
-          type="button"
-          onClick={() => save('draft')}
-          disabled={saving}
-          className="border border-gray-200 text-gray-700 px-6 py-2.5 rounded-xl font-semibold text-[15px] hover:bg-gray-50 transition-colors disabled:opacity-60"
-        >
-          Salvesta mustand
-        </button>
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="text-gray-400 hover:text-gray-600 px-4 py-2.5 text-[15px] transition-colors"
-        >
-          Tühista
-        </button>
+          {/* Actions */}
+          <div className="flex flex-col gap-2 pt-1">
+            <button
+              type="button"
+              onClick={() => save('published')}
+              disabled={saving}
+              className="w-full bg-[#003366] hover:bg-[#004080] text-white px-4 py-2.5 rounded-xl font-semibold text-[14px] transition-colors disabled:opacity-60"
+            >
+              {saving ? 'Salvestamine...' : 'Avalda'}
+            </button>
+            <button
+              type="button"
+              onClick={() => save('draft')}
+              disabled={saving}
+              className="w-full border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl font-semibold text-[14px] hover:bg-gray-50 transition-colors disabled:opacity-60"
+            >
+              Salvesta mustand
+            </button>
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="w-full text-gray-400 hover:text-gray-600 px-4 py-2 text-[14px] transition-colors"
+            >
+              Tühista
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   )
