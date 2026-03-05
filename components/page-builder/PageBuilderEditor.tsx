@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, ExternalLink, ImageIcon, X } from 'lucide-react'
+import { uploadFile } from '@/lib/upload'
 import { supabase } from '@/lib/supabase'
 import SectionEditor from './SectionEditor'
 import SlugInput from './SlugInput'
@@ -85,12 +86,11 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
 
   async function uploadOg(file: File) {
     setOgUploading(true)
-    const ext = file.name.split('.').pop()
-    const name = `og/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-    const { error: err } = await supabase.storage.from('pages').upload(name, file, { cacheControl: '3600', upsert: false })
-    if (!err) {
-      const { data: { publicUrl } } = supabase.storage.from('pages').getPublicUrl(name)
-      setOgImage(publicUrl)
+    try {
+      const url = await uploadFile(file, 'og')
+      setOgImage(url)
+    } catch {
+      // silent
     }
     setOgUploading(false)
   }

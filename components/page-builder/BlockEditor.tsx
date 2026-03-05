@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronUp, ChevronDown, Trash2, ImageIcon, X } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
+import { uploadFile } from '@/lib/upload'
 import type {
   ContentBlock, HeadingBlock, TextBlock, ImageBlock,
   ButtonBlock, VideoBlock, DividerBlock, SpacerBlock, Alignment,
@@ -52,18 +52,16 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
 
   async function uploadImg(file: File): Promise<string | null> {
     setUploading(true)
-    const ext = file.name.split('.').pop()
-    const name = `blocks/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
     setUploadError('')
-    const { error } = await supabase.storage.from('pages').upload(name, file, { cacheControl: '3600', upsert: false })
-    if (error) {
-      setUploadError('Üleslaadimine ebaõnnestus: ' + error.message)
+    try {
+      const url = await uploadFile(file, 'blocks')
+      setUploading(false)
+      return url
+    } catch (e) {
+      setUploadError(e instanceof Error ? e.message : 'Üleslaadimine ebaõnnestus')
       setUploading(false)
       return null
     }
-    const { data: { publicUrl } } = supabase.storage.from('pages').getPublicUrl(name)
-    setUploading(false)
-    return publicUrl
   }
 
   return (

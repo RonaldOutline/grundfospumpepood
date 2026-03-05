@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronUp, ChevronDown, Trash2, Settings2, ImageIcon, X } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
+import { uploadFile } from '@/lib/upload'
 import ColumnEditor from './ColumnEditor'
 import type { Section, Column, SectionSettings } from './types'
 
@@ -94,12 +94,11 @@ export default function SectionEditor({ section, onChange, onMoveUp, onMoveDown,
 
   async function uploadBg(file: File) {
     setUploading(true)
-    const ext = file.name.split('.').pop()
-    const name = `bg/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-    const { error } = await supabase.storage.from('pages').upload(name, file, { cacheControl: '3600', upsert: false })
-    if (!error) {
-      const { data: { publicUrl } } = supabase.storage.from('pages').getPublicUrl(name)
-      updSettings({ background_image_url: publicUrl })
+    try {
+      const url = await uploadFile(file, 'bg')
+      updSettings({ background_image_url: url })
+    } catch {
+      // silent — user sees no image preview
     }
     setUploading(false)
   }
