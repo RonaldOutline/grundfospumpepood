@@ -248,9 +248,7 @@ export async function POST(req: NextRequest) {
   }
 
   const token  = createMontonioJWT(payload, secretKey)
-  const apiUrl = sandbox
-    ? 'https://sandbox-stargate.montonio.com/orders'
-    : 'https://stargate.montonio.com/orders'
+  const apiUrl = 'https://stargate.montonio.com/orders'
 
   try {
     const res = await fetch(apiUrl, {
