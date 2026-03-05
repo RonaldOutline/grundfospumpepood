@@ -3,6 +3,7 @@ import { notFound, redirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import ContactForm from '@/components/ContactForm'
 import BlockRenderer from '@/components/page-builder/BlockRenderer'
+import ShortcodeRenderer from '@/components/ShortcodeRenderer'
 import { getTranslations, getLocale } from 'next-intl/server'
 import type { Section } from '@/components/page-builder/types'
 
@@ -175,7 +176,9 @@ export default async function PublicPage(
           </>
         ) : (
           content && (
-            <div
+            <ShortcodeRenderer
+              html={content}
+              pageId={page.id}
               className="text-[15px] text-gray-700 leading-relaxed
                 [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:text-gray-900 [&_h1]:mt-8 [&_h1]:mb-3
                 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-gray-900 [&_h2]:mt-6 [&_h2]:mb-2
@@ -186,7 +189,6 @@ export default async function PublicPage(
                 [&_a]:text-[#003366] [&_a]:underline [&_a:hover]:text-[#01a0dc]
                 [&_strong]:font-semibold [&_strong]:text-gray-900
                 [&_hr]:border-gray-200 [&_hr]:my-6"
-              dangerouslySetInnerHTML={{ __html: content }}
             />
           )
         )}

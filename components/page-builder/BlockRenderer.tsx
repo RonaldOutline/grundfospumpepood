@@ -1,6 +1,7 @@
 import FeaturedProductsSlider from '@/components/FeaturedProductsSlider'
 import PumpCalculator from '@/components/PumpCalculator'
 import ContactForm from '@/components/ContactForm'
+import ShortcodeRenderer from '@/components/ShortcodeRenderer'
 import type { Section, ContentBlock, HeadingBlock, TextBlock, ImageBlock, ButtonBlock, VideoBlock, DividerBlock, SpacerBlock, SliderBlock } from './types'
 
 // ─── Video URL parser ──────────────────────────────────────────────────────
@@ -63,7 +64,8 @@ function RenderBlock({ block }: { block: ContentBlock }) {
       const isHtml = /<[a-z][\s\S]*>/i.test(b.content)
       if (isHtml) {
         return (
-          <div
+          <ShortcodeRenderer
+            html={b.content}
             className={`text-[16px] leading-relaxed ${alignClass}
               [&_b]:font-bold [&_strong]:font-bold
               [&_i]:italic [&_em]:italic
@@ -78,7 +80,6 @@ function RenderBlock({ block }: { block: ContentBlock }) {
               [&_h5]:text-lg [&_h5]:font-semibold [&_h5]:mt-2 [&_h5]:mb-1
               [&_h6]:text-base [&_h6]:font-semibold [&_h6]:mt-2 [&_h6]:mb-1`}
             style={{ color: b.color }}
-            dangerouslySetInnerHTML={{ __html: b.content }}
           />
         )
       }
