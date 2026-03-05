@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import type React from 'react'
 import { ChevronUp, ChevronDown, Trash2, Settings2, ImageIcon, X, GripVertical } from 'lucide-react'
 import { uploadFile } from '@/lib/upload'
 import ColumnEditor from './ColumnEditor'
@@ -50,10 +51,10 @@ interface Props {
   onDelete: () => void
   isFirst: boolean
   isLast: boolean
-  onGripMouseDown?: () => void
+  onGripDragStart?: (e: React.DragEvent) => void
 }
 
-export default function SectionEditor({ section, onChange, onMoveUp, onMoveDown, onDelete, isFirst, isLast, onGripMouseDown }: Props) {
+export default function SectionEditor({ section, onChange, onMoveUp, onMoveDown, onDelete, isFirst, isLast, onGripDragStart }: Props) {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [uploading, setUploading] = useState(false)
 
@@ -110,7 +111,7 @@ export default function SectionEditor({ section, onChange, onMoveUp, onMoveDown,
     <div className="border border-gray-200 rounded-2xl overflow-hidden bg-gray-50">
       {/* Section header */}
       <div className="flex items-center gap-2 px-4 py-3 bg-white border-b border-gray-100">
-        <GripVertical size={18} onMouseDown={onGripMouseDown} className="text-gray-300 cursor-grab active:cursor-grabbing flex-shrink-0" />
+        <GripVertical size={18} draggable={!!onGripDragStart} onDragStart={onGripDragStart} className="text-gray-300 cursor-grab active:cursor-grabbing flex-shrink-0" />
         <span className="text-[13px] font-semibold text-gray-700 flex-1">
           Sektsioon · {section.columns.length} veerg{section.columns.length !== 1 ? 'u' : ''}
         </span>
