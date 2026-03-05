@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { ChevronUp, ChevronDown, Trash2, ImageIcon, X } from 'lucide-react'
 import { uploadFile } from '@/lib/upload'
+import RichTextEditor from './RichTextEditor'
 import type {
   ContentBlock, HeadingBlock, TextBlock, ImageBlock,
   ButtonBlock, VideoBlock, DividerBlock, SpacerBlock, Alignment,
@@ -165,8 +166,7 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
               <>
                 <div>
                   <label className={lbl}>Sisu</label>
-                  <textarea value={b.content} onChange={e => upd({ content: e.target.value })}
-                    className={`${inp} min-h-[80px] resize-y`} placeholder="Tekst..." />
+                  <RichTextEditor value={b.content} onChange={html => upd({ content: html })} />
                 </div>
                 <div className="flex items-center gap-4 flex-wrap">
                   <div>

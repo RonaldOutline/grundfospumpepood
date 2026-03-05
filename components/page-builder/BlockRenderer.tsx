@@ -60,6 +60,22 @@ function RenderBlock({ block }: { block: ContentBlock }) {
     case 'text': {
       const b = block as TextBlock
       const alignClass = b.alignment === 'center' ? 'text-center' : b.alignment === 'right' ? 'text-right' : 'text-left'
+      const isHtml = /<[a-z][\s\S]*>/i.test(b.content)
+      if (isHtml) {
+        return (
+          <div
+            className={`text-[16px] leading-relaxed ${alignClass}
+              [&_b]:font-bold [&_strong]:font-bold
+              [&_i]:italic [&_em]:italic
+              [&_a]:text-[#003366] [&_a]:underline [&_a:hover]:text-[#01a0dc]
+              [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-2
+              [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-2
+              [&_li]:my-0.5`}
+            style={{ color: b.color }}
+            dangerouslySetInnerHTML={{ __html: b.content }}
+          />
+        )
+      }
       return (
         <p className={`text-[16px] leading-relaxed whitespace-pre-line ${alignClass}`} style={{ color: b.color }}>
           {b.content}
