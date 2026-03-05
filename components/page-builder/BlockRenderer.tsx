@@ -62,7 +62,8 @@ function RenderBlock({ block }: { block: ContentBlock }) {
       const b = block as TextBlock
       const alignClass = b.alignment === 'center' ? 'text-center' : b.alignment === 'right' ? 'text-right' : 'text-left'
       const isHtml = /<[a-z][\s\S]*>/i.test(b.content)
-      if (isHtml) {
+      const hasShortcode = /\[[a-z_]+\]/.test(b.content)
+      if (isHtml || hasShortcode) {
         return (
           <ShortcodeRenderer
             html={b.content}
