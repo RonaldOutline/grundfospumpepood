@@ -1,8 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import ContactForm from '@/components/ContactForm'
+import BlockRenderer from '@/components/page-builder/BlockRenderer'
 import { getTranslations, getLocale } from 'next-intl/server'
+import type { Section } from '@/components/page-builder/types'
 
 interface Column { title: string; text: string }
 
@@ -27,22 +29,39 @@ interface PageRow {
   content_lt: string | null
   content_pl: string | null
   image_url: string | null
+  og_image_url: string | null
+  meta_title: string | null
+  meta_description: string | null
   published: boolean
+  status: string | null
+  visibility: string | null
   template: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  blocks: any[] | null
 }
 
-async function getPage(slug: string): Promise<PageRow | null> {
-  const supabase = createClient(
+function makeClient() {
+  return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )
-  const { data } = await supabase
+}
+
+async function getPage(slug: string): Promise<PageRow | null> {
+  const { data } = await makeClient()
     .from('pages')
-    .select('id, title, title_en, title_ru, title_lv, title_lt, title_pl, short_description, short_description_en, short_description_ru, short_description_lv, short_description_lt, short_description_pl, content, content_en, content_ru, content_lv, content_lt, content_pl, image_url, published, template')
+    .select(`id, title, title_en, title_ru, title_lv, title_lt, title_pl,
+      short_description, short_description_en, short_description_ru, short_description_lv, short_description_lt, short_description_pl,
+      content, content_en, content_ru, content_lv, content_lt, content_pl,
+      image_url, og_image_url, meta_title, meta_description,
+      published, status, visibility, template, blocks`)
     .eq('slug', slug)
-    .eq('published', true)
     .single()
   return data
+}
+
+function isVisible(page: PageRow): boolean {
+  return page.status === 'published' || page.published === true
 }
 
 function pick(page: PageRow, field: 'title' | 'short_description' | 'content', locale: string): string | null {
@@ -59,44 +78,61 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { slug, locale } = await params
   const page = await getPage(slug)
-  if (!page) return {}
-  const title = pick(page, 'title', locale) ?? page.title
-  const description = pick(page, 'short_description', locale) ?? page.short_description ?? undefined
+  if (!page || !isVisible(page)) return {}
+  const title = page.meta_title || pick(page, 'title', locale) || page.title
+  const description = page.meta_description || pick(page, 'short_description', locale) || undefined
+  const ogImg = page.og_image_url || page.image_url
   return {
     title,
-    description,
-    openGraph: { images: page.image_url ? [{ url: page.image_url }] : undefined },
+    description: description ?? undefined,
+    openGraph: { images: ogImg ? [{ url: ogImg }] : undefined },
   }
 }
 
 export default async function PublicPage(
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string; locale: string }> }
 ) {
   const { slug } = await params
   const locale = await getLocale()
   const page = await getPage(slug)
-  if (!page) notFound()
+
+  if (!page || !isVisible(page)) notFound()
+
+  // Private page — require logged-in session
+  if (page.visibility === 'private') {
+    const { data: { session } } = await makeClient().auth.getSession()
+    if (!session) redirect('/konto/sisselogimine')
+  }
+
   const tCommon = await getTranslations('common')
+  const title     = pick(page, 'title', locale) ?? page.title
+  const shortDesc = pick(page, 'short_description', locale)
+  const content   = pick(page, 'content', locale)
 
-  const title        = pick(page, 'title', locale) ?? page.title
-  const shortDesc    = pick(page, 'short_description', locale)
-  const content      = pick(page, 'content', locale)
-
+  const hasBlocks = Array.isArray(page.blocks) && page.blocks.length > 0
   const isContact = page.template === 'contact'
 
   let columns: Column[] = []
-  if (isContact && content) {
+  if (!hasBlocks && isContact && content) {
     try {
       const parsed = JSON.parse(content)
       if (Array.isArray(parsed)) columns = parsed
     } catch {}
   }
 
+  if (hasBlocks) {
+    return (
+      <div className="bg-gray-50 min-h-screen">
+        <BlockRenderer sections={page.blocks as Section[]} />
+      </div>
+    )
+  }
+
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="max-w-5xl mx-auto px-4 py-12">
-
         {page.image_url && (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={page.image_url}
             alt={title}
@@ -106,9 +142,7 @@ export default async function PublicPage(
 
         <h1 className="text-3xl font-bold text-gray-900 mb-3">{title}</h1>
         {shortDesc && (
-          <p className="text-[17px] text-gray-600 mb-10 leading-relaxed">
-            {shortDesc}
-          </p>
+          <p className="text-[17px] text-gray-600 mb-10 leading-relaxed">{shortDesc}</p>
         )}
 
         {isContact ? (
@@ -121,9 +155,7 @@ export default async function PublicPage(
                       <h3 className="font-semibold text-[#003366] text-[15px] mb-2">{col.title}</h3>
                     )}
                     {col.text && (
-                      <p className="text-[14px] text-gray-600 leading-relaxed whitespace-pre-line">
-                        {col.text}
-                      </p>
+                      <p className="text-[14px] text-gray-600 leading-relaxed whitespace-pre-line">{col.text}</p>
                     )}
                   </div>
                 ))}
