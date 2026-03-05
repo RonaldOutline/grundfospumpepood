@@ -241,9 +241,9 @@ export async function POST(req: NextRequest) {
     line_items: items.map(item => ({
       product_code: String(item.id),
       name:         item.name,
-      price:        Number(item.price.toFixed(2)),
+      price:        Number((item.price * (1 + VAT_RATE)).toFixed(2)),
       quantity:     item.qty,
-      final_price:  Number((item.price * item.qty).toFixed(2)),
+      final_price:  Number((item.price * item.qty * (1 + VAT_RATE)).toFixed(2)),
     })),
   }
 
@@ -264,10 +264,9 @@ export async function POST(req: NextRequest) {
 
     if (!res.ok) {
       const err = await res.text()
-      console.error('Montonio orders API viga:', err)
-      // Märgi tellimus ebaõnnestunuks
+      console.error('Montonio orders API viga (status %d):', res.status, err)
       await supabaseAdmin.from('orders').update({ status: 'failed' }).eq('id', orderId)
-      return NextResponse.json({ error: 'Makselingi loomine ebaõnnestus' }, { status: 502 })
+      return NextResponse.json({ error: 'Makselingi loomine ebaõnnestus', detail: err }, { status: 502 })
     }
 
     const data = await res.json() as { payment_url?: string }
