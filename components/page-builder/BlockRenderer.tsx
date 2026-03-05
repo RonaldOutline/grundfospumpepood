@@ -37,16 +37,19 @@ function RenderBlock({ block }: { block: ContentBlock }) {
       const b = block as HeadingBlock
       const Tag = b.level as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
       const alignClass = b.alignment === 'center' ? 'text-center' : b.alignment === 'right' ? 'text-right' : 'text-left'
-      const sizeClass = {
-        h1: 'text-4xl font-bold',
-        h2: 'text-3xl font-bold',
-        h3: 'text-2xl font-semibold',
-        h4: 'text-xl font-semibold',
-        h5: 'text-lg font-semibold',
-        h6: 'text-base font-semibold',
+      const weightClass = ['h1','h2'].includes(b.level) ? 'font-bold' : 'font-semibold'
+      const sizeClass = b.custom_size ? '' : {
+        h1: 'text-4xl',
+        h2: 'text-3xl',
+        h3: 'text-2xl',
+        h4: 'text-xl',
+        h5: 'text-lg',
+        h6: 'text-base',
       }[b.level]
+      const style: React.CSSProperties = { color: b.color }
+      if (b.custom_size) style.fontSize = `${b.custom_size}${b.custom_unit ?? 'px'}`
       return (
-        <Tag className={`${sizeClass} leading-tight ${alignClass}`} style={{ color: b.color }}>
+        <Tag className={`${sizeClass} ${weightClass} leading-tight ${alignClass}`} style={style}>
           {b.text}
         </Tag>
       )

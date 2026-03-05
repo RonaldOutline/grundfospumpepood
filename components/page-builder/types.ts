@@ -11,6 +11,8 @@ export interface HeadingBlock {
   text: string
   alignment: Alignment
   color: string
+  custom_size?: number
+  custom_unit?: 'px' | 'em'
 }
 
 export interface TextBlock {

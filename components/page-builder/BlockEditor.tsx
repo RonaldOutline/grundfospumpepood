@@ -114,6 +114,35 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
                   <input type="text" value={b.text} onChange={e => upd({ text: e.target.value })}
                     className={inp} placeholder="Pealkiri" />
                 </div>
+                <div>
+                  <label className={lbl}>
+                    Suurus{' '}
+                    <span className="font-normal text-gray-400">(tühi = taseme vaikeväärtus)</span>
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      value={b.custom_size ?? ''}
+                      min={6} max={200}
+                      onChange={e => upd({ custom_size: e.target.value ? Number(e.target.value) : undefined })}
+                      className={`${inp} w-24`}
+                      placeholder="auto"
+                    />
+                    <div className="flex gap-1">
+                      {(['px', 'em'] as const).map(u => (
+                        <button key={u} type="button"
+                          onClick={() => upd({ custom_unit: u })}
+                          className={`px-3 py-1 rounded-lg text-[13px] border transition-colors ${
+                            (b.custom_unit ?? 'px') === u
+                              ? 'bg-[#003366] text-white border-[#003366]'
+                              : 'border-gray-200 text-gray-500 hover:border-gray-400'
+                          }`}>
+                          {u}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
                 <div className="flex items-center gap-4 flex-wrap">
                   <div>
                     <label className={lbl}>Joondus</label>
