@@ -1,4 +1,7 @@
-import type { Section, ContentBlock, HeadingBlock, TextBlock, ImageBlock, ButtonBlock, VideoBlock, DividerBlock, SpacerBlock } from './types'
+import FeaturedProductsSlider from '@/components/FeaturedProductsSlider'
+import PumpCalculator from '@/components/PumpCalculator'
+import ContactForm from '@/components/ContactForm'
+import type { Section, ContentBlock, HeadingBlock, TextBlock, ImageBlock, ButtonBlock, VideoBlock, DividerBlock, SpacerBlock, SliderBlock } from './types'
 
 // ─── Video URL parser ──────────────────────────────────────────────────────
 
@@ -135,6 +138,12 @@ function RenderBlock({ block }: { block: ContentBlock }) {
       const b = block as SpacerBlock
       return <div style={{ height: b.height }} />
     }
+    case 'slider':
+      return <FeaturedProductsSlider />
+    case 'calculator':
+      return <PumpCalculator />
+    case 'contact_form':
+      return <ContactForm />
     default:
       return null
   }

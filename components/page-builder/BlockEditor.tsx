@@ -353,6 +353,27 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
             )
           })()}
 
+          {/* SLIDER */}
+          {block.type === 'slider' && (
+            <p className="text-[13px] text-gray-500 bg-blue-50 rounded-lg px-3 py-2">
+              Toodete slider — renderdatakse automaatselt.
+            </p>
+          )}
+
+          {/* CALCULATOR */}
+          {block.type === 'calculator' && (
+            <p className="text-[13px] text-gray-500 bg-blue-50 rounded-lg px-3 py-2">
+              Pumbakalkulaator — renderdatakse automaatselt.
+            </p>
+          )}
+
+          {/* CONTACT FORM */}
+          {block.type === 'contact_form' && (
+            <p className="text-[13px] text-gray-500 bg-blue-50 rounded-lg px-3 py-2">
+              Kontaktvorm — renderdatakse automaatselt.
+            </p>
+          )}
+
         </div>
       )}
     </div>

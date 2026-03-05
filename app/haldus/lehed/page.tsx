@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Plus, Pencil, Trash2, ExternalLink, Eye, Globe, Lock } from 'lucide-react'
+import { Plus, Pencil, Trash2, ExternalLink, Eye } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 import { supabase } from '@/lib/supabase'
 
@@ -14,7 +14,6 @@ interface Page {
   slug: string
   title: string
   status: string | null
-  visibility: string | null
   show_in_nav: boolean | null
   created_at: string
 }
@@ -32,7 +31,7 @@ export default function HaldusLehedPage() {
   async function load() {
     const { data } = await supabase
       .from('pages')
-      .select('id, slug, title, status, visibility, show_in_nav, created_at')
+      .select('id, slug, title, status, show_in_nav, created_at')
       .order('created_at', { ascending: false })
     setPages(data ?? [])
     setLoading(false)
@@ -81,17 +80,15 @@ export default function HaldusLehedPage() {
           </div>
         ) : (
           <>
-            <div className="hidden sm:grid grid-cols-[1fr_auto_auto_auto_auto] gap-4 px-6 py-3 border-b border-gray-100 text-[12px] font-semibold text-gray-400 uppercase tracking-wider">
+            <div className="hidden sm:grid grid-cols-[1fr_auto_auto_auto] gap-4 px-6 py-3 border-b border-gray-100 text-[12px] font-semibold text-gray-400 uppercase tracking-wider">
               <span>Pealkiri / slug</span>
               <span className="text-center">Staatus</span>
-              <span className="text-center">Nähtavus</span>
               <span className="text-center">Menüüs</span>
               <span />
             </div>
             <div className="divide-y divide-gray-50">
               {pages.map(page => {
                 const isPublished = page.status === 'published'
-                const isPublic    = page.visibility !== 'private'
                 const inNav       = !!page.show_in_nav
                 return (
                   <div key={page.id} className="flex items-center gap-4 px-6 py-4">
@@ -110,16 +107,9 @@ export default function HaldusLehedPage() {
                     </div>
 
                     <span className={`px-2.5 py-1 rounded-full text-[12px] font-semibold flex-shrink-0 ${
-                      isPublished ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
+                      isPublished ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600'
                     }`}>
-                      {isPublished ? 'Avaldatud' : 'Mustand'}
-                    </span>
-
-                    <span className={`px-2.5 py-1 rounded-full text-[12px] font-semibold flex-shrink-0 flex items-center gap-1 ${
-                      isPublic ? 'bg-blue-50 text-blue-600' : 'bg-orange-50 text-orange-600'
-                    }`}>
-                      {isPublic ? <Globe size={11} /> : <Lock size={11} />}
-                      {isPublic ? 'Avalik' : 'Privaatne'}
+                      {isPublished ? 'Avalik' : 'Mustand'}
                     </span>
 
                     <span className={`px-2.5 py-1 rounded-full text-[12px] font-semibold flex-shrink-0 flex items-center gap-1 ${

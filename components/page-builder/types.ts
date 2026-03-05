@@ -64,6 +64,22 @@ export interface SpacerBlock {
   height: number
 }
 
+export interface SliderBlock {
+  id: string
+  type: 'slider'
+  category_slug?: string
+}
+
+export interface CalculatorBlock {
+  id: string
+  type: 'calculator'
+}
+
+export interface ContactFormBlock {
+  id: string
+  type: 'contact_form'
+}
+
 export type ContentBlock =
   | HeadingBlock
   | TextBlock
@@ -72,6 +88,9 @@ export type ContentBlock =
   | VideoBlock
   | DividerBlock
   | SpacerBlock
+  | SliderBlock
+  | CalculatorBlock
+  | ContactFormBlock
 
 export interface Column {
   id: string

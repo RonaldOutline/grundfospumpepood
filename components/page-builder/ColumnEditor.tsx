@@ -6,13 +6,16 @@ import BlockEditor from './BlockEditor'
 import type { Column, ContentBlock } from './types'
 
 const BLOCK_TYPES: { type: ContentBlock['type']; label: string }[] = [
-  { type: 'heading',  label: 'Pealkiri' },
-  { type: 'text',     label: 'Tekst' },
-  { type: 'image',    label: 'Pilt' },
-  { type: 'button',   label: 'Nupp' },
-  { type: 'video',    label: 'Video' },
-  { type: 'divider',  label: 'Eraldusjooon' },
-  { type: 'spacer',   label: 'Tühik' },
+  { type: 'heading',      label: 'Pealkiri' },
+  { type: 'text',         label: 'Tekst' },
+  { type: 'image',        label: 'Pilt' },
+  { type: 'button',       label: 'Nupp' },
+  { type: 'video',        label: 'Video' },
+  { type: 'divider',      label: 'Eraldusjooon' },
+  { type: 'spacer',       label: 'Tühik' },
+  { type: 'slider',       label: 'Toodete slider' },
+  { type: 'calculator',   label: 'Kalkulaator' },
+  { type: 'contact_form', label: 'Kontaktvorm' },
 ]
 
 function newBlock(type: ContentBlock['type']): ContentBlock {
@@ -24,7 +27,10 @@ function newBlock(type: ContentBlock['type']): ContentBlock {
     case 'button':  return { id, type, text: 'Kliki siia', url: '/', target: '_self', style: 'filled', color: '#003366', alignment: 'left' }
     case 'video':   return { id, type, url: '', alignment: 'center' }
     case 'divider': return { id, type, color: '#e5e7eb', thickness: 1 }
-    case 'spacer':  return { id, type, height: 40 }
+    case 'spacer':        return { id, type, height: 40 }
+    case 'slider':        return { id, type }
+    case 'calculator':    return { id, type }
+    case 'contact_form':  return { id, type }
   }
 }
 
