@@ -40,9 +40,10 @@ interface Props {
   onDelete: () => void
   isFirst: boolean
   isLast: boolean
+  onGripMouseDown?: () => void
 }
 
-export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onDelete, isFirst, isLast }: Props) {
+export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onDelete, isFirst, isLast, onGripMouseDown }: Props) {
   const [open, setOpen] = useState(true)
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState('')
@@ -69,7 +70,7 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
     <div className="border border-gray-200 rounded-xl overflow-hidden bg-white">
       {/* Header */}
       <div className="flex items-center gap-1.5 px-3 py-2 bg-gray-50 border-b border-gray-100">
-        <GripVertical size={16} className="text-gray-300 cursor-grab active:cursor-grabbing flex-shrink-0" />
+        <GripVertical size={16} onMouseDown={onGripMouseDown} className="text-gray-300 cursor-grab active:cursor-grabbing flex-shrink-0" />
         <span className="text-[12px] font-semibold text-gray-600 flex-1">{LABELS[block.type] ?? block.type}</span>
         <button type="button" onClick={() => setOpen(o => !o)}
           className="text-[11px] text-gray-400 hover:text-gray-700 px-1.5 py-0.5 rounded hover:bg-gray-200 transition-colors">

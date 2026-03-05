@@ -45,6 +45,7 @@ export default function ColumnEditor({ column, onChange, index }: Props) {
   const [showAdd, setShowAdd] = useState(false)
   const [dragIdx, setDragIdx] = useState<number | null>(null)
   const [overIdx, setOverIdx] = useState<number | null>(null)
+  const [draggableIdx, setDraggableIdx] = useState<number | null>(null)
 
   function updateBlock(i: number, b: ContentBlock) {
     const blocks = column.blocks.map((bl, idx) => idx === i ? b : bl)
@@ -94,6 +95,7 @@ export default function ColumnEditor({ column, onChange, index }: Props) {
   function onDragEnd() {
     setDragIdx(null)
     setOverIdx(null)
+    setDraggableIdx(null)
   }
 
   return (
@@ -119,11 +121,12 @@ export default function ColumnEditor({ column, onChange, index }: Props) {
       {column.blocks.map((block, i) => (
         <div
           key={block.id}
-          draggable
+          draggable={draggableIdx === i}
           onDragStart={e => onDragStart(e, i)}
           onDragOver={e => onDragOver(e, i)}
           onDrop={e => onDrop(e, i)}
           onDragEnd={onDragEnd}
+          onMouseUp={() => setDraggableIdx(null)}
           className={`transition-opacity rounded-xl ${dragIdx === i ? 'opacity-30' : ''} ${overIdx === i && dragIdx !== i ? 'ring-2 ring-[#003366]/40' : ''}`}
         >
           <BlockEditor
@@ -134,6 +137,7 @@ export default function ColumnEditor({ column, onChange, index }: Props) {
             onDelete={() => deleteBlock(i)}
             isFirst={i === 0}
             isLast={i === column.blocks.length - 1}
+            onGripMouseDown={() => setDraggableIdx(i)}
           />
         </div>
       ))}
