@@ -123,8 +123,8 @@ export default async function PublicPage(
 
   if (hasBlocks) {
     return (
-      <div className="bg-gray-50 min-h-screen">
-        <div className="max-w-5xl mx-auto px-4 pt-10 pb-2">
+      <div className="min-h-screen">
+        <div className="max-w-[1200px] mx-auto px-4 md:px-6 pt-10 pb-2">
           <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
           {shortDesc && (
             <p className="text-[17px] text-gray-600 mt-3 leading-relaxed">{shortDesc}</p>
