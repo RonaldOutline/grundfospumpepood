@@ -44,7 +44,7 @@ export default function HaldusNav() {
                   : 'text-gray-600 hover:bg-gray-50 hover:text-[#003366]'
               }`}
             >
-              <Icon size={17} />
+              <Icon size={20} />
               {label}
             </Link>
           )

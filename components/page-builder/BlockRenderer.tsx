@@ -70,7 +70,13 @@ function RenderBlock({ block }: { block: ContentBlock }) {
               [&_a]:text-[#003366] [&_a]:underline [&_a:hover]:text-[#01a0dc]
               [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-2
               [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-2
-              [&_li]:my-0.5`}
+              [&_li]:my-0.5
+              [&_h1]:text-4xl [&_h1]:font-bold [&_h1]:leading-tight [&_h1]:mt-4 [&_h1]:mb-2
+              [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:leading-tight [&_h2]:mt-4 [&_h2]:mb-2
+              [&_h3]:text-2xl [&_h3]:font-semibold [&_h3]:leading-tight [&_h3]:mt-3 [&_h3]:mb-1
+              [&_h4]:text-xl [&_h4]:font-semibold [&_h4]:mt-3 [&_h4]:mb-1
+              [&_h5]:text-lg [&_h5]:font-semibold [&_h5]:mt-2 [&_h5]:mb-1
+              [&_h6]:text-base [&_h6]:font-semibold [&_h6]:mt-2 [&_h6]:mb-1`}
             style={{ color: b.color }}
             dangerouslySetInnerHTML={{ __html: b.content }}
           />

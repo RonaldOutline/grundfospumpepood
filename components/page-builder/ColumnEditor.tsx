@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import type React from 'react'
 import { Plus } from 'lucide-react'
 import BlockEditor from './BlockEditor'
 import type { Column, ContentBlock } from './types'
@@ -42,6 +43,8 @@ interface Props {
 
 export default function ColumnEditor({ column, onChange, index }: Props) {
   const [showAdd, setShowAdd] = useState(false)
+  const [dragIdx, setDragIdx] = useState<number | null>(null)
+  const [overIdx, setOverIdx] = useState<number | null>(null)
 
   function updateBlock(i: number, b: ContentBlock) {
     const blocks = column.blocks.map((bl, idx) => idx === i ? b : bl)
@@ -66,6 +69,33 @@ export default function ColumnEditor({ column, onChange, index }: Props) {
     setShowAdd(false)
   }
 
+  function onDragStart(e: React.DragEvent, i: number) {
+    setDragIdx(i)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  function onDragOver(e: React.DragEvent, i: number) {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (overIdx !== i) setOverIdx(i)
+  }
+
+  function onDrop(e: React.DragEvent, i: number) {
+    e.preventDefault()
+    if (dragIdx === null || dragIdx === i) { setDragIdx(null); setOverIdx(null); return }
+    const blocks = [...column.blocks]
+    const [item] = blocks.splice(dragIdx, 1)
+    blocks.splice(i, 0, item)
+    onChange({ ...column, blocks })
+    setDragIdx(null)
+    setOverIdx(null)
+  }
+
+  function onDragEnd() {
+    setDragIdx(null)
+    setOverIdx(null)
+  }
+
   return (
     <div className="flex flex-col gap-2 min-w-0 min-h-[80px]">
       <div className="flex items-center justify-between mb-1">
@@ -87,16 +117,25 @@ export default function ColumnEditor({ column, onChange, index }: Props) {
       </div>
 
       {column.blocks.map((block, i) => (
-        <BlockEditor
+        <div
           key={block.id}
-          block={block}
-          onChange={b => updateBlock(i, b)}
-          onMoveUp={() => moveBlock(i, -1)}
-          onMoveDown={() => moveBlock(i, 1)}
-          onDelete={() => deleteBlock(i)}
-          isFirst={i === 0}
-          isLast={i === column.blocks.length - 1}
-        />
+          draggable
+          onDragStart={e => onDragStart(e, i)}
+          onDragOver={e => onDragOver(e, i)}
+          onDrop={e => onDrop(e, i)}
+          onDragEnd={onDragEnd}
+          className={`transition-opacity rounded-xl ${dragIdx === i ? 'opacity-30' : ''} ${overIdx === i && dragIdx !== i ? 'ring-2 ring-[#003366]/40' : ''}`}
+        >
+          <BlockEditor
+            block={block}
+            onChange={b => updateBlock(i, b)}
+            onMoveUp={() => moveBlock(i, -1)}
+            onMoveDown={() => moveBlock(i, 1)}
+            onDelete={() => deleteBlock(i)}
+            isFirst={i === 0}
+            isLast={i === column.blocks.length - 1}
+          />
+        </div>
       ))}
 
       <button

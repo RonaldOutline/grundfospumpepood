@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronUp, ChevronDown, Trash2, Settings2, ImageIcon, X } from 'lucide-react'
+import { ChevronUp, ChevronDown, Trash2, Settings2, ImageIcon, X, GripVertical } from 'lucide-react'
 import { uploadFile } from '@/lib/upload'
 import ColumnEditor from './ColumnEditor'
 import type { Section, Column, SectionSettings } from './types'
@@ -109,25 +109,26 @@ export default function SectionEditor({ section, onChange, onMoveUp, onMoveDown,
     <div className="border border-gray-200 rounded-2xl overflow-hidden bg-gray-50">
       {/* Section header */}
       <div className="flex items-center gap-2 px-4 py-3 bg-white border-b border-gray-100">
+        <GripVertical size={18} className="text-gray-300 cursor-grab active:cursor-grabbing flex-shrink-0" />
         <span className="text-[13px] font-semibold text-gray-700 flex-1">
           Sektsioon · {section.columns.length} veerg{section.columns.length !== 1 ? 'u' : ''}
         </span>
         <button type="button" onClick={() => setSettingsOpen(o => !o)}
-          className={`p-1.5 rounded-lg transition-colors ${settingsOpen ? 'bg-[#003366] text-white' : 'text-gray-400 hover:text-[#003366] hover:bg-blue-50'}`}
+          className={`p-2 rounded-lg transition-colors ${settingsOpen ? 'bg-[#003366] text-white' : 'text-gray-400 hover:text-[#003366] hover:bg-blue-50'}`}
           title="Sektsioon seaded">
-          <Settings2 size={15} />
+          <Settings2 size={18} />
         </button>
         <button type="button" onClick={onMoveUp} disabled={isFirst}
-          className="p-1.5 text-gray-400 hover:text-[#003366] disabled:opacity-25 rounded-lg hover:bg-blue-50 transition-colors">
-          <ChevronUp size={15} />
+          className="p-2 text-gray-400 hover:text-[#003366] disabled:opacity-25 rounded-lg hover:bg-blue-50 transition-colors">
+          <ChevronUp size={18} />
         </button>
         <button type="button" onClick={onMoveDown} disabled={isLast}
-          className="p-1.5 text-gray-400 hover:text-[#003366] disabled:opacity-25 rounded-lg hover:bg-blue-50 transition-colors">
-          <ChevronDown size={15} />
+          className="p-2 text-gray-400 hover:text-[#003366] disabled:opacity-25 rounded-lg hover:bg-blue-50 transition-colors">
+          <ChevronDown size={18} />
         </button>
         <button type="button" onClick={onDelete}
-          className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors">
-          <Trash2 size={15} />
+          className="p-2 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors">
+          <Trash2 size={18} />
         </button>
       </div>
 

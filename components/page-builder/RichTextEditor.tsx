@@ -28,6 +28,13 @@ export default function RichTextEditor({ value, onChange }: Props) {
     if (url) exec('createLink', url)
   }
 
+  function insertHeading(tag: string) {
+    editorRef.current?.focus()
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
+    document.execCommand('formatBlock', false, tag)
+    if (editorRef.current) onChange(editorRef.current.innerHTML)
+  }
+
   function switchToLive() {
     if (editorRef.current) editorRef.current.innerHTML = value
     setMode('live')
@@ -48,6 +55,16 @@ export default function RichTextEditor({ value, onChange }: Props) {
         </button>
         <button type="button" onClick={() => exec('italic')} className={toolBtn} title="Italic">
           <em>I</em>
+        </button>
+        <div className="w-px h-4 bg-gray-200 mx-0.5" />
+        {(['h1','h2','h3','h4','h5','h6'] as const).map(tag => (
+          <button key={tag} type="button" onClick={() => insertHeading(tag)}
+            className={`${toolBtn} text-[11px] font-semibold uppercase`} title={tag.toUpperCase()}>
+            {tag.toUpperCase()}
+          </button>
+        ))}
+        <button type="button" onClick={() => insertHeading('p')} className={`${toolBtn} text-[11px]`} title="Tavaline tekst">
+          P
         </button>
         <div className="w-px h-4 bg-gray-200 mx-0.5" />
         <button type="button" onClick={addLink} className={`${toolBtn} text-[11px]`} title="Link">
@@ -80,10 +97,16 @@ export default function RichTextEditor({ value, onChange }: Props) {
         className={`p-3 min-h-[120px] focus:outline-none text-[14px] leading-relaxed
           [&_b]:font-bold [&_strong]:font-bold
           [&_i]:italic [&_em]:italic
-          [&_a]:text-[#003366] [&_a]:underline [&_a:hover]:text-[#01a0dc]
+          [&_a]:text-[#003366] [&_a]:underline
           [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-1
           [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-1
           [&_li]:my-0.5
+          [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:my-2
+          [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:my-2
+          [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:my-1
+          [&_h4]:text-lg [&_h4]:font-semibold [&_h4]:my-1
+          [&_h5]:text-base [&_h5]:font-semibold [&_h5]:my-1
+          [&_h6]:text-sm [&_h6]:font-semibold [&_h6]:my-1
           ${mode === 'html' ? 'hidden' : ''}`}
       />
 

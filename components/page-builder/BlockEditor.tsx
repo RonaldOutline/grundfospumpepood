@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronUp, ChevronDown, Trash2, ImageIcon, X } from 'lucide-react'
+import { ChevronUp, ChevronDown, Trash2, ImageIcon, X, GripVertical } from 'lucide-react'
 import { uploadFile } from '@/lib/upload'
 import RichTextEditor from './RichTextEditor'
 import type {
@@ -69,22 +69,23 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
     <div className="border border-gray-200 rounded-xl overflow-hidden bg-white">
       {/* Header */}
       <div className="flex items-center gap-1.5 px-3 py-2 bg-gray-50 border-b border-gray-100">
-        <span className="text-[12px] font-semibold text-gray-600 flex-1">{LABELS[block.type]}</span>
+        <GripVertical size={16} className="text-gray-300 cursor-grab active:cursor-grabbing flex-shrink-0" />
+        <span className="text-[12px] font-semibold text-gray-600 flex-1">{LABELS[block.type] ?? block.type}</span>
         <button type="button" onClick={() => setOpen(o => !o)}
           className="text-[11px] text-gray-400 hover:text-gray-700 px-1.5 py-0.5 rounded hover:bg-gray-200 transition-colors">
           {open ? '▲' : '▼'}
         </button>
         <button type="button" onClick={onMoveUp} disabled={isFirst}
-          className="p-1 text-gray-400 hover:text-gray-700 disabled:opacity-25 rounded hover:bg-gray-200 transition-colors">
-          <ChevronUp size={13} />
+          className="p-1.5 text-gray-400 hover:text-gray-700 disabled:opacity-25 rounded hover:bg-gray-200 transition-colors">
+          <ChevronUp size={16} />
         </button>
         <button type="button" onClick={onMoveDown} disabled={isLast}
-          className="p-1 text-gray-400 hover:text-gray-700 disabled:opacity-25 rounded hover:bg-gray-200 transition-colors">
-          <ChevronDown size={13} />
+          className="p-1.5 text-gray-400 hover:text-gray-700 disabled:opacity-25 rounded hover:bg-gray-200 transition-colors">
+          <ChevronDown size={16} />
         </button>
         <button type="button" onClick={onDelete}
-          className="p-1 text-gray-400 hover:text-red-500 rounded hover:bg-red-50 transition-colors">
-          <Trash2 size={13} />
+          className="p-1.5 text-gray-400 hover:text-red-500 rounded hover:bg-red-50 transition-colors">
+          <Trash2 size={16} />
         </button>
       </div>
 

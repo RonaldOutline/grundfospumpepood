@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import type React from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, ExternalLink, ImageIcon, X } from 'lucide-react'
 import { uploadFile } from '@/lib/upload'
@@ -41,6 +42,8 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [ogUploading, setOgUploading] = useState(false)
+  const [dragSecIdx, setDragSecIdx] = useState<number | null>(null)
+  const [overSecIdx, setOverSecIdx] = useState<number | null>(null)
 
   // Sisu state
   const [sections, setSections] = useState<Section[]>(initialData?.blocks ?? [])
@@ -80,6 +83,35 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
   function deleteSection(i: number) {
     if (!confirm('Kustuta sektsioon koos kõigi blokkidega?')) return
     setSections(s => s.filter((_, idx) => idx !== i).map((sec, idx) => ({ ...sec, order: idx })))
+  }
+
+  function onSecDragStart(e: React.DragEvent, i: number) {
+    setDragSecIdx(i)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  function onSecDragOver(e: React.DragEvent, i: number) {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (overSecIdx !== i) setOverSecIdx(i)
+  }
+
+  function onSecDrop(e: React.DragEvent, i: number) {
+    e.preventDefault()
+    if (dragSecIdx === null || dragSecIdx === i) { setDragSecIdx(null); setOverSecIdx(null); return }
+    setSections(prev => {
+      const arr = [...prev]
+      const [item] = arr.splice(dragSecIdx, 1)
+      arr.splice(i, 0, item)
+      return arr.map((s, idx) => ({ ...s, order: idx }))
+    })
+    setDragSecIdx(null)
+    setOverSecIdx(null)
+  }
+
+  function onSecDragEnd() {
+    setDragSecIdx(null)
+    setOverSecIdx(null)
   }
 
   // ── OG image upload ───────────────────────────────────────────────────────
@@ -187,16 +219,25 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
           )}
 
           {sections.map((section, i) => (
-            <SectionEditor
+            <div
               key={section.id}
-              section={section}
-              onChange={s => updateSection(i, s)}
-              onMoveUp={() => moveSection(i, -1)}
-              onMoveDown={() => moveSection(i, 1)}
-              onDelete={() => deleteSection(i)}
-              isFirst={i === 0}
-              isLast={i === sections.length - 1}
-            />
+              draggable
+              onDragStart={e => onSecDragStart(e, i)}
+              onDragOver={e => onSecDragOver(e, i)}
+              onDrop={e => onSecDrop(e, i)}
+              onDragEnd={onSecDragEnd}
+              className={`transition-opacity rounded-2xl ${dragSecIdx === i ? 'opacity-30' : ''} ${overSecIdx === i && dragSecIdx !== i ? 'ring-2 ring-[#003366]/40' : ''}`}
+            >
+              <SectionEditor
+                section={section}
+                onChange={s => updateSection(i, s)}
+                onMoveUp={() => moveSection(i, -1)}
+                onMoveDown={() => moveSection(i, 1)}
+                onDelete={() => deleteSection(i)}
+                isFirst={i === 0}
+                isLast={i === sections.length - 1}
+              />
+            </div>
           ))}
 
           <button
