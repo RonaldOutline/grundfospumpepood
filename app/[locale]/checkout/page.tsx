@@ -330,10 +330,11 @@ export default function CheckoutPage() {
         }),
       })
 
-      const data = await res.json() as { payment_url?: string; error?: string }
+      const data = await res.json() as { payment_url?: string; error?: string; detail?: string }
 
       if (!res.ok || !data.payment_url) {
-        setApiError(data.error || t('orderFailed'))
+        const msg = data.detail ? `${data.error}: ${data.detail}` : (data.error || t('orderFailed'))
+        setApiError(msg)
         setLoading(false)
         return
       }
