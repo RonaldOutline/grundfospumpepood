@@ -111,7 +111,9 @@ export default function SectionEditor({ section, onChange, onMoveUp, onMoveDown,
     <div className="border border-gray-200 rounded-2xl overflow-hidden bg-gray-50">
       {/* Section header */}
       <div className="flex items-center gap-2 px-4 py-3 bg-white border-b border-gray-100">
-        <GripVertical size={18} draggable={!!onGripDragStart} onDragStart={onGripDragStart} className="text-gray-300 cursor-grab active:cursor-grabbing flex-shrink-0" />
+        <span draggable={!!onGripDragStart} onDragStart={onGripDragStart} className="flex-shrink-0 leading-none">
+          <GripVertical size={18} className="text-gray-300 cursor-grab active:cursor-grabbing" />
+        </span>
         <span className="text-[13px] font-semibold text-gray-700 flex-1">
           Sektsioon · {section.columns.length} veerg{section.columns.length !== 1 ? 'u' : ''}
         </span>
