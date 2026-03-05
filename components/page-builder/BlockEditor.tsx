@@ -44,6 +44,7 @@ interface Props {
 export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onDelete, isFirst, isLast }: Props) {
   const [open, setOpen] = useState(true)
   const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
 
   function upd(fields: Partial<ContentBlock>) {
     onChange({ ...block, ...fields } as ContentBlock)
@@ -53,8 +54,13 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
     setUploading(true)
     const ext = file.name.split('.').pop()
     const name = `blocks/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+    setUploadError('')
     const { error } = await supabase.storage.from('pages').upload(name, file, { cacheControl: '3600', upsert: false })
-    if (error) { setUploading(false); return null }
+    if (error) {
+      setUploadError('Üleslaadimine ebaõnnestus: ' + error.message)
+      setUploading(false)
+      return null
+    }
     const { data: { publicUrl } } = supabase.storage.from('pages').getPublicUrl(name)
     setUploading(false)
     return publicUrl
@@ -165,14 +171,23 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
                     </button>
                   </div>
                 ) : (
-                  <label className={`flex items-center gap-2 border-2 border-dashed border-gray-200 rounded-xl p-4 cursor-pointer hover:border-[#003366]/40 transition-colors ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
-                    <ImageIcon size={18} className="text-gray-400 flex-shrink-0" />
-                    <span className="text-[13px] text-gray-500">{uploading ? 'Laadin...' : 'Kliki pildi lisamiseks'}</span>
-                    <input type="file" accept="image/*" className="hidden" onChange={async e => {
-                      const file = e.target.files?.[0]
-                      if (file) { const url = await uploadImg(file); if (url) upd({ url }) }
-                    }} />
-                  </label>
+                  <>
+                    <label className={`flex items-center gap-2 border-2 border-dashed border-gray-200 rounded-xl p-4 cursor-pointer hover:border-[#003366]/40 transition-colors ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                      <ImageIcon size={18} className="text-gray-400 flex-shrink-0" />
+                      <div>
+                        <p className="text-[13px] text-gray-600 font-medium">{uploading ? 'Laadin üles...' : 'Kliki pildi lisamiseks'}</p>
+                        <p className="text-[11px] text-gray-400">JPG, PNG, WebP</p>
+                      </div>
+                      <input type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" className="hidden" onChange={async e => {
+                        const file = e.target.files?.[0]
+                        if (file) { const url = await uploadImg(file); if (url) upd({ url }) }
+                        e.target.value = ''
+                      }} />
+                    </label>
+                    {uploadError && (
+                      <p className="text-[12px] text-red-500 mt-1">{uploadError}</p>
+                    )}
+                  </>
                 )}
                 <div>
                   <label className={lbl}>Pildi URL (alternatiiv)</label>

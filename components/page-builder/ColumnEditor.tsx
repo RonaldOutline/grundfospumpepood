@@ -93,36 +93,34 @@ export default function ColumnEditor({ column, onChange, index }: Props) {
         />
       ))}
 
-      <div className="relative">
-        <button
-          type="button"
-          onClick={() => setShowAdd(s => !s)}
-          className="w-full flex items-center justify-center gap-1.5 border border-dashed border-gray-300 rounded-xl py-2 text-[13px] text-gray-400 hover:border-[#003366]/50 hover:text-[#003366] transition-colors"
-        >
-          <Plus size={14} /> Lisa blokk
-        </button>
-        {showAdd && (
-          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg p-2 z-20 grid grid-cols-2 gap-1 w-52">
-            {BLOCK_TYPES.map(({ type, label }) => (
-              <button
-                key={type}
-                type="button"
-                onClick={() => addBlock(type)}
-                className="text-left px-3 py-2 rounded-lg text-[13px] text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                {label}
-              </button>
-            ))}
+      <button
+        type="button"
+        onClick={() => setShowAdd(s => !s)}
+        className="w-full flex items-center justify-center gap-1.5 border border-dashed border-gray-300 rounded-xl py-2 text-[13px] text-gray-400 hover:border-[#003366]/50 hover:text-[#003366] transition-colors"
+      >
+        <Plus size={14} /> Lisa blokk
+      </button>
+      {showAdd && (
+        <div className="mt-1 bg-white border border-gray-200 rounded-xl shadow-sm p-2 grid grid-cols-2 gap-1">
+          {BLOCK_TYPES.map(({ type, label }) => (
             <button
+              key={type}
               type="button"
-              onClick={() => setShowAdd(false)}
-              className="col-span-2 text-center px-3 py-1.5 rounded-lg text-[12px] text-gray-400 hover:bg-gray-50 transition-colors border-t border-gray-100 mt-1"
+              onClick={() => addBlock(type)}
+              className="text-left px-3 py-2 rounded-lg text-[13px] text-gray-700 hover:bg-gray-50 transition-colors"
             >
-              Sulge
+              {label}
             </button>
-          </div>
-        )}
-      </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => setShowAdd(false)}
+            className="col-span-2 text-center px-3 py-1.5 rounded-lg text-[12px] text-gray-400 hover:bg-gray-50 transition-colors border-t border-gray-100 mt-1"
+          >
+            Sulge
+          </button>
+        </div>
+      )}
     </div>
   )
 }
