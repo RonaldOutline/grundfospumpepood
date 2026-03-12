@@ -6,6 +6,7 @@ import BlockRenderer from '@/components/page-builder/BlockRenderer'
 import ShortcodeRenderer from '@/components/ShortcodeRenderer'
 import { getTranslations, getLocale } from 'next-intl/server'
 import type { Section } from '@/components/page-builder/types'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 
 interface Column { title: string; text: string }
 
@@ -48,8 +49,9 @@ function makeClient() {
   )
 }
 
-async function getPage(slug: string): Promise<PageRow | null> {
-  const { data } = await makeClient()
+async function getPage(slug: string, preview = false): Promise<PageRow | null> {
+  const client = preview ? supabaseAdmin : makeClient()
+  const { data } = await client
     .from('pages')
     .select(`id, title, title_en, title_ru, title_lv, title_lt, title_pl,
       short_description, short_description_en, short_description_ru, short_description_lv, short_description_lt, short_description_pl,
@@ -96,7 +98,7 @@ export default async function PublicPage(
   const { slug } = await params
   const { preview } = await searchParams
   const locale = await getLocale()
-  const page = await getPage(slug)
+  const page = await getPage(slug, preview === '1')
 
   if (!page || (!isVisible(page) && preview !== '1')) notFound()
 
