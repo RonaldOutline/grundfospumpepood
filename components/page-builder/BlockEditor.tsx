@@ -7,7 +7,7 @@ import { uploadFile } from '@/lib/upload'
 import RichTextEditor from './RichTextEditor'
 import type {
   ContentBlock, HeadingBlock, TextBlock, ImageBlock,
-  ButtonBlock, VideoBlock, DividerBlock, SpacerBlock, SearchBarBlock, Alignment,
+  ButtonBlock, VideoBlock, DividerBlock, SpacerBlock, SearchBarBlock, TegevusaladBlock, Alignment,
 } from './types'
 
 const inp = 'w-full border border-gray-200 rounded-lg px-3 py-2 text-[14px] focus:border-[#003366] outline-none transition-colors bg-white'
@@ -17,6 +17,7 @@ const LABELS: Record<string, string> = {
   heading: 'Pealkiri', text: 'Tekst', image: 'Pilt',
   button: 'Nupp', video: 'Video', divider: 'Eraldusjooon', spacer: 'Tühik',
   search_bar: 'Otsinguriba',
+  tegevusalad: 'Tegevusalad',
 }
 
 function AlignBtns({ value, onChange }: { value: Alignment; onChange: (a: Alignment) => void }) {
@@ -379,6 +380,54 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
               Kontaktvorm — renderdatakse automaatselt.
             </p>
           )}
+
+          {/* TEGEVUSALAD */}
+          {block.type === 'tegevusalad' && (() => {
+            const b = block as TegevusaladBlock
+            return (
+              <>
+                <div>
+                  <label className={lbl}>Veergude arv</label>
+                  <div className="flex gap-1">
+                    {([2, 3, 4, 5, 6] as const).map(n => (
+                      <button key={n} type="button" onClick={() => upd({ columns: n })}
+                        className={`flex-1 py-1.5 rounded-lg text-[13px] border transition-colors ${
+                          b.columns === n ? 'bg-[#003366] text-white border-[#003366]' : 'border-gray-200 text-gray-500 hover:border-gray-400'
+                        }`}>
+                        {n}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className={lbl}>Kaardi stiil</label>
+                  <div className="flex gap-2">
+                    {([['filled', 'Taust'], ['outlined', 'Äärisjoon']] as const).map(([v, l]) => (
+                      <button key={v} type="button" onClick={() => upd({ card_style: v })}
+                        className={`flex-1 py-1.5 rounded-lg text-[13px] border transition-colors ${
+                          b.card_style === v ? 'bg-[#003366] text-white border-[#003366]' : 'border-gray-200 text-gray-500 hover:border-gray-400'
+                        }`}>
+                        {l}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className={lbl}>Ikooni suurus</label>
+                  <div className="flex gap-2">
+                    {([['small', 'Väike (20px)'], ['medium', 'Keskmine (32px)'], ['large', 'Suur (48px)']] as const).map(([v, l]) => (
+                      <button key={v} type="button" onClick={() => upd({ icon_size: v })}
+                        className={`flex-1 py-1.5 rounded-lg text-[13px] border transition-colors ${
+                          b.icon_size === v ? 'bg-[#003366] text-white border-[#003366]' : 'border-gray-200 text-gray-500 hover:border-gray-400'
+                        }`}>
+                        {l}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )
+          })()}
 
           {/* SEARCH BAR */}
           {block.type === 'search_bar' && (() => {

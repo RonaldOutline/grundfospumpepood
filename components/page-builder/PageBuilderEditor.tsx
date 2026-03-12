@@ -252,7 +252,7 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
 
           <button
             type="button"
-            onClick={addSection}
+            onClick={() => addSection()}
             className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-2xl py-4 text-[14px] text-gray-500 hover:border-[#003366]/50 hover:text-[#003366] transition-colors"
           >
             <Plus size={16} /> Lisa sektsioon

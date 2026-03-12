@@ -18,6 +18,7 @@ const BLOCK_TYPES: { type: ContentBlock['type']; label: string }[] = [
   { type: 'calculator',   label: 'Kalkulaator' },
   { type: 'contact_form', label: 'Kontaktvorm' },
   { type: 'search_bar',   label: 'Otsinguriba' },
+  { type: 'tegevusalad',  label: 'Tegevusalad' },
 ]
 
 function newBlock(type: ContentBlock['type']): ContentBlock {
@@ -34,6 +35,7 @@ function newBlock(type: ContentBlock['type']): ContentBlock {
     case 'calculator':    return { id, type }
     case 'contact_form':  return { id, type }
     case 'search_bar':    return { id, type, bg_color: '#003366', btn_color: '#01a0dc', text_color: '#ffffff', max_width: null }
+    case 'tegevusalad':   return { id, type, columns: 4, card_style: 'filled', icon_size: 'medium' }
   }
 }
 

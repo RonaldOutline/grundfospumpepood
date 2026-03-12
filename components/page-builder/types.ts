@@ -80,6 +80,14 @@ export interface ContactFormBlock {
   type: 'contact_form'
 }
 
+export interface TegevusaladBlock {
+  id: string
+  type: 'tegevusalad'
+  columns: 2 | 3 | 4 | 5 | 6
+  card_style: 'filled' | 'outlined'
+  icon_size: 'small' | 'medium' | 'large'
+}
+
 export interface SearchBarBlock {
   id: string
   type: 'search_bar'
@@ -101,6 +109,7 @@ export type ContentBlock =
   | CalculatorBlock
   | ContactFormBlock
   | SearchBarBlock
+  | TegevusaladBlock
 
 export interface Column {
   id: string

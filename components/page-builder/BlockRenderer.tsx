@@ -3,6 +3,7 @@ import PumpCalculator from '@/components/PumpCalculator'
 import ContactForm from '@/components/ContactForm'
 import ShortcodeRenderer from '@/components/ShortcodeRenderer'
 import SearchBarBlockRenderer from './SearchBarBlockRenderer'
+import TegevusaladBlockRenderer from './TegevusaladBlockRenderer'
 import type { Section, ContentBlock, HeadingBlock, TextBlock, ImageBlock, ButtonBlock, VideoBlock, DividerBlock, SpacerBlock, SliderBlock } from './types'
 
 // ─── Video URL parser ──────────────────────────────────────────────────────
@@ -171,6 +172,8 @@ function RenderBlock({ block }: { block: ContentBlock }) {
       return <ContactForm />
     case 'search_bar':
       return <SearchBarBlockRenderer block={block as import('./types').SearchBarBlock} />
+    case 'tegevusalad':
+      return <TegevusaladBlockRenderer block={block as import('./types').TegevusaladBlock} />
     default:
       return null
   }
