@@ -91,13 +91,14 @@ export async function generateMetadata(
 }
 
 export default async function PublicPage(
-  { params }: { params: Promise<{ slug: string; locale: string }> }
+  { params, searchParams }: { params: Promise<{ slug: string; locale: string }>; searchParams: Promise<{ preview?: string }> }
 ) {
   const { slug } = await params
+  const { preview } = await searchParams
   const locale = await getLocale()
   const page = await getPage(slug)
 
-  if (!page || !isVisible(page)) notFound()
+  if (!page || (!isVisible(page) && preview !== '1')) notFound()
 
   // Private page — require logged-in session
   if (page.visibility === 'private') {

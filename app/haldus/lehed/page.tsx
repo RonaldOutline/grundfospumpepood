@@ -94,7 +94,7 @@ export default function HaldusLehedPage() {
                       <div className="font-semibold text-gray-900 text-[15px]">{page.title}</div>
                       <div className="flex items-center gap-1 mt-0.5">
                         <span className="text-[13px] text-gray-400">/leht/{page.slug}</span>
-                        <a href={`/leht/${page.slug}`} target="_blank" rel="noopener noreferrer"
+                        <a href={`/leht/${page.slug}?preview=1`} target="_blank" rel="noopener noreferrer"
                           className="text-gray-300 hover:text-[#003366] transition-colors">
                           <ExternalLink size={12} />
                         </a>
@@ -111,7 +111,7 @@ export default function HaldusLehedPage() {
                     </span>
 
                     <div className="flex items-center gap-1 flex-shrink-0">
-                      <a href={`/leht/${page.slug}`} target="_blank" rel="noopener noreferrer"
+                      <a href={`/leht/${page.slug}?preview=1`} target="_blank" rel="noopener noreferrer"
                         className="p-2 text-gray-400 hover:text-[#003366] transition-colors rounded-lg hover:bg-blue-50"
                         title="Eelvaade">
                         <Eye size={15} />
