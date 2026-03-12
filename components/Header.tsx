@@ -217,10 +217,10 @@ export default function Header() {
                 {t('products')}
                 <ChevronDown size={14} className={`transition-transform duration-200 ${megaOpen ? 'rotate-180' : ''}`} />
               </button>
-              <button className={`px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10 ${megaOpen ? 'text-white' : 'text-white/90 hover:text-white'}`}>
+              <button onMouseEnter={() => setMegaOpen(false)} className={`px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10 ${megaOpen ? 'text-white' : 'text-white/90 hover:text-white'}`}>
                 {t('projectSales')}
               </button>
-              <button className={`px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10 ${megaOpen ? 'text-white' : 'text-white/90 hover:text-white'}`}>
+              <button onMouseEnter={() => setMegaOpen(false)} className={`px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10 ${megaOpen ? 'text-white' : 'text-white/90 hover:text-white'}`}>
                 {t('contact')}
               </button>
             </nav>

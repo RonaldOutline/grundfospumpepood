@@ -304,6 +304,38 @@ export default function SectionEditor({ section, onChange, onMoveUp, onMoveDown,
                   className={`${inp} mt-1`} placeholder="px" />
               )}
             </div>
+            <div className="col-span-2">
+              <label className="block text-[12px] font-medium text-gray-600 mb-1">Polsterdus külgedel</label>
+              <select value={s.padding_x ?? 'small'} onChange={e => updSettings({ padding_x: e.target.value as SectionSettings['padding_x'] })} className={inp}>
+                {PADDING_OPTS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+              </select>
+              {s.padding_x === 'custom' && (
+                <input type="number" value={s.padding_x_custom ?? 0} min={0} max={400}
+                  onChange={e => updSettings({ padding_x_custom: Number(e.target.value) })}
+                  className={`${inp} mt-1`} placeholder="px" />
+              )}
+            </div>
+          </div>
+
+          {/* Border radius */}
+          <div>
+            <label className="block text-[12px] font-medium text-gray-600 mb-2">Ümarad nurgad (px)</label>
+            <div className="grid grid-cols-2 gap-2">
+              {([
+                ['border_radius_tl', '↖ Ülemine vasak'],
+                ['border_radius_tr', '↗ Ülemine parem'],
+                ['border_radius_bl', '↙ Alumine vasak'],
+                ['border_radius_br', '↘ Alumine parem'],
+              ] as const).map(([key, label]) => (
+                <div key={key}>
+                  <label className="block text-[11px] text-gray-400 mb-0.5">{label}</label>
+                  <input type="number" min={0} max={200}
+                    value={s[key] ?? 0}
+                    onChange={e => updSettings({ [key]: Number(e.target.value) })}
+                    className={inp} placeholder="0" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

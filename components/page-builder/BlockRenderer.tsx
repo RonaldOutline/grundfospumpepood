@@ -34,6 +34,9 @@ const PAD_TOP: Record<string, string> = {
 const PAD_BOT: Record<string, string> = {
   small: 'pb-4', medium: 'pb-12', large: 'pb-24', custom: '',
 }
+const PAD_X: Record<string, string> = {
+  small: 'px-4', medium: 'px-8', large: 'px-16', custom: '',
+}
 
 // ─── Single block renderer ─────────────────────────────────────────────────
 
@@ -186,35 +189,47 @@ function RenderSection({ section }: { section: Section }) {
   const isBoxed = settings.width === 'boxed'
   const isCustom = settings.width === 'custom'
 
-  const sectionStyle: React.CSSProperties = {}
+  const bgStyle: React.CSSProperties = {}
   if (settings.background_type === 'color') {
-    sectionStyle.backgroundColor = settings.background_color
+    bgStyle.backgroundColor = settings.background_color
   } else if (settings.background_type === 'gradient') {
     const dir = settings.background_gradient_direction ?? 'to right'
     const c1 = settings.background_gradient_color1 ?? '#003366'
     const c2 = settings.background_gradient_color2 ?? '#01a0dc'
-    sectionStyle.backgroundImage = `linear-gradient(${dir}, ${c1}, ${c2})`
+    bgStyle.backgroundImage = `linear-gradient(${dir}, ${c1}, ${c2})`
   } else if (settings.background_image_url) {
-    sectionStyle.backgroundImage = `url(${settings.background_image_url})`
-    sectionStyle.backgroundSize = 'cover'
-    sectionStyle.backgroundPosition = 'center'
-    sectionStyle.position = 'relative'
+    bgStyle.backgroundImage = `url(${settings.background_image_url})`
+    bgStyle.backgroundSize = 'cover'
+    bgStyle.backgroundPosition = 'center'
+  }
+
+  // Border radius
+  const tl = settings.border_radius_tl
+  const tr = settings.border_radius_tr
+  const br = settings.border_radius_br
+  const bl = settings.border_radius_bl
+  if (tl || tr || br || bl) {
+    bgStyle.borderRadius = `${tl ?? 0}px ${tr ?? 0}px ${br ?? 0}px ${bl ?? 0}px`
+    bgStyle.overflow = 'hidden'
   }
 
   const ptClass = PAD_TOP[settings.padding_top] ?? ''
   const pbClass = PAD_BOT[settings.padding_bottom] ?? ''
-  const ptStyle = settings.padding_top === 'custom' ? settings.padding_top_custom ?? 0 : undefined
-  const pbStyle = settings.padding_bottom === 'custom' ? settings.padding_bottom_custom ?? 0 : undefined
+  const pxClass = PAD_X[settings.padding_x ?? 'small'] ?? 'px-4'
 
   const paddingStyle: React.CSSProperties = {}
-  if (ptStyle !== undefined) paddingStyle.paddingTop = `${ptStyle}px`
-  if (pbStyle !== undefined) paddingStyle.paddingBottom = `${pbStyle}px`
+  if (settings.padding_top === 'custom') paddingStyle.paddingTop = `${settings.padding_top_custom ?? 0}px`
+  if (settings.padding_bottom === 'custom') paddingStyle.paddingBottom = `${settings.padding_bottom_custom ?? 0}px`
+  if (settings.padding_x === 'custom') {
+    paddingStyle.paddingLeft = `${settings.padding_x_custom ?? 0}px`
+    paddingStyle.paddingRight = `${settings.padding_x_custom ?? 0}px`
+  }
 
   const colAlignMap: Record<string, string> = { top: 'start', center: 'center', bottom: 'end' }
 
   const inner = (
     <div
-      className={`grid gap-6 md:gap-8 ${ptClass} ${pbClass}`}
+      className={`grid gap-6 md:gap-8 ${ptClass} ${pbClass} ${settings.padding_x !== 'custom' ? pxClass : ''}`}
       style={{
         gridTemplateColumns: columns.map(c => `${c.width}fr`).join(' '),
         ...paddingStyle,
@@ -234,21 +249,37 @@ function RenderSection({ section }: { section: Section }) {
     </div>
   )
 
+  const overlay = settings.background_type === 'image' && settings.background_image_url && settings.background_overlay > 0 ? (
+    <div
+      className="absolute inset-0 pointer-events-none"
+      style={{ backgroundColor: `rgba(0,0,0,${settings.background_overlay})` }}
+    />
+  ) : null
+
+  if (isBoxed) {
+    return (
+      <section className="w-full">
+        <div style={{ maxWidth: 1200, ...bgStyle }} className="mx-auto relative">
+          {overlay}
+          <div className="relative z-10">{inner}</div>
+        </div>
+      </section>
+    )
+  }
+  if (isCustom) {
+    return (
+      <section className="w-full">
+        <div style={{ maxWidth: settings.width_custom ?? 1200, ...bgStyle }} className="mx-auto relative">
+          {overlay}
+          <div className="relative z-10">{inner}</div>
+        </div>
+      </section>
+    )
+  }
   return (
-    <section style={sectionStyle} className="w-full">
-      {settings.background_type === 'image' && settings.background_image_url && settings.background_overlay > 0 && (
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ backgroundColor: `rgba(0,0,0,${settings.background_overlay})` }}
-        />
-      )}
-      {isBoxed ? (
-        <div className="max-w-[1200px] mx-auto px-4 md:px-6 relative z-10">{inner}</div>
-      ) : isCustom ? (
-        <div style={{ maxWidth: settings.width_custom ?? 1200 }} className="mx-auto px-4 md:px-6 relative z-10">{inner}</div>
-      ) : (
-        <div className="px-4 md:px-6 relative z-10">{inner}</div>
-      )}
+    <section style={bgStyle} className="w-full relative">
+      {overlay}
+      <div className="relative z-10">{inner}</div>
     </section>
   )
 }
