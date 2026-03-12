@@ -89,6 +89,7 @@ export interface TegevusaladBlock {
   columns: 2 | 3 | 4 | 5 | 6
   card_style: 'filled' | 'outlined'
   icon_size: 'small' | 'medium' | 'large'
+  card_bg_color?: string
 }
 
 export interface SearchBarBlock {

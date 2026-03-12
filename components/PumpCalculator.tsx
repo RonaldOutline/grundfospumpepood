@@ -175,8 +175,8 @@ export default function PumpCalculator() {
   // ── Results state ─────────────────────────────────────────────────────────
   const [products, setProducts] = useState<Product[]>([])
   const [total,    setTotal]    = useState(0)
-  const [loading,  setLoading]  = useState(false)
-  const [queried,  setQueried]  = useState(false) // true once first query ran
+  const [loading,  setLoading]  = useState(true)  // start loading since defaults are set
+  const [queried,  setQueried]  = useState(true)  // true once first query ran
 
   // ── Derived ───────────────────────────────────────────────────────────────
   const selectedAla  = TEGEVUSALAD.find(a => a.slug === tegevusala)

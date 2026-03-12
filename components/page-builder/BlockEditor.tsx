@@ -436,6 +436,13 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
                   </div>
                 </div>
                 <div>
+                  <label className={lbl}>Kaardi taustavärv</label>
+                  <ColorField
+                    value={b.card_bg_color ?? '#ffffff'}
+                    onChange={v => upd({ card_bg_color: v })}
+                  />
+                </div>
+                <div>
                   <label className={lbl}>Ikooni suurus</label>
                   <div className="flex gap-2">
                     {([['small', 'Väike (20px)'], ['medium', 'Keskmine (32px)'], ['large', 'Suur (48px)']] as const).map(([v, l]) => (

@@ -40,8 +40,12 @@ export default function TegevusaladBlockRenderer({ block }: { block: Tegevusalad
 
   const cardBase =
     block.card_style === 'filled'
-      ? 'bg-white shadow-sm hover:shadow-md'
-      : 'bg-transparent border border-gray-200 hover:border-[#003366]/40'
+      ? 'shadow-sm hover:shadow-md'
+      : 'border border-gray-200 hover:border-[#003366]/40'
+
+  const cardBgStyle = block.card_style === 'filled'
+    ? { backgroundColor: block.card_bg_color || 'transparent' }
+    : {}
 
   return (
     <div className={`grid ${colClass} gap-3`}>
@@ -50,6 +54,7 @@ export default function TegevusaladBlockRenderer({ block }: { block: Tegevusalad
           key={cat.slug}
           href={`/tooted?tegevusala=${cat.slug}`}
           className={`flex flex-col items-center gap-2.5 px-4 py-5 rounded-xl transition-all group ${cardBase} hover:bg-blue-50`}
+          style={cardBgStyle}
         >
           <cat.icon
             size={iconPx}
