@@ -130,7 +130,7 @@ export interface SectionSettings {
   width_custom?: number
   padding_top: PaddingSize
   padding_bottom: PaddingSize
-  padding_x: PaddingSize
+  padding_x?: PaddingSize
   padding_top_custom?: number
   padding_bottom_custom?: number
   padding_x_custom?: number
