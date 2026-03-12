@@ -115,7 +115,7 @@ export default function FeaturedProductsSlider() {
   const next = () => { setAnimate(true); setPage(p => p + 1) }
 
   return (
-    <section className="py-12 bg-gray-50">
+    <section className="py-12">
       <div className="max-w-7xl mx-auto px-4">
 
         {/* Section header */}

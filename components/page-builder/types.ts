@@ -121,6 +121,10 @@ export interface Column {
   width: number
   vertical_align: VerticalAlign
   blocks: ContentBlock[]
+  border_radius_tl?: number
+  border_radius_tr?: number
+  border_radius_bl?: number
+  border_radius_br?: number
 }
 
 export interface SectionSettings {

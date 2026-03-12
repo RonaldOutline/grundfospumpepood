@@ -100,13 +100,31 @@ export default function ColumnEditor({ column, onChange, index }: Props) {
     setOverIdx(null)
   }
 
+  const [showColSettings, setShowColSettings] = useState(false)
+
+  function updCol(fields: Partial<Column>) {
+    onChange({ ...column, ...fields })
+  }
+
+  const tl = column.border_radius_tl ?? 0
+  const tr = column.border_radius_tr ?? 0
+  const bl = column.border_radius_bl ?? 0
+  const br = column.border_radius_br ?? 0
+
   return (
     <div className="flex flex-col gap-2 min-w-0 min-h-[80px]">
       <div className="flex items-center justify-between mb-1">
         <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
           Veerg {index + 1} · {column.width}%
         </span>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setShowColSettings(s => !s)}
+            className={`text-[11px] px-2 py-0.5 rounded border transition-colors ${showColSettings ? 'bg-[#003366] text-white border-[#003366]' : 'border-gray-200 text-gray-400 hover:border-gray-400'}`}
+          >
+            Seaded
+          </button>
           <label className="text-[11px] text-gray-400">Joondus:</label>
           <select
             value={column.vertical_align}
@@ -119,6 +137,31 @@ export default function ColumnEditor({ column, onChange, index }: Props) {
           </select>
         </div>
       </div>
+
+      {showColSettings && (
+        <div className="bg-white border border-gray-200 rounded-xl p-3 mb-1 space-y-2">
+          <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Ümarad nurgad (px)</div>
+          <div className="grid grid-cols-2 gap-2">
+            {([
+              ['border_radius_tl', '↖ Ülemine vasak'],
+              ['border_radius_tr', '↗ Ülemine parem'],
+              ['border_radius_bl', '↙ Alumine vasak'],
+              ['border_radius_br', '↘ Alumine parem'],
+            ] as const).map(([key, label]) => (
+              <div key={key}>
+                <label className="block text-[10px] text-gray-400 mb-0.5">{label}</label>
+                <input
+                  type="number" min={0} max={200}
+                  value={column[key] ?? 0}
+                  onChange={e => updCol({ [key]: Number(e.target.value) })}
+                  className="w-full border border-gray-200 rounded-lg px-2 py-1 text-[13px] focus:border-[#003366] outline-none bg-white"
+                  placeholder="0"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {column.blocks.map((block, i) => (
         <div

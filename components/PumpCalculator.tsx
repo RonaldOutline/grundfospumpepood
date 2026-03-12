@@ -332,7 +332,7 @@ export default function PumpCalculator() {
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <section className="py-14 bg-white border-t border-gray-100">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-[1200px] mx-auto px-4">
 
         {/* Heading */}
         <div className="mb-8">

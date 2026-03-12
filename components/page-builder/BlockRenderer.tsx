@@ -238,17 +238,29 @@ function RenderSection({ section }: { section: Section }) {
         ...paddingStyle,
       }}
     >
-      {columns.map(col => (
+      {columns.map(col => {
+        const ctl = col.border_radius_tl, ctr = col.border_radius_tr
+        const cbl = col.border_radius_bl, cbr = col.border_radius_br
+        const colStyle: React.CSSProperties = {
+          alignItems: 'stretch',
+          justifyContent: colAlignMap[col.vertical_align] ?? 'start',
+        }
+        if (ctl || ctr || cbl || cbr) {
+          colStyle.borderRadius = `${ctl ?? 0}px ${ctr ?? 0}px ${cbr ?? 0}px ${cbl ?? 0}px`
+          colStyle.overflow = 'hidden'
+        }
+        return (
         <div
           key={col.id}
           className="flex flex-col gap-4 min-w-0"
-          style={{ alignItems: 'stretch', justifyContent: colAlignMap[col.vertical_align] ?? 'start' }}
+          style={colStyle}
         >
           {col.blocks.map(block => (
             <RenderBlock key={block.id} block={block} />
           ))}
         </div>
-      ))}
+        )
+      })}
     </div>
   )
 
