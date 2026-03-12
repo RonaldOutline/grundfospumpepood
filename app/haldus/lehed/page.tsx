@@ -111,11 +111,11 @@ export default function HaldusLehedPage() {
                     </span>
 
                     <div className="flex items-center gap-1 flex-shrink-0">
-                      <a href={`/leht/${page.slug}?preview=1`} target="_blank" rel="noopener noreferrer"
+                      <Link href={`/haldus/lehed/${page.id}/eelvaade`}
                         className="p-2 text-gray-400 hover:text-[#003366] transition-colors rounded-lg hover:bg-blue-50"
                         title="Eelvaade">
                         <Eye size={15} />
-                      </a>
+                      </Link>
                       <Link href={`/haldus/lehed/${page.id}`}
                         className="p-2 text-gray-400 hover:text-[#003366] transition-colors rounded-lg hover:bg-blue-50"
                         title="Muuda">
