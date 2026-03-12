@@ -218,26 +218,36 @@ function RenderSection({ section }: { section: Section }) {
 
   const ptClass = PAD_TOP[settings.padding_top] ?? ''
   const pbClass = PAD_BOT[settings.padding_bottom] ?? ''
-  const pxClass = PAD_X[settings.padding_x ?? 'small'] ?? 'px-4'
 
+  // Mobile always px-5 (20px); desktop uses the configured padding_x
+  const PAD_X_MD: Record<string, string> = {
+    small: 'md:px-4', medium: 'md:px-8', large: 'md:px-16', custom: '',
+  }
+  const pxClasses = `px-5 ${settings.padding_x !== 'custom' ? (PAD_X_MD[settings.padding_x ?? 'small'] ?? '') : ''}`
+
+  // top/bottom custom padding only (left/right handled via style tag below)
   const paddingStyle: React.CSSProperties = {}
   if (settings.padding_top === 'custom') paddingStyle.paddingTop = `${settings.padding_top_custom ?? 0}px`
   if (settings.padding_bottom === 'custom') paddingStyle.paddingBottom = `${settings.padding_bottom_custom ?? 0}px`
-  if (settings.padding_x === 'custom') {
-    paddingStyle.paddingLeft = `${settings.padding_x_custom ?? 0}px`
-    paddingStyle.paddingRight = `${settings.padding_x_custom ?? 0}px`
-  }
+
+  // Unique class for responsive overrides: grid columns at md+, custom px at md+
+  const gridId = `sg${section.id.replace(/-/g, '').slice(0, 10)}`
+  const styleRules = [
+    `@media(min-width:768px){.${gridId}{grid-template-columns:${columns.map(c => `${c.width}fr`).join(' ')}}}`,
+    settings.padding_x === 'custom'
+      ? `@media(min-width:768px){.${gridId}{padding-left:${settings.padding_x_custom ?? 0}px;padding-right:${settings.padding_x_custom ?? 0}px}}`
+      : '',
+  ].filter(Boolean).join('\n')
 
   const colAlignMap: Record<string, string> = { top: 'start', center: 'center', bottom: 'end' }
 
   const inner = (
-    <div
-      className={`grid gap-6 md:gap-8 ${ptClass} ${pbClass} ${settings.padding_x !== 'custom' ? pxClass : ''}`}
-      style={{
-        gridTemplateColumns: columns.map(c => `${c.width}fr`).join(' '),
-        ...paddingStyle,
-      }}
-    >
+    <>
+      <style dangerouslySetInnerHTML={{ __html: styleRules }} />
+      <div
+        className={`grid grid-cols-1 ${gridId} gap-6 md:gap-8 ${ptClass} ${pbClass} ${pxClasses}`}
+        style={paddingStyle}
+      >
       {columns.map(col => {
         const ctl = col.border_radius_tl, ctr = col.border_radius_tr
         const cbl = col.border_radius_bl, cbr = col.border_radius_br
@@ -262,6 +272,7 @@ function RenderSection({ section }: { section: Section }) {
         )
       })}
     </div>
+    </>
   )
 
   const showOverlay = settings.background_type === 'image' && settings.background_image_url
