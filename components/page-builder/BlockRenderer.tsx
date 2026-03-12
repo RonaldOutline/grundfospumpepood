@@ -256,30 +256,17 @@ function RenderSection({ section }: { section: Section }) {
     />
   ) : null
 
-  if (isBoxed) {
-    return (
-      <section className="w-full">
-        <div style={{ maxWidth: 1200, ...bgStyle }} className="mx-auto relative">
-          {overlay}
-          <div className="relative z-10">{inner}</div>
-        </div>
-      </section>
-    )
-  }
-  if (isCustom) {
-    return (
-      <section className="w-full">
-        <div style={{ maxWidth: settings.width_custom ?? 1200, ...bgStyle }} className="mx-auto relative">
-          {overlay}
-          <div className="relative z-10">{inner}</div>
-        </div>
-      </section>
-    )
-  }
+  // Content width constraint — background always spans full width
+  const contentStyle: React.CSSProperties = {}
+  if (isBoxed) contentStyle.maxWidth = 1200
+  else if (isCustom) contentStyle.maxWidth = settings.width_custom ?? 1200
+
   return (
     <section style={bgStyle} className="w-full relative">
       {overlay}
-      <div className="relative z-10">{inner}</div>
+      <div style={contentStyle} className={`${isBoxed || isCustom ? 'mx-auto' : ''} relative z-10`}>
+        {inner}
+      </div>
     </section>
   )
 }
