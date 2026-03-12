@@ -21,6 +21,8 @@ export interface TextBlock {
   content: string
   alignment: Alignment
   color: string
+  font_size?: number
+  font_size_unit?: 'px' | 'em'
 }
 
 export interface ImageBlock {
@@ -42,6 +44,7 @@ export interface ButtonBlock {
   style: 'filled' | 'outline' | 'text'
   color: string
   alignment: Alignment
+  font_size?: number
 }
 
 export interface VideoBlock {

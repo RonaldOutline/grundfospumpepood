@@ -184,6 +184,26 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
                     <label className={lbl}>Värv</label>
                     <ColorField value={b.color} onChange={v => upd({ color: v })} />
                   </div>
+                  <div>
+                    <label className={lbl}>
+                      Suurus <span className="font-normal text-gray-400">(tühi = 16px)</span>
+                    </label>
+                    <div className="flex gap-2">
+                      <input type="number" value={b.font_size ?? ''} min={6} max={200}
+                        onChange={e => upd({ font_size: e.target.value ? Number(e.target.value) : undefined })}
+                        className={`${inp} w-20`} placeholder="16" />
+                      <div className="flex gap-1">
+                        {(['px', 'em'] as const).map(u => (
+                          <button key={u} type="button" onClick={() => upd({ font_size_unit: u })}
+                            className={`px-2.5 py-1 rounded-lg text-[12px] border transition-colors ${
+                              (b.font_size_unit ?? 'px') === u
+                                ? 'bg-[#003366] text-white border-[#003366]'
+                                : 'border-gray-200 text-gray-500 hover:border-gray-400'
+                            }`}>{u}</button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </>
             )
@@ -303,6 +323,12 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
                   <div>
                     <label className={lbl}>Värv</label>
                     <ColorField value={b.color} onChange={v => upd({ color: v })} />
+                  </div>
+                  <div>
+                    <label className={lbl}>Suurus <span className="font-normal text-gray-400">(tühi = 15px)</span></label>
+                    <input type="number" value={b.font_size ?? ''} min={6} max={200}
+                      onChange={e => upd({ font_size: e.target.value ? Number(e.target.value) : undefined })}
+                      className={`${inp} w-20`} placeholder="15" />
                   </div>
                 </div>
               </>

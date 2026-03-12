@@ -66,13 +66,15 @@ function RenderBlock({ block }: { block: ContentBlock }) {
     case 'text': {
       const b = block as TextBlock
       const alignClass = b.alignment === 'center' ? 'text-center' : b.alignment === 'right' ? 'text-right' : 'text-left'
+      const textStyle: React.CSSProperties = { color: b.color }
+      if (b.font_size) textStyle.fontSize = `${b.font_size}${b.font_size_unit ?? 'px'}`
       const isHtml = /<[a-z][\s\S]*>/i.test(b.content)
       const hasShortcode = /\[[a-z_]+\]/.test(b.content)
       if (isHtml || hasShortcode) {
         return (
           <ShortcodeRenderer
             html={b.content}
-            className={`text-[16px] leading-relaxed ${alignClass}
+            className={`leading-relaxed ${b.font_size ? '' : 'text-[16px]'} ${alignClass}
               [&_b]:font-bold [&_strong]:font-bold
               [&_i]:italic [&_em]:italic
               [&_a]:text-[#003366] [&_a]:underline [&_a:hover]:text-[#01a0dc]
@@ -85,12 +87,12 @@ function RenderBlock({ block }: { block: ContentBlock }) {
               [&_h4]:text-xl [&_h4]:font-semibold [&_h4]:mt-3 [&_h4]:mb-1
               [&_h5]:text-lg [&_h5]:font-semibold [&_h5]:mt-2 [&_h5]:mb-1
               [&_h6]:text-base [&_h6]:font-semibold [&_h6]:mt-2 [&_h6]:mb-1`}
-            style={{ color: b.color }}
+            style={textStyle}
           />
         )
       }
       return (
-        <p className={`text-[16px] leading-relaxed whitespace-pre-line ${alignClass}`} style={{ color: b.color }}>
+        <p className={`${b.font_size ? '' : 'text-[16px]'} leading-relaxed whitespace-pre-line ${alignClass}`} style={textStyle}>
           {b.content}
         </p>
       )
@@ -118,7 +120,8 @@ function RenderBlock({ block }: { block: ContentBlock }) {
     case 'button': {
       const b = block as ButtonBlock
       const alignClass = b.alignment === 'center' ? 'text-center' : b.alignment === 'right' ? 'text-right' : 'text-left'
-      let btnCls = 'inline-block px-6 py-3 rounded-xl font-semibold text-[15px] transition-opacity hover:opacity-80'
+      const btnFontSize = b.font_size ? `${b.font_size}px` : undefined
+      let btnCls = `inline-block px-6 py-3 rounded-xl font-semibold ${b.font_size ? '' : 'text-[15px]'} transition-opacity hover:opacity-80`
       if (b.style === 'filled') {
         btnCls += ' text-white'
       } else if (b.style === 'outline') {
@@ -128,10 +131,10 @@ function RenderBlock({ block }: { block: ContentBlock }) {
       }
       const btnStyle: React.CSSProperties =
         b.style === 'filled'
-          ? { backgroundColor: b.color }
+          ? { backgroundColor: b.color, fontSize: btnFontSize }
           : b.style === 'outline'
-          ? { color: b.color, borderColor: b.color }
-          : { color: b.color }
+          ? { color: b.color, borderColor: b.color, fontSize: btnFontSize }
+          : { color: b.color, fontSize: btnFontSize }
       return (
         <div className={alignClass}>
           <a href={b.url} target={b.target} rel={b.target === '_blank' ? 'noopener noreferrer' : undefined}
