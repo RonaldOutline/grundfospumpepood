@@ -1,7 +1,7 @@
 export type Alignment = 'left' | 'center' | 'right'
 export type VerticalAlign = 'top' | 'center' | 'bottom'
 export type WidthType = 'boxed' | 'full'
-export type BackgroundType = 'color' | 'image'
+export type BackgroundType = 'color' | 'image' | 'gradient'
 export type PaddingSize = 'small' | 'medium' | 'large' | 'custom'
 
 export interface HeadingBlock {
@@ -83,6 +83,10 @@ export interface ContactFormBlock {
 export interface SearchBarBlock {
   id: string
   type: 'search_bar'
+  bg_color: string
+  btn_color: string
+  text_color: string
+  max_width: number | null
 }
 
 export type ContentBlock =
@@ -111,6 +115,9 @@ export interface SectionSettings {
   background_color: string
   background_image_url: string | null
   background_overlay: number
+  background_gradient_color1?: string
+  background_gradient_color2?: string
+  background_gradient_direction?: string
   padding_top: PaddingSize
   padding_bottom: PaddingSize
   padding_top_custom?: number

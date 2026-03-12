@@ -194,12 +194,12 @@ export default function SectionEditor({ section, onChange, onMoveUp, onMoveDown,
           <div>
             <label className="block text-[12px] font-medium text-gray-600 mb-1">Taust</label>
             <div className="flex gap-2 mb-2">
-              {(['color', 'image'] as const).map(v => (
+              {(['color', 'gradient', 'image'] as const).map(v => (
                 <button key={v} type="button" onClick={() => updSettings({ background_type: v })}
-                  className={`px-3 py-1.5 rounded-lg text-[13px] border transition-colors ${
+                  className={`flex-1 px-2 py-1.5 rounded-lg text-[13px] border transition-colors ${
                     s.background_type === v ? 'bg-[#003366] text-white border-[#003366]' : 'border-gray-200 text-gray-600 hover:border-gray-400'
                   }`}>
-                  {v === 'color' ? 'Värv' : 'Pilt'}
+                  {v === 'color' ? 'Värv' : v === 'gradient' ? 'Gradient' : 'Pilt'}
                 </button>
               ))}
             </div>
@@ -209,6 +209,43 @@ export default function SectionEditor({ section, onChange, onMoveUp, onMoveDown,
                   onChange={e => updSettings({ background_color: e.target.value })}
                   className="h-9 w-16 rounded border border-gray-200 cursor-pointer" />
                 <span className="text-[13px] text-gray-500 font-mono">{s.background_color}</span>
+              </div>
+            )}
+            {s.background_type === 'gradient' && (
+              <div className="space-y-2">
+                <div className="flex gap-3 items-end">
+                  <div>
+                    <label className="block text-[11px] text-gray-500 mb-1">Värv 1</label>
+                    <input type="color" value={s.background_gradient_color1 ?? '#003366'}
+                      onChange={e => updSettings({ background_gradient_color1: e.target.value })}
+                      className="h-9 w-14 rounded border border-gray-200 cursor-pointer" />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-gray-500 mb-1">Värv 2</label>
+                    <input type="color" value={s.background_gradient_color2 ?? '#01a0dc'}
+                      onChange={e => updSettings({ background_gradient_color2: e.target.value })}
+                      className="h-9 w-14 rounded border border-gray-200 cursor-pointer" />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-[11px] text-gray-500 mb-1">Suund</label>
+                    <select
+                      value={s.background_gradient_direction ?? 'to right'}
+                      onChange={e => updSettings({ background_gradient_direction: e.target.value })}
+                      className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-[13px] outline-none"
+                    >
+                      <option value="to right">→ Paremale</option>
+                      <option value="to left">← Vasakule</option>
+                      <option value="to bottom">↓ Alla</option>
+                      <option value="to top">↑ Üles</option>
+                      <option value="135deg">↘ Diagonaal ↘</option>
+                      <option value="45deg">↗ Diagonaal ↗</option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  className="h-6 rounded-lg border border-gray-200"
+                  style={{ background: `linear-gradient(${s.background_gradient_direction ?? 'to right'}, ${s.background_gradient_color1 ?? '#003366'}, ${s.background_gradient_color2 ?? '#01a0dc'})` }}
+                />
               </div>
             )}
             {s.background_type === 'image' && (

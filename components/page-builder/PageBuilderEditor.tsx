@@ -62,8 +62,14 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
 
   // ── Sections ─────────────────────────────────────────────────────────────
 
-  function addSection() {
-    setSections(s => [...s, { ...newSection(), order: s.length }])
+  function addSection(afterIndex?: number) {
+    setSections(s => {
+      const sec = { ...newSection(), order: 0 }
+      const arr = afterIndex !== undefined
+        ? [...s.slice(0, afterIndex + 1), sec, ...s.slice(afterIndex + 1)]
+        : [...s, sec]
+      return arr.map((item, idx) => ({ ...item, order: idx }))
+    })
   }
 
   function updateSection(i: number, section: Section) {
@@ -213,23 +219,34 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
           )}
 
           {sections.map((section, i) => (
-            <div
-              key={section.id}
-              onDragOver={e => onSecDragOver(e, i)}
-              onDrop={e => onSecDrop(e, i)}
-              onDragEnd={onSecDragEnd}
-              className={`transition-opacity rounded-2xl ${dragSecIdx === i ? 'opacity-30' : ''} ${overSecIdx === i && dragSecIdx !== i ? 'ring-2 ring-[#003366]/40' : ''}`}
-            >
-              <SectionEditor
-                section={section}
-                onChange={s => updateSection(i, s)}
-                onMoveUp={() => moveSection(i, -1)}
-                onMoveDown={() => moveSection(i, 1)}
-                onDelete={() => deleteSection(i)}
-                isFirst={i === 0}
-                isLast={i === sections.length - 1}
-                onGripDragStart={e => onSecDragStart(e, i)}
-              />
+            <div key={section.id}>
+              <div
+                onDragOver={e => onSecDragOver(e, i)}
+                onDrop={e => onSecDrop(e, i)}
+                onDragEnd={onSecDragEnd}
+                className={`transition-opacity rounded-2xl ${dragSecIdx === i ? 'opacity-30' : ''} ${overSecIdx === i && dragSecIdx !== i ? 'ring-2 ring-[#003366]/40' : ''}`}
+              >
+                <SectionEditor
+                  section={section}
+                  onChange={s => updateSection(i, s)}
+                  onMoveUp={() => moveSection(i, -1)}
+                  onMoveDown={() => moveSection(i, 1)}
+                  onDelete={() => deleteSection(i)}
+                  isFirst={i === 0}
+                  isLast={i === sections.length - 1}
+                  onGripDragStart={e => onSecDragStart(e, i)}
+                />
+              </div>
+              {i < sections.length - 1 && (
+                <button
+                  type="button"
+                  onClick={() => addSection(i)}
+                  className="w-full flex items-center justify-center gap-1.5 py-1 text-[12px] text-gray-300 hover:text-[#003366] hover:bg-blue-50 rounded-xl transition-colors group"
+                >
+                  <Plus size={12} />
+                  <span className="opacity-0 group-hover:opacity-100 transition-opacity">Lisa sektsioon siia</span>
+                </button>
+              )}
             </div>
           ))}
 

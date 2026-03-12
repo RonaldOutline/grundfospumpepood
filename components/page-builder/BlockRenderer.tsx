@@ -170,7 +170,7 @@ function RenderBlock({ block }: { block: ContentBlock }) {
     case 'contact_form':
       return <ContactForm />
     case 'search_bar':
-      return <SearchBarBlockRenderer />
+      return <SearchBarBlockRenderer block={block as import('./types').SearchBarBlock} />
     default:
       return null
   }
@@ -185,6 +185,11 @@ function RenderSection({ section }: { section: Section }) {
   const sectionStyle: React.CSSProperties = {}
   if (settings.background_type === 'color') {
     sectionStyle.backgroundColor = settings.background_color
+  } else if (settings.background_type === 'gradient') {
+    const dir = settings.background_gradient_direction ?? 'to right'
+    const c1 = settings.background_gradient_color1 ?? '#003366'
+    const c2 = settings.background_gradient_color2 ?? '#01a0dc'
+    sectionStyle.backgroundImage = `linear-gradient(${dir}, ${c1}, ${c2})`
   } else if (settings.background_image_url) {
     sectionStyle.backgroundImage = `url(${settings.background_image_url})`
     sectionStyle.backgroundSize = 'cover'

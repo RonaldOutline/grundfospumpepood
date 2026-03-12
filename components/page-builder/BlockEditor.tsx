@@ -7,7 +7,7 @@ import { uploadFile } from '@/lib/upload'
 import RichTextEditor from './RichTextEditor'
 import type {
   ContentBlock, HeadingBlock, TextBlock, ImageBlock,
-  ButtonBlock, VideoBlock, DividerBlock, SpacerBlock, Alignment,
+  ButtonBlock, VideoBlock, DividerBlock, SpacerBlock, SearchBarBlock, Alignment,
 } from './types'
 
 const inp = 'w-full border border-gray-200 rounded-lg px-3 py-2 text-[14px] focus:border-[#003366] outline-none transition-colors bg-white'
@@ -381,11 +381,36 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
           )}
 
           {/* SEARCH BAR */}
-          {block.type === 'search_bar' && (
-            <p className="text-[13px] text-gray-500 bg-blue-50 rounded-lg px-3 py-2">
-              Otsinguriba — otsib tooteid, sama stiil kui päises.
-            </p>
-          )}
+          {block.type === 'search_bar' && (() => {
+            const b = block as SearchBarBlock
+            return (
+              <>
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className={lbl}>Taust</label>
+                    <input type="color" value={b.bg_color} onChange={e => upd({ bg_color: e.target.value })}
+                      className="h-8 w-full rounded border border-gray-200 cursor-pointer" />
+                  </div>
+                  <div>
+                    <label className={lbl}>Nupp</label>
+                    <input type="color" value={b.btn_color} onChange={e => upd({ btn_color: e.target.value })}
+                      className="h-8 w-full rounded border border-gray-200 cursor-pointer" />
+                  </div>
+                  <div>
+                    <label className={lbl}>Tekst</label>
+                    <input type="color" value={b.text_color} onChange={e => upd({ text_color: e.target.value })}
+                      className="h-8 w-full rounded border border-gray-200 cursor-pointer" />
+                  </div>
+                </div>
+                <div>
+                  <label className={lbl}>Max laius (px) <span className="font-normal text-gray-400">— tühi = täislaius</span></label>
+                  <input type="number" value={b.max_width ?? ''} min={200} max={2000}
+                    onChange={e => upd({ max_width: e.target.value ? Number(e.target.value) : null })}
+                    className={inp} placeholder="täislaius" />
+                </div>
+              </>
+            )
+          })()}
 
         </div>
       )}

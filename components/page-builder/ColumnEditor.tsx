@@ -33,7 +33,7 @@ function newBlock(type: ContentBlock['type']): ContentBlock {
     case 'slider':        return { id, type }
     case 'calculator':    return { id, type }
     case 'contact_form':  return { id, type }
-    case 'search_bar':    return { id, type }
+    case 'search_bar':    return { id, type, bg_color: '#003366', btn_color: '#01a0dc', text_color: '#ffffff', max_width: null }
   }
 }
 
