@@ -6,6 +6,7 @@ import { ChevronUp, ChevronDown, Trash2, ImageIcon, X, GripVertical } from 'luci
 import { uploadFile } from '@/lib/upload'
 import RichTextEditor from './RichTextEditor'
 import ColorField from './ColorField'
+import ColorOrGradientField from './ColorOrGradientField'
 import type {
   ContentBlock, HeadingBlock, TextBlock, ImageBlock,
   ButtonBlock, VideoBlock, DividerBlock, SpacerBlock, SearchBarBlock, TegevusaladBlock, Alignment,
@@ -407,8 +408,12 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
           {/* TEGEVUSALAD */}
           {block.type === 'tegevusalad' && (() => {
             const b = block as TegevusaladBlock
+            const hasBg     = b.card_has_bg     ?? (b.card_style === 'filled')
+            const hasBorder = b.card_has_border ?? (b.card_style === 'outlined')
+            const SHADOW_OPTS = [['none','Puudub'],['sm','Väike'],['md','Keskmine'],['lg','Suur']] as const
             return (
               <>
+                {/* Columns */}
                 <div>
                   <label className={lbl}>Veergude arv</label>
                   <div className="flex gap-1">
@@ -416,43 +421,97 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
                       <button key={n} type="button" onClick={() => upd({ columns: n })}
                         className={`flex-1 py-1.5 rounded-lg text-[13px] border transition-colors ${
                           b.columns === n ? 'bg-[#003366] text-white border-[#003366]' : 'border-gray-200 text-gray-500 hover:border-gray-400'
-                        }`}>
-                        {n}
-                      </button>
+                        }`}>{n}</button>
                     ))}
                   </div>
                 </div>
-                <div>
-                  <label className={lbl}>Kaardi stiil</label>
-                  <div className="flex gap-2">
-                    {([['filled', 'Taust'], ['outlined', 'Äärisjoon']] as const).map(([v, l]) => (
-                      <button key={v} type="button" onClick={() => upd({ card_style: v })}
-                        className={`flex-1 py-1.5 rounded-lg text-[13px] border transition-colors ${
-                          b.card_style === v ? 'bg-[#003366] text-white border-[#003366]' : 'border-gray-200 text-gray-500 hover:border-gray-400'
-                        }`}>
-                        {l}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <label className={lbl}>Kaardi taustavärv</label>
-                  <ColorField
-                    value={b.card_bg_color ?? '#ffffff'}
-                    onChange={v => upd({ card_bg_color: v })}
-                  />
-                </div>
+
+                {/* Icon size */}
                 <div>
                   <label className={lbl}>Ikooni suurus</label>
                   <div className="flex gap-2">
-                    {([['small', 'Väike (20px)'], ['medium', 'Keskmine (32px)'], ['large', 'Suur (48px)']] as const).map(([v, l]) => (
+                    {([['small','Väike (20px)'],['medium','Keskmine (32px)'],['large','Suur (48px)']] as const).map(([v, l]) => (
                       <button key={v} type="button" onClick={() => upd({ icon_size: v })}
                         className={`flex-1 py-1.5 rounded-lg text-[13px] border transition-colors ${
                           b.icon_size === v ? 'bg-[#003366] text-white border-[#003366]' : 'border-gray-200 text-gray-500 hover:border-gray-400'
-                        }`}>
-                        {l}
-                      </button>
+                        }`}>{l}</button>
                     ))}
+                  </div>
+                </div>
+
+                {/* Card height */}
+                <div>
+                  <label className={lbl}>Kaardi kõrgus (px, tühi = automaatne)</label>
+                  <input type="number" min={40} max={500}
+                    value={b.card_height ?? ''}
+                    onChange={e => upd({ card_height: e.target.value ? Number(e.target.value) : undefined })}
+                    className={inp} placeholder="automaatne" />
+                </div>
+
+                {/* Bg toggle + color */}
+                <div className="flex items-center gap-3">
+                  <label className="flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" checked={hasBg}
+                      onChange={e => upd({ card_has_bg: e.target.checked })}
+                      className="w-4 h-4 rounded accent-[#003366]" />
+                    <span className={lbl + ' mb-0'}>Taustavärv</span>
+                  </label>
+                </div>
+                {hasBg && (
+                  <ColorOrGradientField
+                    value={b.card_bg_color || '#ffffff'}
+                    onChange={v => upd({ card_bg_color: v })}
+                  />
+                )}
+
+                {/* Border toggle + color */}
+                <div className="flex items-center gap-3">
+                  <label className="flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" checked={hasBorder}
+                      onChange={e => upd({ card_has_border: e.target.checked })}
+                      className="w-4 h-4 rounded accent-[#003366]" />
+                    <span className={lbl + ' mb-0'}>Äärisjoon</span>
+                  </label>
+                </div>
+                {hasBorder && (
+                  <ColorOrGradientField
+                    value={b.card_border_color || '#e5e7eb'}
+                    onChange={v => upd({ card_border_color: v })}
+                  />
+                )}
+
+                {/* Hover bg */}
+                <div>
+                  <label className={lbl}>Hover taustavärv</label>
+                  <ColorOrGradientField
+                    value={b.card_hover_bg || '#eff6ff'}
+                    onChange={v => upd({ card_hover_bg: v })}
+                  />
+                </div>
+
+                {/* Shadows */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className={lbl}>Shadow</label>
+                    <div className="flex flex-col gap-1">
+                      {SHADOW_OPTS.map(([v, l]) => (
+                        <button key={v} type="button" onClick={() => upd({ card_shadow: v })}
+                          className={`py-1 rounded-lg text-[12px] border transition-colors ${
+                            (b.card_shadow ?? 'none') === v ? 'bg-[#003366] text-white border-[#003366]' : 'border-gray-200 text-gray-500 hover:border-gray-400'
+                          }`}>{l}</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className={lbl}>Hover shadow</label>
+                    <div className="flex flex-col gap-1">
+                      {SHADOW_OPTS.map(([v, l]) => (
+                        <button key={v} type="button" onClick={() => upd({ card_hover_shadow: v })}
+                          className={`py-1 rounded-lg text-[12px] border transition-colors ${
+                            (b.card_hover_shadow ?? 'none') === v ? 'bg-[#003366] text-white border-[#003366]' : 'border-gray-200 text-gray-500 hover:border-gray-400'
+                          }`}>{l}</button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </>

@@ -88,9 +88,17 @@ export interface TegevusaladBlock {
   id: string
   type: 'tegevusalad'
   columns: 2 | 3 | 4 | 5 | 6
-  card_style: 'filled' | 'outlined'
+  // new independent toggles (legacy card_style kept for compat)
+  card_has_bg?: boolean
+  card_has_border?: boolean
+  card_style?: 'filled' | 'outlined'
   icon_size: 'small' | 'medium' | 'large'
-  card_bg_color?: string
+  card_bg_color?: string       // solid hex or linear-gradient(...)
+  card_border_color?: string   // solid hex or linear-gradient(...)
+  card_hover_bg?: string       // solid hex or linear-gradient(...)
+  card_height?: number
+  card_shadow?: 'none' | 'sm' | 'md' | 'lg'
+  card_hover_shadow?: 'none' | 'sm' | 'md' | 'lg'
 }
 
 export interface SearchBarBlock {
@@ -136,6 +144,7 @@ export interface SectionSettings {
   background_color: string
   background_image_url: string | null
   background_overlay: number
+  background_overlay_css?: string  // overrides opacity slider when set
   background_gradient_color1?: string
   background_gradient_color2?: string
   background_gradient_direction?: string

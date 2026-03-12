@@ -6,6 +6,7 @@ import { ChevronUp, ChevronDown, Trash2, Settings2, ImageIcon, X, GripVertical }
 import { uploadFile } from '@/lib/upload'
 import ColumnEditor from './ColumnEditor'
 import ColorField from './ColorField'
+import ColorOrGradientField from './ColorOrGradientField'
 import type { Section, Column, SectionSettings } from './types'
 
 const inp = 'w-full border border-gray-200 rounded-lg px-3 py-2 text-[14px] focus:border-[#003366] outline-none transition-colors bg-white'
@@ -299,6 +300,22 @@ export default function SectionEditor({ section, onChange, onMoveUp, onMoveDown,
                   <input type="range" min={0} max={1} step={0.05} value={s.background_overlay}
                     onChange={e => updSettings({ background_overlay: Number(e.target.value) })}
                     className="w-full" />
+                </div>
+                <div>
+                  <label className="block text-[12px] font-medium text-gray-600 mb-1">
+                    Overlay värv / gradient
+                    <span className="ml-1 text-[11px] text-gray-400">(tühi = must opacity)</span>
+                  </label>
+                  <ColorOrGradientField
+                    value={s.background_overlay_css || '#000000'}
+                    onChange={v => updSettings({ background_overlay_css: v })}
+                  />
+                  {s.background_overlay_css && (
+                    <button type="button" onClick={() => updSettings({ background_overlay_css: undefined })}
+                      className="mt-1 text-[11px] text-gray-400 hover:text-red-500 transition-colors">
+                      × Eemalda kohandatud overlay
+                    </button>
+                  )}
                 </div>
               </div>
             )}
