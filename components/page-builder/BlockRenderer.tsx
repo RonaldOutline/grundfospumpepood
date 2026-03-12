@@ -2,6 +2,7 @@ import FeaturedProductsSlider from '@/components/FeaturedProductsSlider'
 import PumpCalculator from '@/components/PumpCalculator'
 import ContactForm from '@/components/ContactForm'
 import ShortcodeRenderer from '@/components/ShortcodeRenderer'
+import SearchBarBlockRenderer from './SearchBarBlockRenderer'
 import type { Section, ContentBlock, HeadingBlock, TextBlock, ImageBlock, ButtonBlock, VideoBlock, DividerBlock, SpacerBlock, SliderBlock } from './types'
 
 // ─── Video URL parser ──────────────────────────────────────────────────────
@@ -168,6 +169,8 @@ function RenderBlock({ block }: { block: ContentBlock }) {
       return <PumpCalculator />
     case 'contact_form':
       return <ContactForm />
+    case 'search_bar':
+      return <SearchBarBlockRenderer />
     default:
       return null
   }

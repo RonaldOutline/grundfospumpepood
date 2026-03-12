@@ -16,6 +16,7 @@ const lbl = 'block text-[12px] font-medium text-gray-600 mb-1'
 const LABELS: Record<string, string> = {
   heading: 'Pealkiri', text: 'Tekst', image: 'Pilt',
   button: 'Nupp', video: 'Video', divider: 'Eraldusjooon', spacer: 'Tühik',
+  search_bar: 'Otsinguriba',
 }
 
 function AlignBtns({ value, onChange }: { value: Alignment; onChange: (a: Alignment) => void }) {
@@ -376,6 +377,13 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
           {block.type === 'contact_form' && (
             <p className="text-[13px] text-gray-500 bg-blue-50 rounded-lg px-3 py-2">
               Kontaktvorm — renderdatakse automaatselt.
+            </p>
+          )}
+
+          {/* SEARCH BAR */}
+          {block.type === 'search_bar' && (
+            <p className="text-[13px] text-gray-500 bg-blue-50 rounded-lg px-3 py-2">
+              Otsinguriba — otsib tooteid, sama stiil kui päises.
             </p>
           )}
 

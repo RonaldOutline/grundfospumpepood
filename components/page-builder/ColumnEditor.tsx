@@ -17,6 +17,7 @@ const BLOCK_TYPES: { type: ContentBlock['type']; label: string }[] = [
   { type: 'slider',       label: 'Toodete slider' },
   { type: 'calculator',   label: 'Kalkulaator' },
   { type: 'contact_form', label: 'Kontaktvorm' },
+  { type: 'search_bar',   label: 'Otsinguriba' },
 ]
 
 function newBlock(type: ContentBlock['type']): ContentBlock {
@@ -32,6 +33,7 @@ function newBlock(type: ContentBlock['type']): ContentBlock {
     case 'slider':        return { id, type }
     case 'calculator':    return { id, type }
     case 'contact_form':  return { id, type }
+    case 'search_bar':    return { id, type }
   }
 }
 

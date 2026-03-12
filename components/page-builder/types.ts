@@ -80,6 +80,11 @@ export interface ContactFormBlock {
   type: 'contact_form'
 }
 
+export interface SearchBarBlock {
+  id: string
+  type: 'search_bar'
+}
+
 export type ContentBlock =
   | HeadingBlock
   | TextBlock
@@ -91,6 +96,7 @@ export type ContentBlock =
   | SliderBlock
   | CalculatorBlock
   | ContactFormBlock
+  | SearchBarBlock
 
 export interface Column {
   id: string
@@ -130,5 +136,6 @@ export interface PageFormData {
   meta_title: string
   meta_description: string
   og_image_url: string
+  show_title: boolean
   blocks: Section[]
 }

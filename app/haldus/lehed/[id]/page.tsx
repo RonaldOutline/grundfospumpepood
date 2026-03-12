@@ -18,7 +18,7 @@ export default function MuudaLehtPage() {
   useEffect(() => {
     supabase
       .from('pages')
-      .select('id, title, slug, short_description, status, visibility, show_in_nav, nav_label, meta_title, meta_description, og_image_url, blocks')
+      .select('id, title, slug, short_description, status, visibility, show_in_nav, nav_label, meta_title, meta_description, og_image_url, show_title, blocks')
       .eq('id', id)
       .single()
       .then(({ data: row, error }) => {
@@ -37,6 +37,7 @@ export default function MuudaLehtPage() {
             meta_title: row.meta_title ?? '',
             meta_description: row.meta_description ?? '',
             og_image_url: row.og_image_url ?? '',
+            show_title: row.show_title !== false,
             blocks: Array.isArray(row.blocks) ? row.blocks : [],
           })
         }

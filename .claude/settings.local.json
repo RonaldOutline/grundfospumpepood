@@ -88,7 +88,11 @@
       "Bash(git add components/page-builder/ app/haldus/lehed/page.tsx app/haldus/lehed/uus/page.tsx \"app/haldus/lehed/[id]/page.tsx\" \"app/[locale]/leht/[slug]/page.tsx\" && git status)",
       "Bash(ss -tlnp | grep node; ps aux | grep -E \"next|node\" | grep -v grep | head -5)",
       "Bash(git add .claude/settings.local.json && git commit -m \"Remove accidentally committed API key from settings\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>\" && git push origin main)",
-      "Bash(git reset --mixed HEAD~2 && git status --short)"
+      "Bash(git reset --mixed HEAD~2 && git status --short)",
+      "Bash(find /workspaces/grundfospumpepood/public -name \"*.png\" -o -name \"*.jpg\" 2>/dev/null | head -10)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(gh api:*)"
     ]
   }
 }

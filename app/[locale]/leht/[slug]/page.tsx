@@ -37,6 +37,7 @@ interface PageRow {
   published: boolean
   status: string | null
   visibility: string | null
+  show_title: boolean | null
   template: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   blocks: any[] | null
@@ -57,7 +58,7 @@ async function getPage(slug: string, preview = false): Promise<PageRow | null> {
       short_description, short_description_en, short_description_ru, short_description_lv, short_description_lt, short_description_pl,
       content, content_en, content_ru, content_lv, content_lt, content_pl,
       image_url, og_image_url, meta_title, meta_description,
-      published, status, visibility, template, blocks`)
+      published, status, visibility, show_title, template, blocks`)
     .eq('slug', slug)
     .single()
   return data
@@ -124,15 +125,19 @@ export default async function PublicPage(
     } catch {}
   }
 
+  const titleVisible = page.show_title !== false
+
   if (hasBlocks) {
     return (
       <div className="min-h-screen">
-        <div className="max-w-[1200px] mx-auto px-4 md:px-6 pt-10 pb-2">
-          <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
-          {shortDesc && (
-            <p className="text-[17px] text-gray-600 mt-3 leading-relaxed">{shortDesc}</p>
-          )}
-        </div>
+        {titleVisible && (
+          <div className="max-w-[1200px] mx-auto px-4 md:px-6 pt-10 pb-2">
+            <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
+            {shortDesc && (
+              <p className="text-[17px] text-gray-600 mt-3 leading-relaxed">{shortDesc}</p>
+            )}
+          </div>
+        )}
         <BlockRenderer sections={page.blocks as Section[]} />
       </div>
     )
@@ -150,9 +155,13 @@ export default async function PublicPage(
           />
         )}
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-3">{title}</h1>
-        {shortDesc && (
-          <p className="text-[17px] text-gray-600 mb-10 leading-relaxed">{shortDesc}</p>
+        {titleVisible && (
+          <>
+            <h1 className="text-3xl font-bold text-gray-900 mb-3">{title}</h1>
+            {shortDesc && (
+              <p className="text-[17px] text-gray-600 mb-10 leading-relaxed">{shortDesc}</p>
+            )}
+          </>
         )}
 
         {isContact ? (

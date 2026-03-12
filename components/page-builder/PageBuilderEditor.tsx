@@ -58,6 +58,7 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
   const [metaTitle, setMetaTitle] = useState(initialData?.meta_title ?? '')
   const [metaDesc, setMetaDesc] = useState(initialData?.meta_description ?? '')
   const [ogImage, setOgImage] = useState(initialData?.og_image_url ?? '')
+  const [showTitle, setShowTitle] = useState(initialData?.show_title ?? true)
 
   // ── Sections ─────────────────────────────────────────────────────────────
 
@@ -148,6 +149,7 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
       meta_title: metaTitle.trim() || null,
       meta_description: metaDesc.trim() || null,
       og_image_url: ogImage || null,
+      show_title: showTitle,
       blocks: sections.map((s, i) => ({ ...s, order: i })),
       updated_at: new Date().toISOString(),
       // Keep published in sync with status for backwards compat
@@ -282,6 +284,15 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
                 <option value="private">Privaatne</option>
               </select>
             </div>
+          </div>
+
+          {/* Kuva seaded */}
+          <div className="space-y-2">
+            <label className="flex items-center gap-2.5 cursor-pointer select-none">
+              <input type="checkbox" checked={showTitle} onChange={e => setShowTitle(e.target.checked)}
+                className="w-4 h-4 rounded border-gray-300 accent-[#003366]" />
+              <span className="text-[14px] text-gray-700">Näita lehe pealkirja</span>
+            </label>
           </div>
 
           {/* Menüü */}
