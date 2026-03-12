@@ -194,9 +194,9 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
         <div className="flex-1 min-w-0 bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-[15px] font-semibold text-gray-700">Sisu</h2>
-            {mode === 'edit' && slug && (
+            {mode === 'edit' && initialData?.id && (
               <a
-                href={`/leht/${slug}`} target="_blank" rel="noopener noreferrer"
+                href={`/haldus/lehed/${initialData.id}/eelvaade`} target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-[13px] text-gray-400 hover:text-[#003366] transition-colors"
               >
                 <ExternalLink size={14} /> Eelvaade
