@@ -163,8 +163,8 @@ export default function PumpCalculator() {
   const tCat = useTranslations('categories')
 
   // ── Form state ────────────────────────────────────────────────────────────
-  const [tegevusala, setTegevusala] = useState('')
-  const [minHead,    setMinHead]    = useState('')
+  const [tegevusala, setTegevusala] = useState('kute')
+  const [minHead,    setMinHead]    = useState('10')
   const [flowMode,   setFlowMode]   = useState<'direct' | 'area'>('direct')
   const [flowInput,  setFlowInput]  = useState('')
   const [areaInput,  setAreaInput]  = useState('')
