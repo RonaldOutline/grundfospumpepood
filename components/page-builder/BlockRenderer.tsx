@@ -264,14 +264,15 @@ function RenderSection({ section }: { section: Section }) {
     </div>
   )
 
-  const overlayBg = settings.background_overlay_css
-    || `rgba(0,0,0,${settings.background_overlay})`
   const showOverlay = settings.background_type === 'image' && settings.background_image_url
-    && (settings.background_overlay_css || settings.background_overlay > 0)
+    && settings.background_overlay > 0
   const overlay = showOverlay ? (
     <div
       className="absolute inset-0 pointer-events-none"
-      style={{ background: overlayBg }}
+      style={{
+        background: settings.background_overlay_css || '#000000',
+        opacity: settings.background_overlay,
+      }}
     />
   ) : null
 

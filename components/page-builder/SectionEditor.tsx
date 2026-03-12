@@ -295,27 +295,29 @@ export default function SectionEditor({ section, onChange, onMoveUp, onMoveDown,
                 )}
                 <div>
                   <label className="block text-[12px] font-medium text-gray-600 mb-1">
-                    Overlay tumedus: {Math.round(s.background_overlay * 100)}%
-                  </label>
-                  <input type="range" min={0} max={1} step={0.05} value={s.background_overlay}
-                    onChange={e => updSettings({ background_overlay: Number(e.target.value) })}
-                    className="w-full" />
-                </div>
-                <div>
-                  <label className="block text-[12px] font-medium text-gray-600 mb-1">
                     Overlay värv / gradient
-                    <span className="ml-1 text-[11px] text-gray-400">(tühi = must opacity)</span>
                   </label>
                   <ColorOrGradientField
                     value={s.background_overlay_css || '#000000'}
                     onChange={v => updSettings({ background_overlay_css: v })}
                   />
-                  {s.background_overlay_css && (
-                    <button type="button" onClick={() => updSettings({ background_overlay_css: undefined })}
-                      className="mt-1 text-[11px] text-gray-400 hover:text-red-500 transition-colors">
-                      × Eemalda kohandatud overlay
-                    </button>
-                  )}
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-[12px] font-medium text-gray-600">
+                      Läbipaistvus: {Math.round(s.background_overlay * 100)}%
+                    </label>
+                    {s.background_overlay === 0 && (
+                      <span className="text-[11px] text-blue-500 font-medium">läbipaistev</span>
+                    )}
+                  </div>
+                  <input type="range" min={0} max={1} step={0.05} value={s.background_overlay}
+                    onChange={e => updSettings({ background_overlay: Number(e.target.value) })}
+                    className="w-full" />
+                  <div className="flex justify-between text-[10px] text-gray-400 mt-0.5">
+                    <span>0% (läbipaistev)</span>
+                    <span>100% (täiesti peidetud pilt)</span>
+                  </div>
                 </div>
               </div>
             )}
