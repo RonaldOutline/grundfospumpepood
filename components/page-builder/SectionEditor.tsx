@@ -141,11 +141,35 @@ export default function SectionEditor({ section, onChange, onMoveUp, onMoveDown,
       {settingsOpen && (
         <div className="bg-white border-b border-gray-100 px-4 py-4 space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            {/* Width */}
+            {/* Background width */}
             <div>
-              <label className="block text-[12px] font-medium text-gray-600 mb-1">Laius</label>
+              <label className="block text-[12px] font-medium text-gray-600 mb-1">Tausta laius</label>
               <div className="flex gap-2 mb-1.5">
-                {([['boxed', 'Boxed (1200px)'], ['full', 'Full laius'], ['custom', 'Kohandatud']] as const).map(([v, l]) => (
+                {([['full', 'Full laius'], ['custom', 'Kohandatud']] as const).map(([v, l]) => (
+                  <button key={v} type="button" onClick={() => updSettings({ bg_width: v })}
+                    className={`flex-1 py-1.5 rounded-lg text-[13px] border transition-colors ${
+                      (s.bg_width ?? 'full') === v ? 'bg-[#003366] text-white border-[#003366]' : 'border-gray-200 text-gray-600 hover:border-gray-400'
+                    }`}>
+                    {l}
+                  </button>
+                ))}
+              </div>
+              {s.bg_width === 'custom' && (
+                <input
+                  type="number" min={200} max={3000}
+                  value={s.bg_width_custom ?? 1200}
+                  onChange={e => updSettings({ bg_width_custom: Number(e.target.value) })}
+                  className={`${inp} text-[13px]`}
+                  placeholder="px"
+                />
+              )}
+            </div>
+
+            {/* Content width */}
+            <div>
+              <label className="block text-[12px] font-medium text-gray-600 mb-1">Sisu laius</label>
+              <div className="flex gap-2 mb-1.5">
+                {([['full', 'Full'], ['boxed', 'Boxed (1200px)'], ['custom', 'Kohandatud']] as const).map(([v, l]) => (
                   <button key={v} type="button" onClick={() => updSettings({ width: v })}
                     className={`flex-1 py-1.5 rounded-lg text-[13px] border transition-colors ${
                       s.width === v ? 'bg-[#003366] text-white border-[#003366]' : 'border-gray-200 text-gray-600 hover:border-gray-400'

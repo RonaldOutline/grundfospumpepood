@@ -259,18 +259,26 @@ function RenderSection({ section }: { section: Section }) {
     />
   ) : null
 
-  // Content width constraint — background always spans full width
+  // Content width constraint (independent of background)
   const contentStyle: React.CSSProperties = {}
   if (isBoxed) contentStyle.maxWidth = 1200
   else if (isCustom) contentStyle.maxWidth = settings.width_custom ?? 1200
 
+  // Background width constraint (independent of content)
+  const isBgCustom = settings.bg_width === 'custom'
+  const bgWidthStyle: React.CSSProperties = isBgCustom
+    ? { maxWidth: `${settings.bg_width_custom ?? 1200}px`, width: '100%' }
+    : {}
+
   return (
-    <section style={bgStyle} className="w-full relative">
-      {overlay}
-      <div style={contentStyle} className={`${isBoxed || isCustom ? 'mx-auto' : ''} relative z-10`}>
-        {inner}
-      </div>
-    </section>
+    <div className="w-full flex justify-center">
+      <section style={{ ...bgStyle, ...bgWidthStyle }} className={`${isBgCustom ? '' : 'w-full'} relative`}>
+        {overlay}
+        <div style={contentStyle} className={`${isBoxed || isCustom ? 'mx-auto' : ''} relative z-10`}>
+          {inner}
+        </div>
+      </section>
+    </div>
   )
 }
 

@@ -1,6 +1,7 @@
 export type Alignment = 'left' | 'center' | 'right'
 export type VerticalAlign = 'top' | 'center' | 'bottom'
 export type WidthType = 'boxed' | 'full' | 'custom'
+export type BgWidthType = 'full' | 'custom'
 export type BackgroundType = 'color' | 'image' | 'gradient'
 export type PaddingSize = 'small' | 'medium' | 'large' | 'custom'
 
@@ -124,6 +125,9 @@ export interface Column {
 
 export interface SectionSettings {
   width: WidthType
+  width_custom?: number
+  bg_width?: BgWidthType
+  bg_width_custom?: number
   background_type: BackgroundType
   background_color: string
   background_image_url: string | null
@@ -131,7 +135,6 @@ export interface SectionSettings {
   background_gradient_color1?: string
   background_gradient_color2?: string
   background_gradient_direction?: string
-  width_custom?: number
   padding_top: PaddingSize
   padding_bottom: PaddingSize
   padding_x?: PaddingSize
