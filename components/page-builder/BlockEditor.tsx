@@ -5,6 +5,7 @@ import type React from 'react'
 import { ChevronUp, ChevronDown, Trash2, ImageIcon, X, GripVertical } from 'lucide-react'
 import { uploadFile } from '@/lib/upload'
 import RichTextEditor from './RichTextEditor'
+import ColorField from './ColorField'
 import type {
   ContentBlock, HeadingBlock, TextBlock, ImageBlock,
   ButtonBlock, VideoBlock, DividerBlock, SpacerBlock, SearchBarBlock, TegevusaladBlock, Alignment,
@@ -158,8 +159,7 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
                   </div>
                   <div>
                     <label className={lbl}>Värv</label>
-                    <input type="color" value={b.color} onChange={e => upd({ color: e.target.value })}
-                      className="h-8 w-14 rounded border border-gray-200 cursor-pointer" />
+                    <ColorField value={b.color} onChange={v => upd({ color: v })} />
                   </div>
                 </div>
               </>
@@ -182,8 +182,7 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
                   </div>
                   <div>
                     <label className={lbl}>Värv</label>
-                    <input type="color" value={b.color} onChange={e => upd({ color: e.target.value })}
-                      className="h-8 w-14 rounded border border-gray-200 cursor-pointer" />
+                    <ColorField value={b.color} onChange={v => upd({ color: v })} />
                   </div>
                 </div>
               </>
@@ -303,8 +302,7 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
                   </div>
                   <div>
                     <label className={lbl}>Värv</label>
-                    <input type="color" value={b.color} onChange={e => upd({ color: e.target.value })}
-                      className="h-8 w-14 rounded border border-gray-200 cursor-pointer" />
+                    <ColorField value={b.color} onChange={v => upd({ color: v })} />
                   </div>
                 </div>
               </>
@@ -336,8 +334,7 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
               <div className="flex items-end gap-4">
                 <div>
                   <label className={lbl}>Värv</label>
-                  <input type="color" value={b.color} onChange={e => upd({ color: e.target.value })}
-                    className="h-8 w-14 rounded border border-gray-200 cursor-pointer" />
+                  <ColorField value={b.color} onChange={v => upd({ color: v })} />
                 </div>
                 <div className="flex-1">
                   <label className={lbl}>Paksus (px)</label>
@@ -434,21 +431,18 @@ export default function BlockEditor({ block, onChange, onMoveUp, onMoveDown, onD
             const b = block as SearchBarBlock
             return (
               <>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="space-y-2">
                   <div>
-                    <label className={lbl}>Taust</label>
-                    <input type="color" value={b.bg_color} onChange={e => upd({ bg_color: e.target.value })}
-                      className="h-8 w-full rounded border border-gray-200 cursor-pointer" />
+                    <label className={lbl}>Taustavärv</label>
+                    <ColorField value={b.bg_color} onChange={v => upd({ bg_color: v })} />
                   </div>
                   <div>
-                    <label className={lbl}>Nupp</label>
-                    <input type="color" value={b.btn_color} onChange={e => upd({ btn_color: e.target.value })}
-                      className="h-8 w-full rounded border border-gray-200 cursor-pointer" />
+                    <label className={lbl}>Nupu värv</label>
+                    <ColorField value={b.btn_color} onChange={v => upd({ btn_color: v })} />
                   </div>
                   <div>
-                    <label className={lbl}>Tekst</label>
-                    <input type="color" value={b.text_color} onChange={e => upd({ text_color: e.target.value })}
-                      className="h-8 w-full rounded border border-gray-200 cursor-pointer" />
+                    <label className={lbl}>Teksti värv</label>
+                    <ColorField value={b.text_color} onChange={v => upd({ text_color: v })} />
                   </div>
                 </div>
                 <div>

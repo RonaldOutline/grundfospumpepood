@@ -184,6 +184,7 @@ function RenderBlock({ block }: { block: ContentBlock }) {
 function RenderSection({ section }: { section: Section }) {
   const { settings, columns } = section
   const isBoxed = settings.width === 'boxed'
+  const isCustom = settings.width === 'custom'
 
   const sectionStyle: React.CSSProperties = {}
   if (settings.background_type === 'color') {
@@ -243,6 +244,8 @@ function RenderSection({ section }: { section: Section }) {
       )}
       {isBoxed ? (
         <div className="max-w-[1200px] mx-auto px-4 md:px-6 relative z-10">{inner}</div>
+      ) : isCustom ? (
+        <div style={{ maxWidth: settings.width_custom ?? 1200 }} className="mx-auto px-4 md:px-6 relative z-10">{inner}</div>
       ) : (
         <div className="px-4 md:px-6 relative z-10">{inner}</div>
       )}

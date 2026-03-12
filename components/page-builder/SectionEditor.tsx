@@ -5,6 +5,7 @@ import type React from 'react'
 import { ChevronUp, ChevronDown, Trash2, Settings2, ImageIcon, X, GripVertical } from 'lucide-react'
 import { uploadFile } from '@/lib/upload'
 import ColumnEditor from './ColumnEditor'
+import ColorField from './ColorField'
 import type { Section, Column, SectionSettings } from './types'
 
 const inp = 'w-full border border-gray-200 rounded-lg px-3 py-2 text-[14px] focus:border-[#003366] outline-none transition-colors bg-white'
@@ -143,16 +144,25 @@ export default function SectionEditor({ section, onChange, onMoveUp, onMoveDown,
             {/* Width */}
             <div>
               <label className="block text-[12px] font-medium text-gray-600 mb-1">Laius</label>
-              <div className="flex gap-2">
-                {(['boxed', 'full'] as const).map(v => (
+              <div className="flex gap-2 mb-1.5">
+                {([['boxed', 'Boxed (1200px)'], ['full', 'Full laius'], ['custom', 'Kohandatud']] as const).map(([v, l]) => (
                   <button key={v} type="button" onClick={() => updSettings({ width: v })}
                     className={`flex-1 py-1.5 rounded-lg text-[13px] border transition-colors ${
                       s.width === v ? 'bg-[#003366] text-white border-[#003366]' : 'border-gray-200 text-gray-600 hover:border-gray-400'
                     }`}>
-                    {v === 'boxed' ? 'Boxed (1200px)' : 'Full laius'}
+                    {l}
                   </button>
                 ))}
               </div>
+              {s.width === 'custom' && (
+                <input
+                  type="number" min={200} max={3000}
+                  value={s.width_custom ?? 1200}
+                  onChange={e => updSettings({ width_custom: Number(e.target.value) })}
+                  className={`${inp} text-[13px]`}
+                  placeholder="px"
+                />
+              )}
             </div>
 
             {/* Column count */}
@@ -204,27 +214,18 @@ export default function SectionEditor({ section, onChange, onMoveUp, onMoveDown,
               ))}
             </div>
             {s.background_type === 'color' && (
-              <div className="flex items-center gap-3">
-                <input type="color" value={s.background_color}
-                  onChange={e => updSettings({ background_color: e.target.value })}
-                  className="h-9 w-16 rounded border border-gray-200 cursor-pointer" />
-                <span className="text-[13px] text-gray-500 font-mono">{s.background_color}</span>
-              </div>
+              <ColorField value={s.background_color} onChange={v => updSettings({ background_color: v })} />
             )}
             {s.background_type === 'gradient' && (
               <div className="space-y-2">
                 <div className="flex gap-3 items-end">
                   <div>
                     <label className="block text-[11px] text-gray-500 mb-1">Värv 1</label>
-                    <input type="color" value={s.background_gradient_color1 ?? '#003366'}
-                      onChange={e => updSettings({ background_gradient_color1: e.target.value })}
-                      className="h-9 w-14 rounded border border-gray-200 cursor-pointer" />
+                    <ColorField value={s.background_gradient_color1 ?? '#003366'} onChange={v => updSettings({ background_gradient_color1: v })} />
                   </div>
                   <div>
                     <label className="block text-[11px] text-gray-500 mb-1">Värv 2</label>
-                    <input type="color" value={s.background_gradient_color2 ?? '#01a0dc'}
-                      onChange={e => updSettings({ background_gradient_color2: e.target.value })}
-                      className="h-9 w-14 rounded border border-gray-200 cursor-pointer" />
+                    <ColorField value={s.background_gradient_color2 ?? '#01a0dc'} onChange={v => updSettings({ background_gradient_color2: v })} />
                   </div>
                   <div className="flex-1">
                     <label className="block text-[11px] text-gray-500 mb-1">Suund</label>

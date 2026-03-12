@@ -39,6 +39,7 @@ interface Props {
 export default function PageBuilderEditor({ mode, initialData }: Props) {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
   const [error, setError] = useState('')
   const [ogUploading, setOgUploading] = useState(false)
   const [dragSecIdx, setDragSecIdx] = useState<number | null>(null)
@@ -163,7 +164,7 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
     }
 
     if (mode === 'create') {
-      const { error: err } = await supabase.from('pages').insert(payload)
+      const { data: created, error: err } = await supabase.from('pages').insert(payload).select('id').single()
       if (err) {
         setError(
           err.message.includes('unique') || err.message.includes('duplicate')
@@ -173,6 +174,9 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
         setSaving(false)
         return
       }
+      if (targetStatus) setStatus(targetStatus)
+      router.push(`/haldus/lehed/${created!.id}`)
+      return
     } else {
       const { error: err } = await supabase.from('pages').update(payload).eq('id', initialData!.id!)
       if (err) {
@@ -187,7 +191,9 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
     }
 
     if (targetStatus) setStatus(targetStatus)
-    router.push('/haldus/lehed')
+    setSaving(false)
+    setSaved(true)
+    setTimeout(() => setSaved(false), 3000)
     router.refresh()
   }
 
@@ -390,6 +396,11 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
 
           {/* Actions */}
           <div className="flex flex-col gap-2 pt-1">
+            {saved && (
+              <div className="text-center text-[13px] text-green-600 font-medium py-1">
+                Salvestatud
+              </div>
+            )}
             <button
               type="button"
               onClick={() => save('published')}
@@ -408,10 +419,10 @@ export default function PageBuilderEditor({ mode, initialData }: Props) {
             </button>
             <button
               type="button"
-              onClick={() => router.back()}
+              onClick={() => router.push('/haldus/lehed')}
               className="w-full text-gray-400 hover:text-gray-600 px-4 py-2 text-[14px] transition-colors"
             >
-              Tühista
+              ← Lehtede nimekiri
             </button>
           </div>
         </div>
