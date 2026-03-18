@@ -1,0 +1,30 @@
+{
+  "migrated": [],
+  "failed": [
+    {
+      "id": 3,
+      "sku": "59641500",
+      "error": "fetch is not a function"
+    },
+    {
+      "id": 4,
+      "sku": "59643500",
+      "error": "fetch is not a function"
+    },
+    {
+      "id": 5,
+      "sku": "93093537",
+      "error": "fetch is not a function"
+    },
+    {
+      "id": 6,
+      "sku": "93093665",
+      "error": "fetch is not a function"
+    },
+    {
+      "id": 7,
+      "sku": "93093854",
+      "error": "fetch is not a function"
+    }
+  ]
+}
