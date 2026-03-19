@@ -551,7 +551,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
           .in('name_et', names)
         if (translations) {
           const map: Record<string, string> = {}
-          for (const row of translations) {
+          for (const row of translations as Record<string, string>[]) {
             const translated = row[`name_${locale}`]
             if (translated) map[row.name_et] = translated
           }
