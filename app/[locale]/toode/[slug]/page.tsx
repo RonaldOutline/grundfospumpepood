@@ -547,12 +547,12 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         const names = attrs.map((a: Attribute) => a.attribute_name)
         const { data: translations } = await supabase
           .from('attribute_name_translations')
-          .select(`name_et, name_${locale}`)
+          .select('name_et, name_en, name_ru, name_lv, name_lt, name_pl')
           .in('name_et', names)
         if (translations) {
           const map: Record<string, string> = {}
-          for (const row of translations as Record<string, string>[]) {
-            const translated = row[`name_${locale}`]
+          for (const row of translations) {
+            const translated = (row as Record<string, string | null>)[`name_${locale}`]
             if (translated) map[row.name_et] = translated
           }
           setAttrNameMap(map)
