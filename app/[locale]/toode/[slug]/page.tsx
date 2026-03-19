@@ -370,7 +370,7 @@ function AttributesTable({ attributes, product }: { attributes: Attribute[]; pro
 
 // ─── TOOTE TABID ───────────────────────────────────────────────────────────
 
-function ProductTabs({ product, attributes, locale }: { product: Product; attributes: Attribute[]; locale: string }) {
+function ProductTabs({ product, attributes, locale, attrNameMap }: { product: Product; attributes: Attribute[]; locale: string; attrNameMap: Record<string, string> }) {
   const t = useTranslations('product')
 
   const tabs = [
@@ -440,7 +440,7 @@ function ProductTabs({ product, attributes, locale }: { product: Product; attrib
                           <div key={ci}>
                             {col.map((attr, i) => (
                               <div key={i} className={`flex items-start justify-between py-2 ${i < col.length - 1 ? 'border-b border-gray-50' : ''}`}>
-                                <span className="text-[14px] text-gray-500 pr-4 flex-shrink-0 w-1/2 leading-snug">{attr.attribute_name}</span>
+                                <span className="text-[14px] text-gray-500 pr-4 flex-shrink-0 w-1/2 leading-snug">{attrNameMap[attr.attribute_name] || attr.attribute_name}</span>
                                 <span className="text-[14px] font-medium text-gray-800 text-right leading-snug">{attr.attribute_value}</span>
                               </div>
                             ))}
@@ -517,6 +517,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
   const [product, setProduct] = useState<Product | null>(null)
   const [attributes, setAttributes] = useState<Attribute[]>([])
+  const [attrNameMap, setAttrNameMap] = useState<Record<string, string>>({})
   const [related, setRelated] = useState<RelatedProduct[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -541,6 +542,23 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
       setAttributes(attrs || [])
 
+      // Fetch translated attribute names for non-Estonian locales
+      if (locale !== 'et' && attrs && attrs.length > 0) {
+        const names = attrs.map((a: Attribute) => a.attribute_name)
+        const { data: translations } = await supabase
+          .from('attribute_name_translations')
+          .select(`name_et, name_${locale}`)
+          .in('name_et', names)
+        if (translations) {
+          const map: Record<string, string> = {}
+          for (const row of translations) {
+            const translated = row[`name_${locale}`]
+            if (translated) map[row.name_et] = translated
+          }
+          setAttrNameMap(map)
+        }
+      }
+
       if (prod.category_id) {
         const { data: relProds } = await supabase
           .from('products')
@@ -556,7 +574,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
     }
 
     loadProduct()
-  }, [slug])
+  }, [slug, locale])
 
   if (loading) {
     return (
@@ -597,7 +615,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         </div>
 
         {/* Tabid */}
-        <ProductTabs product={product} attributes={attributes} locale={locale} />
+        <ProductTabs product={product} attributes={attributes} locale={locale} attrNameMap={attrNameMap} />
 
         {/* Seotud tooted */}
         <RelatedProducts products={related} />
