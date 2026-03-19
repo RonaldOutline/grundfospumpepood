@@ -243,7 +243,7 @@
     "clearCart": "Iztīrīt grozu",
     "orderSummary": "Pasūtījuma kopsavilkums",
     "subtotalExVat": "Starpsumma (bez PVN)",
-    "vat": "PVN (22%)",
+    "vat": "PVN (24%)",
     "shippingTbd": "Tiks precizēts",
     "securePay": "Droša maksāšana ar Montonio",
     "viewProducts": "Skatīt produktus"
@@ -281,7 +281,7 @@
     "notesPlaceholder": "Papildu informācija par pasūtījumu (pēc izvēles)",
     "orderSummary": "Pasūtījuma kopsavilkums",
     "subtotalExVat": "Summa (bez PVN)",
-    "vatAmount": "PVN (22%)",
+    "vatAmount": "PVN (24%)",
     "delivery": "Piegāde",
     "free": "Bezmaksas",
     "total": "Kopā",

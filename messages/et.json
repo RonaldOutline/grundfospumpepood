@@ -243,7 +243,7 @@
     "clearCart": "Tühjenda korv",
     "orderSummary": "Tellimuse kokkuvõte",
     "subtotalExVat": "Summa (km-ta)",
-    "vat": "KM (22%)",
+    "vat": "KM (24%)",
     "shippingTbd": "Täpsustame",
     "securePay": "Turvaline maksmine Montonioga",
     "viewProducts": "Vaata tooteid"
@@ -281,7 +281,7 @@
     "notesPlaceholder": "Lisainfo tellimuse kohta (vabatahtlik)",
     "orderSummary": "Tellimuse kokkuvõte",
     "subtotalExVat": "Summa (km-ta)",
-    "vatAmount": "KM (22%)",
+    "vatAmount": "KM (24%)",
     "delivery": "Tarne",
     "free": "Tasuta",
     "total": "Kokku",

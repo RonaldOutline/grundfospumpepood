@@ -35,7 +35,7 @@ function saveCart(items: CartItem[]) {
   window.dispatchEvent(new Event('cart_updated'))
 }
 
-const VAT_RATE = 0.22
+const VAT_RATE = 0.24
 
 // ─── TOOTE RIDA ─────────────────────────────────────────────────────────────
 

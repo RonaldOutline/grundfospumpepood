@@ -13,10 +13,13 @@
  *   products.drawing_url  TEXT
  *
  * Usage:
- *   node upload-assets.mjs                  # upload + update DB for all
- *   node upload-assets.mjs --test           # first 3 SKUs only
- *   node upload-assets.mjs --curves-only    # skip drawings
- *   node upload-assets.mjs --drawings-only  # skip curves
+ *   node upload-assets.mjs                            # upload curves + drawings
+ *   node upload-assets.mjs --test                     # first 3 SKUs only
+ *   node upload-assets.mjs --curves-only              # skip drawings
+ *   node upload-assets.mjs --drawings-only            # skip curves
+ *   node upload-assets.mjs --curves-dir=path/to/dir   # custom curves folder
+ *   node upload-assets.mjs --drawings-dir=path/to/dir # custom drawings folder
+ *   node upload-assets.mjs --curves-suffix=_curve.png # custom file suffix
  */
 
 import { createClient }    from '@supabase/supabase-js'
@@ -36,15 +39,22 @@ const SERVICE_ROLE_KEY  = process.env.SUPABASE_SERVICE_ROLE_KEY
 const BUCKET    = 'products'
 const BASE_URL  = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}`
 
-const CURVES_DIR   = join(__dirname, 'upload-ready', 'curves')
-const DRAWINGS_DIR = join(__dirname, 'upload-ready', 'drawings')
-
 // ── CLI flags ──────────────────────────────────────────────────────────────────
-const ARGS          = new Set(process.argv.slice(2))
+const ARGV          = process.argv.slice(2)
+const ARGS          = new Set(ARGV)
 const TEST          = ARGS.has('--test')
 const CURVES_ONLY   = ARGS.has('--curves-only')
 const DRAWINGS_ONLY = ARGS.has('--drawings-only')
 const TEST_LIMIT    = 3
+
+const getCLIArg = (prefix) => ARGV.find(a => a.startsWith(prefix))?.replace(prefix, '') ?? null
+
+const CURVES_DIR_ARG   = getCLIArg('--curves-dir=')
+const DRAWINGS_DIR_ARG = getCLIArg('--drawings-dir=')
+const CURVES_SUFFIX    = getCLIArg('--curves-suffix=') ?? '_curve.png'
+
+const CURVES_DIR   = CURVES_DIR_ARG   ?? join(__dirname, 'upload-ready', 'curves')
+const DRAWINGS_DIR = DRAWINGS_DIR_ARG ?? join(__dirname, 'upload-ready', 'drawings')
 
 const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false }
@@ -77,11 +87,11 @@ async function main() {
     process.exit(1)
   }
 
-  const curveFiles   = DRAWINGS_ONLY ? [] : readdirSync(CURVES_DIR).filter(f => f.endsWith('_curve.png'))
+  const curveFiles   = DRAWINGS_ONLY ? [] : readdirSync(CURVES_DIR).filter(f => f.endsWith(CURVES_SUFFIX))
   const drawingFiles = CURVES_ONLY   ? [] : readdirSync(DRAWINGS_DIR).filter(f => f.endsWith('_drawing.png'))
 
   // Collect all unique SKUs
-  const curveBySku   = Object.fromEntries(curveFiles.map(f   => [f.replace('_curve.png', ''),   f]))
+  const curveBySku   = Object.fromEntries(curveFiles.map(f   => [f.replace(CURVES_SUFFIX, ''),  f]))
   const drawingBySku = Object.fromEntries(drawingFiles.map(f => [f.replace('_drawing.png', ''), f]))
 
   let allSkus = [...new Set([...Object.keys(curveBySku), ...Object.keys(drawingBySku)])]

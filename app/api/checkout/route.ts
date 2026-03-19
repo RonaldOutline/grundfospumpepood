@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Puuduvad kohustuslikud väljad' }, { status: 422 })
   }
 
-  const VAT_RATE = 0.22
+  const VAT_RATE = 0.24
   const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0)
 
   // ── Kupong ──────────────────────────────────────────────────────────────────

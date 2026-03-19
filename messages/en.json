@@ -243,7 +243,7 @@
     "clearCart": "Clear cart",
     "orderSummary": "Order summary",
     "subtotalExVat": "Subtotal (ex. VAT)",
-    "vat": "VAT (22%)",
+    "vat": "VAT (24%)",
     "shippingTbd": "To be determined",
     "securePay": "Secure payment with Montonio",
     "viewProducts": "View products"
@@ -281,7 +281,7 @@
     "notesPlaceholder": "Additional info about the order (optional)",
     "orderSummary": "Order summary",
     "subtotalExVat": "Subtotal (ex. VAT)",
-    "vatAmount": "VAT (22%)",
+    "vatAmount": "VAT (24%)",
     "delivery": "Delivery",
     "free": "Free",
     "total": "Total",

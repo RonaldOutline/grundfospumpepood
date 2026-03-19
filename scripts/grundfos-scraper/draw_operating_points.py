@@ -97,24 +97,52 @@ def detect_hq_panel(arr: np.ndarray) -> tuple[int, int, int, int, bool]:
     search_h = int(h * 0.65)
 
     gray = arr[:search_h, :, :3].astype(np.float32).mean(axis=2)
-    is_dark = gray < 80   # axis border lines are near-black
-
-    row_proj = is_dark.sum(axis=1)   # (search_h,)
-    col_proj = is_dark.sum(axis=0)   # (w,)
 
     # Skip the outer 2 % border of the image
     skip_r = max(2, int(h  * 0.02))
     skip_c = max(2, int(w  * 0.02))
 
-    # Horizontal border lines: span ≥ 50 % of image width
-    row_thresh = w * 0.50
-    strong_rows = np.where(row_proj > row_thresh)[0]
-    strong_rows = strong_rows[strong_rows >= skip_r]   # drop outer border
+    # Adaptive darkness + span thresholds — try progressively looser settings
+    # until we find at least 2 horizontal and 1 vertical border candidate
+    strong_rows = np.array([], dtype=int)
+    strong_cols = np.array([], dtype=int)
 
-    # Vertical left border: span ≥ 18 % of search height
-    col_thresh  = search_h * 0.18
-    strong_cols = np.where(col_proj > col_thresh)[0]
-    strong_cols = strong_cols[(strong_cols >= skip_c) & (strong_cols < w - skip_c)]
+    for dark_thresh in [80, 110, 140]:
+        is_dark   = gray < dark_thresh
+        row_proj  = is_dark.sum(axis=1)   # (search_h,)
+        col_proj  = is_dark.sum(axis=0)   # (w,)
+
+        _strong_rows = np.array([], dtype=int)
+        for row_frac in [0.50, 0.30, 0.15, 0.10, 0.05]:
+            cands = np.where(row_proj > w * row_frac)[0]
+            cands = cands[cands >= skip_r]
+            # Require rows to span at least 10 % of image height so we pick up
+            # both the top AND bottom borders, not just a thick single border line
+            if len(cands) >= 2 and (cands[-1] - cands[0]) >= h * 0.10:
+                _strong_rows = cands
+                break
+
+        _strong_cols = np.array([], dtype=int)
+        for col_frac in [0.18, 0.10, 0.05, 0.03]:
+            cands = np.where(col_proj > search_h * col_frac)[0]
+            cands = cands[(cands >= skip_c) & (cands < w - skip_c)]
+            if len(cands) >= 1:
+                _strong_cols = cands
+                break
+
+        if len(_strong_rows) >= 2 and len(_strong_cols) >= 1:
+            strong_rows = _strong_rows
+            strong_cols = _strong_cols
+            is_dark_final = is_dark   # needed for right-border scan
+            break
+    else:
+        # Use whatever we found at the loosest setting
+        is_dark_final = gray < 140
+        col_proj = is_dark_final.sum(axis=0)
+        strong_rows = _strong_rows
+        strong_cols = _strong_cols
+
+    is_dark = is_dark_final
 
     # Defaults
     plot_top    = int(h * _FT)
@@ -252,7 +280,8 @@ def draw_annotation(img: Image.Image,
 # ── Per-SKU processing ────────────────────────────────────────────────────────
 
 def process_sku(sku: str, entry: dict, input_dir: Path, output_dir: Path,
-                debug: bool) -> str | None:
+                debug: bool, input_suffix: str = '_curve.png',
+                output_suffix: str = '_curve.png') -> str | None:
     """
     Process one SKU. Returns a warning string or None on success.
     """
@@ -287,7 +316,7 @@ def process_sku(sku: str, entry: dict, input_dir: Path, output_dir: Path,
         q_max = q_ls * 2.5
 
     # --- Find image ---
-    img_path = input_dir / f'{sku}_curve.png'
+    img_path = input_dir / f'{sku}{input_suffix}'
     if not img_path.exists():
         return f'{sku}: image not found ({img_path.name})'
 
@@ -322,7 +351,7 @@ def process_sku(sku: str, entry: dict, input_dir: Path, output_dir: Path,
         )
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    out.save(output_dir / f'{sku}_curve_annotated.png')
+    out.save(output_dir / f'{sku}{output_suffix}')
     return None  # success
 
 # ── Main ──────────────────────────────────────────────────────────────────────
@@ -332,12 +361,16 @@ def main():
     parser.add_argument('--test',        action='store_true',  help='Process first 5 SKUs only')
     parser.add_argument('--debug',       action='store_true',  help='Draw detected plot bounds in green')
     parser.add_argument('--sku',         default='',           help='Comma-separated SKUs to process')
-    parser.add_argument('--input-dir',   default=str(CURVES_DIR),  help='Folder with {SKU}_curve.png files')
+    parser.add_argument('--input-dir',   default=str(CURVES_DIR),  help='Folder with curve images')
     parser.add_argument('--output-dir',  default=str(OUTPUT_DIR),  help='Output folder for annotated images')
+    parser.add_argument('--input-suffix', default='_curve.png', help='Input filename suffix (default: _curve.png)')
+    parser.add_argument('--output-suffix', default='_curve.png', help='Output filename suffix (default: _curve.png)')
     args = parser.parse_args()
 
-    input_dir  = Path(args.input_dir)
-    output_dir = Path(args.output_dir)
+    input_dir     = Path(args.input_dir)
+    output_dir    = Path(args.output_dir)
+    input_suffix  = args.input_suffix
+    output_suffix = args.output_suffix
 
     data: dict = json.loads(DATA_FILE.read_text(encoding='utf-8'))
 
@@ -368,7 +401,7 @@ def main():
             failed += 1
             continue
 
-        w = process_sku(sku, entry, input_dir, output_dir, args.debug)
+        w = process_sku(sku, entry, input_dir, output_dir, args.debug, input_suffix, output_suffix)
         if w:
             warn_msgs.append(w)
             failed += 1

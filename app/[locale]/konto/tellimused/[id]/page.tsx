@@ -193,7 +193,7 @@ function TellimusDetail() {
                 <span>{subtotal.toFixed(2)} €</span>
               </div>
               <div className="flex justify-between text-[14px] text-gray-600">
-                <span>KM 22%</span>
+                <span>KM 24%</span>
                 <span>{vat.toFixed(2)} €</span>
               </div>
               <div className="flex justify-between text-[16px] font-bold text-gray-900 pt-1 border-t border-gray-100">

@@ -243,7 +243,7 @@
     "clearCart": "Išvalyti krepšelį",
     "orderSummary": "Užsakymo suvestinė",
     "subtotalExVat": "Tarpinė suma (be PVM)",
-    "vat": "PVM (22%)",
+    "vat": "PVM (24%)",
     "shippingTbd": "Bus tikslinama",
     "securePay": "Saugus mokėjimas su Montonio",
     "viewProducts": "Žiūrėti produktus"
@@ -281,7 +281,7 @@
     "notesPlaceholder": "Papildoma informacija apie užsakymą (neprivaloma)",
     "orderSummary": "Užsakymo suvestinė",
     "subtotalExVat": "Suma (be PVM)",
-    "vatAmount": "PVM (22%)",
+    "vatAmount": "PVM (24%)",
     "delivery": "Pristatymas",
     "free": "Nemokama",
     "total": "Viso",

@@ -188,7 +188,7 @@ export default function TellimusDetailPage() {
                 <span>Vahesumma (km-ta)</span><span>{subtotal.toFixed(2)} €</span>
               </div>
               <div className="flex justify-between text-gray-500">
-                <span>KM 22%</span><span>{vat.toFixed(2)} €</span>
+                <span>KM 24%</span><span>{vat.toFixed(2)} €</span>
               </div>
               <div className="flex justify-between font-bold text-[16px] text-gray-900 pt-1">
                 <span>Kokku</span><span className="text-[#003366]">{order.total.toFixed(2)} €</span>

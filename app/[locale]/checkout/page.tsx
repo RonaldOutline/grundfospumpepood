@@ -36,7 +36,7 @@ interface ParcelPoint {
   postal_code: string
 }
 
-const VAT_RATE = 0.22
+const VAT_RATE = 0.24
 
 // ─── OSTUKORV ────────────────────────────────────────────────────────────────
 

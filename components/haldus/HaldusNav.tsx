@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Package, Tag,
-  ShoppingCart, Users, Settings, Ticket, FileText,
+  ShoppingCart, Users, Settings, Ticket, FileText, Languages,
 } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 
@@ -16,6 +16,7 @@ const NAV = [
   { href: '/haldus/kliendid',   label: 'Kliendid',   icon: Users,           exact: false, roles: ['superadmin', 'manager'] },
   { href: '/haldus/lehed',       label: 'Lehed',       icon: FileText,        exact: false, roles: ['superadmin'] },
   { href: '/haldus/soodustused', label: 'Soodustused', icon: Ticket,          exact: false, roles: ['superadmin'] },
+  { href: '/haldus/tolked',     label: 'Tõlgid',      icon: Languages,       exact: false, roles: ['superadmin'] },
   { href: '/haldus/seaded',     label: 'Seaded',      icon: Settings,        exact: false, roles: ['superadmin'] },
 ]
 

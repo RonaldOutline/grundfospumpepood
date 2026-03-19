@@ -126,7 +126,7 @@ export function InvoicePDF({ order, items, customerName, customerEmail }: Invoic
             <Text style={styles.totalsValue}>{fmt(subtotal)}</Text>
           </View>
           <View style={styles.totalsRow}>
-            <Text style={styles.totalsLabel}>KM 22%:</Text>
+            <Text style={styles.totalsLabel}>KM 24%:</Text>
             <Text style={styles.totalsValue}>{fmt(vat)}</Text>
           </View>
           <View style={[styles.totalsRow, styles.totalLine]}>
