@@ -36,6 +36,9 @@ interface Product {
   width_cm: number | null
   height_cm: number | null
   category_id: number | null
+  tags: string | null
+  curve_url: string | null
+  drawing_url: string | null
 }
 
 interface Attribute {
@@ -191,6 +194,17 @@ function ProductInfo({ product }: { product: Product }) {
       <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
         {product.name}
       </h1>
+
+      {/* Sildid */}
+      {product.tags && (
+        <div className="flex flex-wrap gap-1.5">
+          {product.tags.split(',').map(tag => tag.trim()).filter(Boolean).map(tag => (
+            <span key={tag} className="inline-flex items-center px-2.5 py-1 rounded-full bg-[#003366]/8 text-[#003366] text-[13px] font-medium">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
 
       {/* Lühikirjeldus */}
       {shortDesc && (
@@ -352,6 +366,100 @@ function AttributesTable({ attributes, product }: { attributes: Attribute[]; pro
   )
 }
 
+// ─── TOOTE TABID ───────────────────────────────────────────────────────────
+
+function ProductTabs({ product, attributes, locale }: { product: Product; attributes: Attribute[]; locale: string }) {
+  const t = useTranslations('product')
+
+  const tabs = [
+    { key: 'description', label: 'Toote kirjeldus' },
+    { key: 'specs',       label: 'Tehnilised andmed' },
+    { key: 'drawing',     label: 'Joonised' },
+    { key: 'curves',      label: 'Kõverad' },
+  ]
+
+  const [active, setActive] = useState<string>('description')
+  const [showAll, setShowAll] = useState(false)
+
+  const physicalAttrs: Attribute[] = []
+  if (product.weight_kg) physicalAttrs.push({ attribute_name: t('weightKg'),  attribute_value: String(product.weight_kg) })
+  if (product.length_cm) physicalAttrs.push({ attribute_name: t('lengthCm'),  attribute_value: String(product.length_cm) })
+  if (product.width_cm)  physicalAttrs.push({ attribute_name: t('widthCm'),   attribute_value: String(product.width_cm) })
+  if (product.height_cm) physicalAttrs.push({ attribute_name: t('heightCm'),  attribute_value: String(product.height_cm) })
+  const allAttrs = [...physicalAttrs, ...attributes]
+  const visibleAttrs = showAll ? allAttrs : allAttrs.slice(0, 16)
+  const half = Math.ceil(visibleAttrs.length / 2)
+
+  const desc = (product[`description_${locale}` as keyof Product] as string | null) || product.description_et
+
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-6">
+      {/* Tab bar */}
+      <div className="flex border-b border-gray-100 overflow-x-auto">
+        {tabs.map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setActive(tab.key)}
+            className={`flex-shrink-0 px-6 py-4 text-[15px] font-medium transition-colors border-b-2 -mb-px whitespace-nowrap ${
+              active === tab.key
+                ? 'border-[#003366] text-[#003366]'
+                : 'border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="p-6">
+        {active === 'description' && (
+          <div className="text-[15px] text-gray-600 leading-relaxed">
+            {desc || <span className="text-gray-400 italic">Kirjeldus puudub.</span>}
+          </div>
+        )}
+
+        {active === 'specs' && (
+          allAttrs.length > 0 ? (
+            <>
+              <div className="mb-4 text-[15px] text-gray-400">{allAttrs.length} {t('parameters')}</div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8">
+                {[visibleAttrs.slice(0, half), visibleAttrs.slice(half)].map((col, ci) => (
+                  <div key={ci}>
+                    {col.map((attr, i) => (
+                      <div key={i} className={`flex items-start justify-between py-2.5 ${i < col.length - 1 ? 'border-b border-gray-50' : ''}`}>
+                        <span className="text-[15px] text-gray-500 pr-4 flex-shrink-0 w-1/2">{attr.attribute_name}</span>
+                        <span className="text-[15px] font-medium text-gray-800 text-right">{attr.attribute_value}</span>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+              {allAttrs.length > 16 && (
+                <button onClick={() => setShowAll(!showAll)}
+                  className="mt-4 w-full py-2.5 border border-gray-200 rounded-xl text-[15px] text-gray-500 hover:border-[#003366] hover:text-[#003366] transition-colors font-medium">
+                  {showAll ? t('hide') : t('showAllParams', { count: allAttrs.length })}
+                </button>
+              )}
+            </>
+          ) : <span className="text-gray-400 italic text-[15px]">Tehnilised andmed puuduvad.</span>
+        )}
+
+        {active === 'drawing' && (
+          product.drawing_url
+            ? <img src={product.drawing_url} alt={`${product.name} joonis`} className="max-w-full mx-auto" />
+            : <span className="text-gray-400 italic text-[15px]">Joonis puudub.</span>
+        )}
+
+        {active === 'curves' && (
+          product.curve_url
+            ? <img src={product.curve_url} alt={`${product.name} kõver`} className="max-w-full mx-auto" />
+            : <span className="text-gray-400 italic text-[15px]">Kõverad puuduvad.</span>
+        )}
+      </div>
+    </div>
+  )
+}
+
 // ─── SEOTUD TOOTED ─────────────────────────────────────────────────────────
 
 function RelatedProducts({ products }: { products: RelatedProduct[] }) {
@@ -477,23 +585,8 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
           <ProductInfo product={product} />
         </div>
 
-        {/* Kirjeldus + atribuudid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {(() => {
-            const desc = (product[`description_${locale}` as keyof Product] as string | null) || product.description_et
-            return desc ? (
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
-                <h2 className="font-bold text-gray-900 text-[17px]">{t('descriptionTitle')}</h2>
-              </div>
-              <div className="p-6 text-[15px] text-gray-600 leading-relaxed">
-                {desc}
-              </div>
-            </div>
-            ) : null
-          })()}
-          <AttributesTable attributes={attributes} product={product} />
-        </div>
+        {/* Tabid */}
+        <ProductTabs product={product} attributes={attributes} locale={locale} />
 
         {/* Seotud tooted */}
         <RelatedProducts products={related} />
