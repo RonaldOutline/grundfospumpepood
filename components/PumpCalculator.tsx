@@ -39,6 +39,51 @@ const TEMP_OPTIONS = [
   { labelKey: 'temp3' as const, threshold: 110 },
 ]
 
+// ─── Unit helpers ────────────────────────────────────────────────────────────
+
+/** Parse "15 dm" / "4 m" / "80 cm" → metres */
+function parseHeadM(v: string): number | null {
+  const m = v.match(/([\d.,]+)\s*(dm|cm|mm|m)\b/i)
+  if (!m) return null
+  const val = parseFloat(m[1].replace(',', '.'))
+  const u = m[2].toLowerCase()
+  if (u === 'dm') return val / 10
+  if (u === 'cm') return val / 100
+  if (u === 'mm') return val / 1000
+  return val
+}
+
+/** Parse "4.6 m³/h" / "1.2 l/s" / "30 l/min" → m³/h */
+function parseFlowM3h(v: string): number | null {
+  const m = v.match(/([\d.,]+)\s*(m[³3]\/h|l\/s|l\/min)/i)
+  if (!m) return null
+  const val = parseFloat(m[1].replace(',', '.'))
+  const u = m[2].toLowerCase()
+  if (u === 'l/s')   return val * 3.6
+  if (u === 'l/min') return val * 0.06
+  return val
+}
+
+/** Parse "1 x 230 V" / "3 x 400 V" → '1' | '3' | null */
+function parsePhase(v: string): string | null {
+  const m = v.match(/^(\d+)\s*[×x]/i)
+  return m ? m[1] : null
+}
+
+/** Parse max temp from "2 .. 110 °C" / "-10 .. 95 °C" → number */
+function parseMaxTemp(v: string): number | null {
+  const nums = v.match(/-?\d+(?:[.,]\d+)?/g)
+  if (!nums || nums.length < 2) return null
+  return parseFloat(nums[nums.length - 1].replace(',', '.'))
+}
+
+/** Parse IP water protection digit from "IP44" / "IPX4D" / "IP68" */
+function parseIpWater(v: string): number | null {
+  // Match IPxx where second char is digit or X
+  const m = v.match(/IP[X\d](\d)/i)
+  return m ? parseInt(m[1]) : null
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 // Alias: drenaaz ↔ drenaa (DB slug mismatch)
@@ -239,54 +284,56 @@ export default function PumpCalculator() {
 
         productIds = productIds.filter(id => {
           const attrs = attrMap.get(id) ?? []
+          const get = (re: RegExp) => attrs.find(a => re.test(a.name))
 
-          // Max Head: only exclude if attribute exists AND value is below threshold
+          // ── Max head: "Tõstekõrgus maks." ─────────────────────────────
+          // Values: "15 dm", "4 m" — convert to metres, compare to user metres
           if (headVal !== null) {
-            const a = attrs.find(a => /head/i.test(a.name))
+            const a = get(/tõstekõrgus\s*maks/i)
             if (a) {
-              const v = parseFloat(a.value.replace(',', '.'))
-              if (!isNaN(v) && v < headVal) return false
+              const v = parseHeadM(a.value)
+              if (v !== null && v < headVal) return false
             }
           }
 
-          // Max Flow
+          // ── Max flow: "Max voolukiirus" ────────────────────────────────
+          // Values: "4.6 m³/h" — convert to m³/h, compare to user m³/h
           if (flowVal !== null) {
-            const a = attrs.find(a => /flow/i.test(a.name))
+            const a = get(/max\s+voolukiirus/i)
             if (a) {
-              const v = parseFloat(a.value.replace(',', '.'))
-              if (!isNaN(v) && v < flowVal) return false
+              const v = parseFlowM3h(a.value)
+              if (v !== null && v < flowVal) return false
             }
           }
 
-          // Phases (1 or 3)
+          // ── Phase: "Nimipinge" ─────────────────────────────────────────
+          // Values: "1 x 230 V", "3 x 400 V"
           if (phase) {
-            const a = attrs.find(a => /phase/i.test(a.name))
+            const a = get(/nimipinge/i)
             if (a) {
-              const is1 = /\b1\b|single|mono|1[×x]/.test(a.value)
-              const is3 = /\b3\b|three|tri|3[×x]/.test(a.value)
-              if (phase === '1' && !is1) return false
-              if (phase === '3' && !is3) return false
+              const pumpPhase = parsePhase(a.value)
+              if (pumpPhase && pumpPhase !== phase) return false
             }
           }
 
-          // Max Liquid Temperature
+          // ── Max liquid temp: "Vedeliku temperatuurivahemik" ───────────
+          // Values: "2 .. 110 °C", "-10 .. 95 °C" — take max (last number)
           if (tempVal !== null) {
-            const a = attrs.find(a => /temp/i.test(a.name))
+            const a = get(/vedeliku\s+temperatuurivahemik/i)
             if (a) {
-              const v = parseFloat(a.value.replace(',', '.'))
-              if (!isNaN(v) && v < tempVal) return false
+              const maxT = parseMaxTemp(a.value)
+              if (maxT !== null && maxT < tempVal) return false
             }
           }
 
-          // IP class (outdoor = IP ≥ 54)
+          // ── IP class: "Kaitseklass (IEC 34-5)" ────────────────────────
+          // Outdoor requires water protection digit ≥ 4 (splash resistant)
+          // Values: "IP44", "IP68", "IPX4D", "IPX2D"
           if (location === 'outdoor') {
-            const a = attrs.find(a => /ip.?(class|prot|rat)/i.test(a.name) || /^ip/i.test(a.name))
+            const a = get(/kaitseklass/i)
             if (a) {
-              const m = a.value.match(/\d{2,}/)
-              if (m) {
-                const ip = parseInt(m[0])
-                if (!isNaN(ip) && ip < 54) return false
-              }
+              const waterDig = parseIpWater(a.value)
+              if (waterDig !== null && waterDig < 4) return false
             }
           }
 
