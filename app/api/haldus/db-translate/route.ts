@@ -226,7 +226,7 @@ export async function POST(req: NextRequest) {
       // Get existing translations
       const existing = await sb(`/attribute_name_translations?select=name_et,name_en,name_ru,name_lv,name_lt,name_pl&limit=2000`) as Record<string, string | null>[]
       const existingMap: Record<string, Record<string, string | null>> = {}
-      for (const row of existing ?? []) existingMap[row.name_et] = row
+      for (const row of existing ?? []) existingMap[row.name_et as string] = row
 
       // Find names needing translation (not in table at all, or missing some locales)
       const toProcess = uniqueNames.filter(name => {
