@@ -7,6 +7,7 @@ import {
   ChevronRight, Package, Truck, Shield,
   Phone, ZoomIn, Check, Share2, Printer, ShoppingCart
 } from 'lucide-react'
+import { groupBySection } from '@/lib/spec-sections'
 
 // ─── TÜÜBID ────────────────────────────────────────────────────────────────
 
@@ -379,7 +380,6 @@ function ProductTabs({ product, attributes, locale }: { product: Product; attrib
   ]
 
   const [active, setActive] = useState<string>('description')
-  const [showAll, setShowAll] = useState(false)
 
   const physicalAttrs: Attribute[] = []
   if (product.weight_kg) physicalAttrs.push({ attribute_name: t('weightKg'),  attribute_value: String(product.weight_kg) })
@@ -387,8 +387,6 @@ function ProductTabs({ product, attributes, locale }: { product: Product; attrib
   if (product.width_cm)  physicalAttrs.push({ attribute_name: t('widthCm'),   attribute_value: String(product.width_cm) })
   if (product.height_cm) physicalAttrs.push({ attribute_name: t('heightCm'),  attribute_value: String(product.height_cm) })
   const allAttrs = [...physicalAttrs, ...attributes]
-  const visibleAttrs = showAll ? allAttrs : allAttrs.slice(0, 16)
-  const half = Math.ceil(visibleAttrs.length / 2)
 
   const desc = (product[`description_${locale}` as keyof Product] as string | null) || product.description_et
 
@@ -421,25 +419,37 @@ function ProductTabs({ product, attributes, locale }: { product: Product; attrib
         {active === 'specs' && (
           allAttrs.length > 0 ? (
             <>
-              <div className="mb-4 text-[15px] text-gray-400">{allAttrs.length} {t('parameters')}</div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8">
-                {[visibleAttrs.slice(0, half), visibleAttrs.slice(half)].map((col, ci) => (
-                  <div key={ci}>
-                    {col.map((attr, i) => (
-                      <div key={i} className={`flex items-start justify-between py-2.5 ${i < col.length - 1 ? 'border-b border-gray-50' : ''}`}>
-                        <span className="text-[15px] text-gray-500 pr-4 flex-shrink-0 w-1/2">{attr.attribute_name}</span>
-                        <span className="text-[15px] font-medium text-gray-800 text-right">{attr.attribute_value}</span>
-                      </div>
-                    ))}
+              <div className="mb-5 text-[15px] text-gray-400">{allAttrs.length} {t('parameters')}</div>
+              <div className="space-y-6">
+                {groupBySection(allAttrs).map(({ section, attrs: sAttrs }) => (
+                  <div key={section.key}>
+                    {/* Section header */}
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="text-[13px] font-bold text-[#003366] uppercase tracking-wider">
+                        {section.label}
+                      </span>
+                      <div className="flex-1 h-px bg-[#003366]/10" />
+                      <span className="text-[12px] text-gray-400">{sAttrs.length}</span>
+                    </div>
+                    {/* Attr rows — two columns on large screens */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8">
+                      {(() => {
+                        const half = Math.ceil(sAttrs.length / 2)
+                        return [sAttrs.slice(0, half), sAttrs.slice(half)].map((col, ci) => (
+                          <div key={ci}>
+                            {col.map((attr, i) => (
+                              <div key={i} className={`flex items-start justify-between py-2 ${i < col.length - 1 ? 'border-b border-gray-50' : ''}`}>
+                                <span className="text-[14px] text-gray-500 pr-4 flex-shrink-0 w-1/2 leading-snug">{attr.attribute_name}</span>
+                                <span className="text-[14px] font-medium text-gray-800 text-right leading-snug">{attr.attribute_value}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ))
+                      })()}
+                    </div>
                   </div>
                 ))}
               </div>
-              {allAttrs.length > 16 && (
-                <button onClick={() => setShowAll(!showAll)}
-                  className="mt-4 w-full py-2.5 border border-gray-200 rounded-xl text-[15px] text-gray-500 hover:border-[#003366] hover:text-[#003366] transition-colors font-medium">
-                  {showAll ? t('hide') : t('showAllParams', { count: allAttrs.length })}
-                </button>
-              )}
             </>
           ) : <span className="text-gray-400 italic text-[15px]">Tehnilised andmed puuduvad.</span>
         )}
