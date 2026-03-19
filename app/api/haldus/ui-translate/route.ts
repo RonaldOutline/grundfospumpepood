@@ -12,7 +12,6 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient }             from '@supabase/supabase-js'
-import { revalidateTag }            from 'next/cache'
 
 import etJson from '@/messages/et.json'
 import enJson from '@/messages/en.json'
@@ -244,9 +243,6 @@ export async function POST(req: NextRequest) {
       results[locale] = { translated: 0, error: String(err) }
     }
   }
-
-  // Bust the Next.js cache so updated translations load immediately
-  revalidateTag('ui-translations')
 
   return NextResponse.json({ results })
 }

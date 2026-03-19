@@ -55,7 +55,7 @@ const getDbOverride = unstable_cache(
     }
   },
   ['ui-translations'],
-  { revalidate: 3600, tags: ['ui-translations'] },
+  { revalidate: 60, tags: ['ui-translations'] },
 )
 
 export default getRequestConfig(async ({ requestLocale }) => {
