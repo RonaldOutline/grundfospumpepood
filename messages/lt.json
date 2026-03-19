@@ -221,6 +221,7 @@
     "notFoundHint": "Šis produktas neprieinamas arba buvo pašalintas.",
     "viewAllProducts": "Žiūrėti visus produktus",
     "vatExcl": "+ PVM",
+    "vatIncl": "PVM įskaičiuotas",
     "weightKg": "Svoris (kg)",
     "lengthCm": "Ilgis (cm)",
     "widthCm": "Plotis (cm)",
@@ -244,6 +245,7 @@
     "orderSummary": "Užsakymo suvestinė",
     "subtotalExVat": "Tarpinė suma (be PVM)",
     "vat": "PVM (24%)",
+    "vatIncluded": "įsk. PVM (24%)",
     "shippingTbd": "Bus tikslinama",
     "securePay": "Saugus mokėjimas su Montonio",
     "viewProducts": "Žiūrėti produktus"

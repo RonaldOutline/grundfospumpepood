@@ -221,6 +221,7 @@
     "notFoundHint": "Этот товар недоступен или был удалён.",
     "viewAllProducts": "Смотреть все товары",
     "vatExcl": "+ НДС",
+    "vatIncl": "НДС включён",
     "weightKg": "Масса (кг)",
     "lengthCm": "Длина (см)",
     "widthCm": "Ширина (см)",
@@ -243,7 +244,8 @@
     "clearCart": "Очистить корзину",
     "orderSummary": "Итоги заказа",
     "subtotalExVat": "Сумма (без НДС)",
-    "vat": "НДС (22%)",
+    "vat": "НДС (24%)",
+    "vatIncluded": "вкл. НДС (24%)",
     "shippingTbd": "Уточняется",
     "securePay": "Безопасная оплата через Montonio",
     "viewProducts": "Смотреть товары"

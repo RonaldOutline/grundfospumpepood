@@ -7,6 +7,7 @@ import {
   ChevronRight, ArrowRight, Package
 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { withVat, fmt, VAT_RATE } from '@/lib/price'
 
 // ─── TÜÜBID ────────────────────────────────────────────────────────────────
 
@@ -35,7 +36,7 @@ function saveCart(items: CartItem[]) {
   window.dispatchEvent(new Event('cart_updated'))
 }
 
-const VAT_RATE = 0.24
+// VAT_RATE imported from @/lib/price
 
 // ─── TOOTE RIDA ─────────────────────────────────────────────────────────────
 
@@ -70,7 +71,7 @@ function CartRow({
           {item.name}
         </Link>
         <div className="text-[15px] text-gray-500 mt-0.5">
-          {Number(item.price).toFixed(2).replace('.', ',')} € {t('perPiece')}
+          {fmt(withVat(item.price))} {t('perPiece')}
         </div>
       </div>
 
@@ -98,7 +99,7 @@ function CartRow({
         {/* Rea koguhind */}
         <div className="text-right w-20 hidden sm:block">
           <div className="text-[15px] font-bold text-[#003366]">
-            {(item.price * item.qty).toFixed(2).replace('.', ',')} €
+            {fmt(withVat(item.price) * item.qty)}
           </div>
         </div>
 
@@ -153,7 +154,7 @@ export default function OstukorvPage() {
 
   const subtotalNoVat = items.reduce((sum, item) => sum + item.price * item.qty, 0)
   const vat           = subtotalNoVat * VAT_RATE
-  const total         = subtotalNoVat + vat
+  const total         = subtotalNoVat + vat  // incl. VAT
 
   if (!mounted) return null
 
@@ -231,18 +232,6 @@ export default function OstukorvPage() {
 
                 <div className="space-y-3 mb-5">
                   <div className="flex justify-between text-[15px]">
-                    <span className="text-gray-500">{t('subtotalExVat')}</span>
-                    <span className="font-medium text-gray-800">
-                      {subtotalNoVat.toFixed(2).replace('.', ',')} €
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-[15px]">
-                    <span className="text-gray-500">{t('vat')}</span>
-                    <span className="font-medium text-gray-800">
-                      {vat.toFixed(2).replace('.', ',')} €
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-[15px]">
                     <span className="text-gray-500">{t('shipping')}</span>
                     <span className="text-[#01a0dc] font-medium">{t('shippingTbd')}</span>
                   </div>
@@ -251,6 +240,10 @@ export default function OstukorvPage() {
                     <span className="font-bold text-[#003366] text-xl">
                       {total.toFixed(2).replace('.', ',')} €
                     </span>
+                  </div>
+                  <div className="flex justify-between text-[13px] text-gray-400">
+                    <span>{t('vatIncluded')}</span>
+                    <span>{vat.toFixed(2).replace('.', ',')} €</span>
                   </div>
                 </div>
 

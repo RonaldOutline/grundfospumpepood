@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ShoppingCart, ChevronRight, Search, Loader2, Check, RotateCcw } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useTranslations } from 'next-intl'
+import { withVat, fmt } from '@/lib/price'
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -157,11 +158,11 @@ function MiniProductCard({ product }: { product: Product }) {
         <div className="flex items-center justify-between mt-auto pt-2 border-t border-gray-50">
           <div>
             <div className="text-[15px] font-bold text-[#003366]">
-              {Number(price).toFixed(2).replace('.', ',')} €
+              {fmt(withVat(price))}
             </div>
             {product.sale_price && (
               <div className="text-[12px] text-gray-400 line-through">
-                {Number(product.price).toFixed(2).replace('.', ',')} €
+                {fmt(withVat(product.price))}
               </div>
             )}
           </div>

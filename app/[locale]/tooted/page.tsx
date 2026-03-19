@@ -9,6 +9,7 @@ import {
   ShoppingCart, ChevronDown, ChevronRight, X, Check
 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { withVat, fmt } from '@/lib/price'
 
 // ─── TÜÜBID ────────────────────────────────────────────────────────────────
 
@@ -132,11 +133,11 @@ function ProductCard({ product }: { product: Product }) {
         <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-50">
           <div>
             <div className="text-lg font-bold text-[#003366]">
-              {Number(displayPrice).toFixed(2).replace('.', ',')} €
+              {fmt(withVat(displayPrice))}
             </div>
             {product.sale_price && (
               <div className="text-[13px] text-gray-400 line-through">
-                {Number(product.price).toFixed(2).replace('.', ',')} €
+                {fmt(withVat(product.price))}
               </div>
             )}
           </div>

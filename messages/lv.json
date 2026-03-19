@@ -221,6 +221,7 @@
     "notFoundHint": "Šis produkts nav pieejams vai ir noņemts.",
     "viewAllProducts": "Skatīt visus produktus",
     "vatExcl": "+ PVN",
+    "vatIncl": "PVN iekļauts",
     "weightKg": "Svars (kg)",
     "lengthCm": "Garums (cm)",
     "widthCm": "Platums (cm)",
@@ -244,6 +245,7 @@
     "orderSummary": "Pasūtījuma kopsavilkums",
     "subtotalExVat": "Starpsumma (bez PVN)",
     "vat": "PVN (24%)",
+    "vatIncluded": "iekļ. PVN (24%)",
     "shippingTbd": "Tiks precizēts",
     "securePay": "Droša maksāšana ar Montonio",
     "viewProducts": "Skatīt produktus"

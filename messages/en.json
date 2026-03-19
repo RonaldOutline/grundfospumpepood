@@ -221,6 +221,7 @@
     "notFoundHint": "This product is not available or has been removed.",
     "viewAllProducts": "View all products",
     "vatExcl": "+ VAT",
+    "vatIncl": "VAT included",
     "weightKg": "Weight (kg)",
     "lengthCm": "Length (cm)",
     "widthCm": "Width (cm)",
@@ -244,6 +245,7 @@
     "orderSummary": "Order summary",
     "subtotalExVat": "Subtotal (ex. VAT)",
     "vat": "VAT (24%)",
+    "vatIncluded": "incl. VAT (24%)",
     "shippingTbd": "To be determined",
     "securePay": "Secure payment with Montonio",
     "viewProducts": "View products"

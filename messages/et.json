@@ -221,6 +221,7 @@
     "notFoundHint": "See toode ei ole saadaval või on eemaldatud.",
     "viewAllProducts": "Vaata kõiki tooteid",
     "vatExcl": "+ KM",
+    "vatIncl": "KM sisaldub",
     "weightKg": "Kaal (kg)",
     "lengthCm": "Pikkus (cm)",
     "widthCm": "Laius (cm)",
@@ -244,6 +245,7 @@
     "orderSummary": "Tellimuse kokkuvõte",
     "subtotalExVat": "Summa (km-ta)",
     "vat": "KM (24%)",
+    "vatIncluded": "sh. KM (24%)",
     "shippingTbd": "Täpsustame",
     "securePay": "Turvaline maksmine Montonioga",
     "viewProducts": "Vaata tooteid"

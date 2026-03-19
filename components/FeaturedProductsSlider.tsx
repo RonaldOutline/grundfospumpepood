@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useTranslations } from 'next-intl'
+import { withVat, fmt } from '@/lib/price'
 
 interface Product {
   id: number
@@ -213,11 +214,11 @@ export default function FeaturedProductsSlider() {
                           <div className="flex items-end justify-between mt-auto">
                             <div>
                               <div className="text-lg font-bold text-[#003366]">
-                                {Number(price).toFixed(2).replace('.', ',')} €
+                                {fmt(withVat(price))}
                               </div>
                               {product.sale_price && (
                                 <div className="text-[13px] text-gray-400 line-through">
-                                  {Number(product.price).toFixed(2).replace('.', ',')} €
+                                  {fmt(withVat(product.price))}
                                 </div>
                               )}
                             </div>

@@ -8,6 +8,7 @@ import {
   Phone, ZoomIn, Check, Share2, Printer, ShoppingCart
 } from 'lucide-react'
 import { groupBySection } from '@/lib/spec-sections'
+import { withVat, fmt } from '@/lib/price'
 
 // ─── TÜÜBID ────────────────────────────────────────────────────────────────
 
@@ -215,21 +216,21 @@ function ProductInfo({ product }: { product: Product }) {
       )}
 
       {/* Hind */}
-      <div className="flex items-baseline gap-3">
+      <div className="flex items-baseline gap-3 flex-wrap">
         <span className="text-3xl font-bold text-[#003366]">
-          {Number(displayPrice).toFixed(2).replace('.', ',')} €
+          {fmt(withVat(displayPrice))}
         </span>
         {product.sale_price && (
           <>
             <span className="text-[15px] text-gray-400 line-through">
-              {Number(product.price).toFixed(2).replace('.', ',')} €
+              {fmt(withVat(product.price))}
             </span>
             <span className="bg-[#01a0dc] text-white text-[15px] font-bold px-2 py-0.5 rounded-lg">
               -{discount}%
             </span>
           </>
         )}
-        <span className="text-[15px] text-gray-400">{t('vatExcl')}</span>
+        <span className="text-[14px] text-gray-400">{t('vatIncl')}</span>
       </div>
 
       {/* Laoseis */}
