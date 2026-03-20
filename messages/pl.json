@@ -225,7 +225,11 @@
     "weightKg": "Waga (kg)",
     "lengthCm": "Długość (cm)",
     "widthCm": "Szerokość (cm)",
-    "heightCm": "Wysokość (cm)"
+    "heightCm": "Wysokość (cm)",
+    "tabDescription": "Opis produktu",
+    "tabSpecs": "Dane techniczne",
+    "tabDrawing": "Rysunki",
+    "tabCurves": "Krzywe"
   },
   "cart": {
     "title": "Koszyk",

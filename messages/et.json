@@ -225,7 +225,11 @@
     "weightKg": "Kaal (kg)",
     "lengthCm": "Pikkus (cm)",
     "widthCm": "Laius (cm)",
-    "heightCm": "Kõrgus (cm)"
+    "heightCm": "Kõrgus (cm)",
+    "tabDescription": "Toote kirjeldus",
+    "tabSpecs": "Tehnilised andmed",
+    "tabDrawing": "Joonised",
+    "tabCurves": "Kõverad"
   },
   "cart": {
     "title": "Ostukorv",

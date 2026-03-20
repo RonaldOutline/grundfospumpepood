@@ -225,7 +225,11 @@
     "weightKg": "Масса (кг)",
     "lengthCm": "Длина (см)",
     "widthCm": "Ширина (см)",
-    "heightCm": "Высота (см)"
+    "heightCm": "Высота (см)",
+    "tabDescription": "Описание товара",
+    "tabSpecs": "Технические данные",
+    "tabDrawing": "Чертежи",
+    "tabCurves": "Кривые"
   },
   "cart": {
     "title": "Корзина",

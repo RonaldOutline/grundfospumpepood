@@ -225,7 +225,11 @@
     "weightKg": "Svoris (kg)",
     "lengthCm": "Ilgis (cm)",
     "widthCm": "Plotis (cm)",
-    "heightCm": "Aukštis (cm)"
+    "heightCm": "Aukštis (cm)",
+    "tabDescription": "Produkto aprašymas",
+    "tabSpecs": "Techniniai duomenys",
+    "tabDrawing": "Brėžiniai",
+    "tabCurves": "Kreivės"
   },
   "cart": {
     "title": "Pirkinių krepšelis",

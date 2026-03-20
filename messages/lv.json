@@ -225,7 +225,11 @@
     "weightKg": "Svars (kg)",
     "lengthCm": "Garums (cm)",
     "widthCm": "Platums (cm)",
-    "heightCm": "Augstums (cm)"
+    "heightCm": "Augstums (cm)",
+    "tabDescription": "Produkta apraksts",
+    "tabSpecs": "Tehniskie dati",
+    "tabDrawing": "Rasējumi",
+    "tabCurves": "Līknes"
   },
   "cart": {
     "title": "Iepirkumu grozs",

@@ -370,10 +370,10 @@ function ProductTabs({
   const t = useTranslations('product')
 
   const tabs = [
-    { key: 'description', label: 'Toote kirjeldus' },
-    { key: 'specs',       label: 'Tehnilised andmed' },
-    { key: 'drawing',     label: 'Joonised' },
-    { key: 'curves',      label: 'Kõverad' },
+    { key: 'description', label: t('tabDescription') },
+    { key: 'specs',       label: t('tabSpecs') },
+    { key: 'drawing',     label: t('tabDrawing') },
+    { key: 'curves',      label: t('tabCurves') },
   ]
 
   const [active, setActive] = useState<string>('description')

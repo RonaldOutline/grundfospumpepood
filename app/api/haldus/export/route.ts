@@ -61,34 +61,49 @@ export async function GET(req: NextRequest) {
   wb.created  = new Date()
   wb.modified = new Date()
 
-  // ── Sheet 1: Products ──────────────────────────────────────────────────────
+  // ── Single sheet: all product data + technical attributes ──────────────────
   const ws = wb.addWorksheet('Tooted', {
-    views: [{ state: 'frozen', ySplit: 1 }],
+    views: [{ state: 'frozen', xSplit: 2, ySplit: 1 }],  // freeze SKU + Nimi columns + header row
   })
 
-  // Column definitions — key, header label, width
-  const COLS: { key: string; header: string; width: number }[] = [
-    { key: 'sku',          header: 'SKU',               width: 14  },
-    { key: 'name',         header: 'Nimi',              width: 40  },
-    { key: 'category',     header: 'Kategooria',        width: 24  },
-    { key: 'importance',   header: 'Tähtsus (1–10)',    width: 14  },
-    { key: 'price',        header: 'Hind (€)',          width: 12  },
-    { key: 'sale_price',   header: 'Müügihind (€)',     width: 14  },
-    { key: 'in_stock',     header: 'Laos',              width: 10  },
-    { key: 'published',    header: 'Avaldatud',         width: 12  },
-    { key: 'short_desc',   header: 'Lühikirjeldus',     width: 50  },
-    { key: 'tags',         header: 'Sildid',            width: 40  },
-    { key: 'weight_kg',    header: 'Kaal (kg)',         width: 12  },
-    { key: 'length_cm',    header: 'Pikkus (cm)',       width: 12  },
-    { key: 'width_cm',     header: 'Laius (cm)',        width: 12  },
-    { key: 'height_cm',    header: 'Kõrgus (cm)',       width: 12  },
-    { key: 'slug',         header: 'Slug',              width: 44  },
-    { key: 'image_url',    header: 'Pilt URL',          width: 60  },
-    { key: 'curve_url',    header: 'Kõver URL',         width: 60  },
-    { key: 'drawing_url',  header: 'Joonis URL',        width: 60  },
-    { key: 'category_gf',  header: 'Grundfos kategooria', width: 28 },
-    { key: 'url_gf',       header: 'Grundfos URL',      width: 70  },
+  const BLUE         = '003366'
+  const WHITE        = 'FFFFFF'
+  const GREEN_LIGHT  = 'E8F5E9'
+  const BLUE_LIGHT   = 'E3F0FB'
+  const GRAY_LIGHT   = 'F5F5F5'
+  const ORANGE_LIGHT = 'FFF3E0'
+  const PURPLE_LIGHT = 'F3E5F5'
+
+  // Fixed columns (SKU and Name first — they will be frozen)
+  const FIXED_COLS: { key: string; header: string; width: number }[] = [
+    { key: 'sku',          header: 'SKU',                  width: 14  },
+    { key: 'name',         header: 'Nimi',                 width: 40  },
+    { key: 'category',     header: 'Kategooria',           width: 24  },
+    { key: 'importance',   header: 'Tähtsus (1–10)',       width: 14  },
+    { key: 'price',        header: 'Hind (€)',             width: 12  },
+    { key: 'sale_price',   header: 'Müügihind (€)',        width: 14  },
+    { key: 'in_stock',     header: 'Laos',                 width: 10  },
+    { key: 'published',    header: 'Avaldatud',            width: 12  },
+    { key: 'short_desc',   header: 'Lühikirjeldus',        width: 50  },
+    { key: 'tags',         header: 'Sildid',               width: 40  },
+    { key: 'weight_kg',    header: 'Kaal (kg)',            width: 12  },
+    { key: 'length_cm',    header: 'Pikkus (cm)',          width: 12  },
+    { key: 'width_cm',     header: 'Laius (cm)',           width: 12  },
+    { key: 'height_cm',    header: 'Kõrgus (cm)',          width: 12  },
+    { key: 'slug',         header: 'Slug',                 width: 44  },
+    { key: 'image_url',    header: 'Pilt URL',             width: 60  },
+    { key: 'curve_url',    header: 'Kõver URL',            width: 60  },
+    { key: 'drawing_url',  header: 'Joonis URL',           width: 60  },
+    { key: 'category_gf',  header: 'Grundfos kategooria',  width: 28  },
+    { key: 'url_gf',       header: 'Grundfos URL',         width: 70  },
   ]
+
+  // Dynamic attribute columns appended after fixed columns
+  const ATTR_COLS: { key: string; header: string; width: number }[] = allAttrNames.map(n => ({
+    key: `attr__${n}`, header: n, width: 22,
+  }))
+
+  const COLS = [...FIXED_COLS, ...ATTR_COLS]
 
   ws.columns = COLS.map(c => ({ key: c.key, header: c.header, width: c.width }))
 
@@ -96,17 +111,12 @@ export async function GET(req: NextRequest) {
   const headerRow = ws.getRow(1)
   headerRow.height = 22
 
-  const BLUE  = '003366'
-  const WHITE = 'FFFFFF'
-  const GREEN_LIGHT = 'E8F5E9'
-  const BLUE_LIGHT  = 'E3F0FB'
-  const GRAY_LIGHT  = 'F5F5F5'
-  const ORANGE_LIGHT = 'FFF3E0'
-
   COLS.forEach((col, i) => {
     const cell = headerRow.getCell(i + 1)
+    // Attribute columns get a slightly different header colour to distinguish them
+    const isAttr = col.key.startsWith('attr__')
     cell.font      = { bold: true, color: { argb: WHITE }, name: 'Arial', size: 10 }
-    cell.fill      = { type: 'pattern', pattern: 'solid', fgColor: { argb: BLUE } }
+    cell.fill      = { type: 'pattern', pattern: 'solid', fgColor: { argb: isAttr ? '4A235A' : BLUE } }
     cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: false }
     cell.border    = {
       bottom: { style: 'thin', color: { argb: '5580AA' } },
@@ -114,18 +124,16 @@ export async function GET(req: NextRequest) {
     }
   })
 
-  // Enable auto-filter on header row
   ws.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1, column: COLS.length } }
 
   // ── Importance colour scale helper ─────────────────────────────────────────
   function importanceColour(v: number | null): string {
     if (!v) return GRAY_LIGHT
-    // 1=light red, 5=yellow, 10=green
-    if (v >= 8) return 'C8E6C9'   // green
-    if (v >= 6) return 'DCEDC8'   // light green
-    if (v >= 4) return 'FFF9C4'   // yellow
-    if (v >= 2) return 'FFE0B2'   // orange
-    return 'FFCDD2'               // red
+    if (v >= 8) return 'C8E6C9'
+    if (v >= 6) return 'DCEDC8'
+    if (v >= 4) return 'FFF9C4'
+    if (v >= 2) return 'FFE0B2'
+    return 'FFCDD2'
   }
 
   // ── Data rows ──────────────────────────────────────────────────────────────
@@ -136,8 +144,10 @@ export async function GET(req: NextRequest) {
     const prodId  = skuToId[p.sku ?? ''] ?? ''
     const catSlug = pcMap[prodId] ?? ''
     const catName = catMap[catSlug] ?? catSlug
+    const pAttrs  = attrsByProduct[prodId] ?? []
+    const attrMap = Object.fromEntries(pAttrs.map(a => [a.name, a.value]))
 
-    const row = ws.addRow({
+    const rowData: Record<string, string | number | null> = {
       sku:         p.sku         ?? '',
       name:        p.name        ?? '',
       category:    catName,
@@ -158,10 +168,12 @@ export async function GET(req: NextRequest) {
       drawing_url: p.drawing_url ?? '',
       category_gf: p.category_gf ?? '',
       url_gf:      p.url_gf      ?? '',
-    })
+    }
+    for (const n of allAttrNames) rowData[`attr__${n}`] = attrMap[n] ?? ''
 
-    row.height = 18
-    row.font   = { name: 'Arial', size: 10 }
+    const row = ws.addRow(rowData)
+    row.height    = 18
+    row.font      = { name: 'Arial', size: 10 }
     row.alignment = { vertical: 'middle' }
 
     // Price formatting
@@ -174,72 +186,30 @@ export async function GET(req: NextRequest) {
     COLS.forEach((col, i) => {
       const cell = row.getCell(i + 1)
       let bg = 'FFFFFF'
-      if (['price', 'sale_price'].includes(col.key))                bg = GREEN_LIGHT
-      else if (['sku'].includes(col.key))                           bg = GRAY_LIGHT
+      if (col.key === 'sku')                                        bg = GRAY_LIGHT
+      else if (col.key === 'name')                                  bg = GRAY_LIGHT
+      else if (['price', 'sale_price'].includes(col.key))           bg = GREEN_LIGHT
       else if (['category', 'tags'].includes(col.key))              bg = BLUE_LIGHT
       else if (['curve_url', 'drawing_url'].includes(col.key))      bg = ORANGE_LIGHT
+      else if (col.key.startsWith('attr__'))                        bg = PURPLE_LIGHT
       cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bg } }
     })
 
-    // Importance cell — coloured background
-    const impIdx = COLS.findIndex(c => c.key === 'importance') + 1
+    // Importance cell
+    const impIdx  = COLS.findIndex(c => c.key === 'importance') + 1
     const impCell = row.getCell(impIdx)
     impCell.fill      = { type: 'pattern', pattern: 'solid', fgColor: { argb: importanceColour(p.importance ?? null) } }
     impCell.alignment = { horizontal: 'center', vertical: 'middle' }
     impCell.font      = { bold: true, name: 'Arial', size: 10 }
 
-    // Stock cell — green/red
+    // Stock cell
     const stockIdx  = COLS.findIndex(c => c.key === 'in_stock') + 1
     const stockCell = row.getCell(stockIdx)
     stockCell.font      = { bold: true, color: { argb: p.in_stock ? '2E7D32' : 'C62828' }, name: 'Arial', size: 10 }
     stockCell.alignment = { horizontal: 'center', vertical: 'middle' }
-  })
 
-  // ── Sheet 2: Technical specs ───────────────────────────────────────────────
-  const ws2 = wb.addWorksheet('Tehnilised andmed', {
-    views: [{ state: 'frozen', xSplit: 2, ySplit: 1 }],
-  })
-
-  // First 2 columns: SKU, name — then one column per attribute
-  const specCols: { key: string; header: string; width: number }[] = [
-    { key: 'sku',  header: 'SKU',  width: 14 },
-    { key: 'name', header: 'Nimi', width: 36 },
-    ...allAttrNames.map(n => ({ key: n, header: n, width: 22 })),
-  ]
-  ws2.columns = specCols.map(c => ({ key: c.key, header: c.header, width: c.width }))
-
-  // Header styling for sheet 2
-  const h2 = ws2.getRow(1)
-  h2.height = 22
-  specCols.forEach((_, i) => {
-    const cell = h2.getCell(i + 1)
-    cell.font      = { bold: true, color: { argb: WHITE }, name: 'Arial', size: 9 }
-    cell.fill      = { type: 'pattern', pattern: 'solid', fgColor: { argb: BLUE } }
-    cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: false }
-    cell.border    = { bottom: { style: 'thin', color: { argb: '5580AA' } } }
-  })
-  ws2.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1, column: specCols.length } }
-
-  ;(products ?? []).forEach(p => {
-    const pid    = skuToId[p.sku ?? ''] ?? ''
-    const pAttrs = attrsByProduct[pid] ?? []
-    const attrMap = Object.fromEntries(pAttrs.map(a => [a.name, a.value]))
-
-    const rowData: Record<string, string> = {
-      sku:  p.sku  ?? '',
-      name: p.name ?? '',
-    }
-    for (const n of allAttrNames) rowData[n] = attrMap[n] ?? ''
-
-    const row = ws2.addRow(rowData)
-    row.height = 16
-    row.font   = { name: 'Arial', size: 9 }
-    row.alignment = { vertical: 'middle' }
-
-    // Colour SKU and name cells
-    row.getCell(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: GRAY_LIGHT } }
-    row.getCell(2).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: GRAY_LIGHT } }
-    row.getCell(1).font = { bold: true, name: 'Arial', size: 9 }
+    // SKU bold
+    row.getCell(1).font = { bold: true, name: 'Arial', size: 10 }
   })
 
   // ── Serialise and return ───────────────────────────────────────────────────
