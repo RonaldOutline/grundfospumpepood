@@ -3,7 +3,7 @@ import ExcelJS from 'exceljs'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 
 // POST /api/haldus/import — full product data import from the exported xlsx
-// Matches the export format: fixed columns + attr__ prefixed attribute columns
+// Only updates rows where data has actually changed vs current DB state.
 
 const BOOL_FALSE = new Set(['false', '0', 'ei', 'otsas', 'no'])
 
@@ -22,6 +22,13 @@ function parseNum(v: unknown): number | null {
 function parseStr(v: unknown): string | null {
   const s = String(v ?? '').trim()
   return s === '' ? null : s
+}
+
+function eq(a: unknown, b: unknown): boolean {
+  if (a === b) return true
+  if (a == null && b == null) return true
+  if (a == null || b == null) return false
+  return String(a) === String(b)
 }
 
 export async function POST(req: NextRequest) {
@@ -53,23 +60,12 @@ export async function POST(req: NextRequest) {
   const ws = wb.worksheets[0]
   if (!ws) return NextResponse.json({ error: 'Tühi fail' }, { status: 400 })
 
-  // Build header map: column index → key
   const headerRow = ws.getRow(1)
   const headers: string[] = []
   headerRow.eachCell({ includeEmpty: true }, (cell, col) => {
     headers[col - 1] = String(cell.value ?? '').trim()
   })
 
-  // Identify fixed vs attribute columns
-  const fixedKeys = new Set([
-    'SKU', 'Nimi', 'Kategooria', 'Tähtsus (1–10)', 'Hind (€)', 'Müügihind (€)',
-    'Laos', 'Avaldatud', 'Lühikirjeldus', 'Sildid',
-    'Kaal (kg)', 'Pikkus (cm)', 'Laius (cm)', 'Kõrgus (cm)',
-    'Slug', 'Pilt URL', 'Kõver URL', 'Joonis URL',
-    'Grundfos kategooria', 'Grundfos URL',
-  ])
-
-  // Also support raw key names from older exports
   const HEADER_TO_FIELD: Record<string, string> = {
     'SKU':               'sku',
     'Nimi':              'name',
@@ -93,36 +89,76 @@ export async function POST(req: NextRequest) {
     'Grundfos URL':      'url_gf',
   }
 
-  // Map: colIndex → { type: 'fixed'|'attr', field: string }
+  const fixedKeys = new Set(Object.keys(HEADER_TO_FIELD))
+
   const colMap: Array<{ type: 'fixed' | 'attr'; field: string }> = headers.map(h => {
     if (HEADER_TO_FIELD[h]) return { type: 'fixed', field: HEADER_TO_FIELD[h] }
-    // Attribute columns are everything else that's non-empty and not a known fixed key
     if (h && !fixedKeys.has(h)) return { type: 'attr', field: h }
     return { type: 'fixed', field: '' }
   })
 
+  const hasAttrCols = colMap.some(c => c.type === 'attr')
+
+  // ── Collect all SKUs from xlsx ─────────────────────────────────────────────
+  const skuIdx = headers.indexOf('SKU')
+  const xlsxSkus: string[] = []
+  for (let r = 2; r <= ws.rowCount; r++) {
+    const row = ws.getRow(r)
+    const cells: unknown[] = []
+    row.eachCell({ includeEmpty: true }, (cell, col) => { cells[col - 1] = cell.value })
+    const sku = parseStr(cells[skuIdx])
+    if (sku) xlsxSkus.push(sku)
+  }
+
+  // ── Batch fetch current DB state ───────────────────────────────────────────
+  const { data: dbProducts } = await supabaseAdmin
+    .from('products')
+    .select('id, sku, name, slug, short_description_et, tags, image_url, curve_url, drawing_url, category_gf, url_gf, price, sale_price, weight_kg, length_cm, width_cm, height_cm, importance, in_stock, published')
+    .in('sku', xlsxSkus)
+
+  const productBySku = Object.fromEntries(
+    (dbProducts ?? []).map(p => [p.sku ?? '', p])
+  )
+  const productIds = (dbProducts ?? []).map(p => p.id as number)
+
+  // Batch fetch all current attributes for matching products
+  const allCurrentAttrs: Array<{ product_id: number; attribute_name: string; attribute_value: string }> = []
+  if (hasAttrCols && productIds.length > 0) {
+    // paginate to bypass PostgREST 1000-row limit
+    let from = 0
+    while (true) {
+      const { data: batch } = await supabaseAdmin
+        .from('product_attributes')
+        .select('product_id, attribute_name, attribute_value')
+        .in('product_id', productIds)
+        .range(from, from + 999)
+      if (!batch || batch.length === 0) break
+      allCurrentAttrs.push(...batch)
+      if (batch.length < 1000) break
+      from += 1000
+    }
+  }
+
+  // Group current attrs by product_id
+  const currentAttrsByPid: Record<number, Record<string, string>> = {}
+  for (const a of allCurrentAttrs) {
+    if (!currentAttrsByPid[a.product_id]) currentAttrsByPid[a.product_id] = {}
+    currentAttrsByPid[a.product_id][a.attribute_name] = a.attribute_value
+  }
+
   // ── Process rows ───────────────────────────────────────────────────────────
-  let updated = 0, skipped = 0
+  let updated = 0, skipped = 0, unchanged = 0
   const errors: string[] = []
 
-  const rowCount = ws.rowCount
-  for (let r = 2; r <= rowCount; r++) {
+  for (let r = 2; r <= ws.rowCount; r++) {
     const row = ws.getRow(r)
-
-    // Build cell value array
     const cells: unknown[] = []
-    row.eachCell({ includeEmpty: true }, (cell, col) => {
-      cells[col - 1] = cell.value
-    })
+    row.eachCell({ includeEmpty: true }, (cell, col) => { cells[col - 1] = cell.value })
 
-    // Extract SKU
-    const skuIdx = headers.indexOf('SKU')
     const sku = parseStr(cells[skuIdx])
     if (!sku) { skipped++; continue }
 
-    // Find product
-    const { data: prod } = await supabaseAdmin
-      .from('products').select('id').eq('sku', sku).single()
+    const prod = productBySku[sku]
     if (!prod) { skipped++; continue }
 
     // Build product update object
@@ -130,12 +166,11 @@ export async function POST(req: NextRequest) {
     const attrUpdates: Array<{ name: string; value: string }> = []
 
     colMap.forEach((col, i) => {
-      if (!col.field) return
+      if (!col.field || col.field === 'category') return
       const raw = cells[i]
-
       if (col.type === 'fixed') {
         switch (col.field) {
-          case 'sku':
+          case 'sku': break  // never overwrite SKU
           case 'slug':
           case 'name':
           case 'short_description_et':
@@ -145,9 +180,7 @@ export async function POST(req: NextRequest) {
           case 'drawing_url':
           case 'category_gf':
           case 'url_gf':
-          case 'category':  // skip — handled via product_categories separately
-            if (col.field !== 'category') productUpdate[col.field] = parseStr(raw)
-            break
+            productUpdate[col.field] = parseStr(raw); break
           case 'price':
           case 'sale_price':
           case 'weight_kg':
@@ -155,12 +188,10 @@ export async function POST(req: NextRequest) {
           case 'width_cm':
           case 'height_cm':
           case 'importance':
-            productUpdate[col.field] = parseNum(raw)
-            break
+            productUpdate[col.field] = parseNum(raw); break
           case 'in_stock':
           case 'published':
-            productUpdate[col.field] = parseBool(raw)
-            break
+            productUpdate[col.field] = parseBool(raw); break
         }
       } else if (col.type === 'attr') {
         const val = parseStr(raw)
@@ -168,23 +199,37 @@ export async function POST(req: NextRequest) {
       }
     })
 
-    // Remove nullish SKU/slug to avoid overwriting with null
-    delete productUpdate['sku']
+    // ── Diff: check if product fields changed ─────────────────────────────
+    const prodChanged = Object.entries(productUpdate).some(
+      ([k, v]) => !eq((prod as Record<string, unknown>)[k], v)
+    )
+
+    // ── Diff: check if attributes changed ─────────────────────────────────
+    let attrsChanged = false
+    if (hasAttrCols) {
+      const currentAttrs = currentAttrsByPid[prod.id as number] ?? {}
+      const newAttrMap = Object.fromEntries(attrUpdates.map(a => [a.name, a.value]))
+      const currentKeys = Object.keys(currentAttrs).sort()
+      const newKeys = Object.keys(newAttrMap).sort()
+      if (currentKeys.join() !== newKeys.join()) {
+        attrsChanged = true
+      } else {
+        attrsChanged = currentKeys.some(k => currentAttrs[k] !== newAttrMap[k])
+      }
+    }
+
+    if (!prodChanged && !attrsChanged) { unchanged++; continue }
 
     try {
-      // Update product
-      const { error: pErr } = await supabaseAdmin
-        .from('products')
-        .update({ ...productUpdate, updated_at: new Date().toISOString() })
-        .eq('id', prod.id)
-
-      if (pErr) {
-        errors.push(`${sku}: ${pErr.message}`)
-        continue
+      if (prodChanged) {
+        const { error: pErr } = await supabaseAdmin
+          .from('products')
+          .update({ ...productUpdate, updated_at: new Date().toISOString() })
+          .eq('id', prod.id)
+        if (pErr) { errors.push(`${sku}: ${pErr.message}`); continue }
       }
 
-      // Replace attributes if any attr columns exist in this file
-      if (colMap.some(c => c.type === 'attr')) {
+      if (hasAttrCols && attrsChanged) {
         await supabaseAdmin.from('product_attributes').delete().eq('product_id', prod.id)
         if (attrUpdates.length > 0) {
           await supabaseAdmin.from('product_attributes').insert(
@@ -201,8 +246,9 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({
     updated,
+    unchanged,
     skipped,
-    errors: errors.slice(0, 20),   // cap error list
+    errors: errors.slice(0, 20),
     total_errors: errors.length,
   })
 }
