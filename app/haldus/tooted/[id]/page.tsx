@@ -8,6 +8,7 @@ import { useAuth } from '@/lib/auth-context'
 import { supabase } from '@/lib/supabase'
 import StatusToggle from '@/components/haldus/StatusToggle'
 import ProductImageUpload from '@/components/haldus/ProductImageUpload'
+import ProductFileUpload from '@/components/haldus/ProductFileUpload'
 import ConfirmDialog from '@/components/haldus/ConfirmDialog'
 
 const canManageProducts = (role: string) => role === 'superadmin'
@@ -367,22 +368,24 @@ export default function MuudaToode() {
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
               <h2 className="font-semibold text-gray-900">Failid</h2>
               <div>
-                <label className="block text-[15px] font-medium text-gray-700 mb-1.5">Joonis URL</label>
-                <input value={drawingUrl} onChange={e => setDrawingUrl(e.target.value)} placeholder="https://..."
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-[15px] text-gray-900 font-mono outline-none focus:border-[#003366]" />
-                {drawingUrl && (
-                  <a href={drawingUrl} target="_blank" rel="noreferrer"
-                    className="inline-block mt-1.5 text-[13px] text-[#003366] hover:underline">Ava joonis ↗</a>
-                )}
+                <label className="block text-[15px] font-medium text-gray-700 mb-1.5">Joonis</label>
+                <ProductFileUpload
+                  currentUrl={drawingUrl || null}
+                  folder="drawings"
+                  label="joonis"
+                  onUpload={url => setDrawingUrl(url)}
+                  onRemove={() => setDrawingUrl('')}
+                />
               </div>
               <div>
-                <label className="block text-[15px] font-medium text-gray-700 mb-1.5">Kõverad URL</label>
-                <input value={curveUrl} onChange={e => setCurveUrl(e.target.value)} placeholder="https://..."
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-[15px] text-gray-900 font-mono outline-none focus:border-[#003366]" />
-                {curveUrl && (
-                  <a href={curveUrl} target="_blank" rel="noreferrer"
-                    className="inline-block mt-1.5 text-[13px] text-[#003366] hover:underline">Ava kõverad ↗</a>
-                )}
+                <label className="block text-[15px] font-medium text-gray-700 mb-1.5">Kõverad</label>
+                <ProductFileUpload
+                  currentUrl={curveUrl || null}
+                  folder="curves"
+                  label="kõverad"
+                  onUpload={url => setCurveUrl(url)}
+                  onRemove={() => setCurveUrl('')}
+                />
               </div>
             </div>
 

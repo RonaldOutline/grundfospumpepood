@@ -217,12 +217,16 @@ export default function Header() {
                 {t('products')}
                 <ChevronDown size={14} className={`transition-transform duration-200 ${megaOpen ? 'rotate-180' : ''}`} />
               </button>
-              <button onMouseEnter={() => setMegaOpen(false)} className={`px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10 ${megaOpen ? 'text-white' : 'text-white/90 hover:text-white'}`}>
+              <a href="https://ipumps.ee/kontakt/" target="_blank" rel="noopener noreferrer"
+                onMouseEnter={() => setMegaOpen(false)}
+                className={`px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10 ${megaOpen ? 'text-white' : 'text-white/90 hover:text-white'}`}>
                 {t('projectSales')}
-              </button>
-              <button onMouseEnter={() => setMegaOpen(false)} className={`px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10 ${megaOpen ? 'text-white' : 'text-white/90 hover:text-white'}`}>
+              </a>
+              <Link href="/leht/kontakt"
+                onMouseEnter={() => setMegaOpen(false)}
+                className={`px-3 py-2 rounded text-[15px] font-medium transition-colors hover:bg-white/10 ${megaOpen ? 'text-white' : 'text-white/90 hover:text-white'}`}>
                 {t('contact')}
-              </button>
+              </Link>
             </nav>
 
             {/* Parempoolsed nupud */}
