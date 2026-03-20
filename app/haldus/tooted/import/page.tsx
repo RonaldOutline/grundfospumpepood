@@ -1,158 +1,82 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Upload, AlertCircle } from 'lucide-react'
-import * as XLSX from 'xlsx'
+import { ArrowLeft, Upload, CheckCircle, AlertCircle, FileSpreadsheet } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 import { supabase } from '@/lib/supabase'
-import ImportPreview, { type ImportRow } from '@/components/haldus/ImportPreview'
 
 const canManageProducts = (role: string) => role === 'superadmin'
 
-// Veerunimede kaardistamine (auto-detekt)
-const COL_MAP: Record<string, string[]> = {
-  sku:                  ['sku', 'artikkel', 'article', 'kood'],
-  name:                 ['name', 'nimi', 'toode', 'product'],
-  short_description_et: ['short_description', 'lühikirjeldus', 'short_desc'],
-  description_et:       ['description', 'kirjeldus', 'desc'],
-  price:                ['price', 'hind', 'price_eur'],
-  in_stock:             ['in_stock', 'laoseis', 'stock', 'ladu'],
-  category_slug:        ['category', 'kategooria', 'category_slug'],
-}
+type Status = 'idle' | 'uploading' | 'done' | 'error'
 
-function detectColumn(headers: string[], field: string): number {
-  const variants = COL_MAP[field] ?? []
-  for (const v of variants) {
-    const i = headers.findIndex(h => h.toLowerCase().trim() === v)
-    if (i !== -1) return i
-  }
-  return -1
-}
-
-function parseRows(raw: unknown[][]): ImportRow[] {
-  if (raw.length < 2) return []
-  const headers = (raw[0] as string[]).map(h => String(h ?? ''))
-  const cols = Object.fromEntries(
-    Object.keys(COL_MAP).map(f => [f, detectColumn(headers, f)])
-  )
-
-  return raw.slice(1)
-    .filter(row => row.some(c => c !== null && c !== undefined && c !== ''))
-    .map(row => {
-      const get = (f: string) => cols[f] >= 0 ? row[cols[f]] : undefined
-      const stockVal = String(get('in_stock') ?? 'true').toLowerCase()
-      return {
-        sku:                  String(get('sku') ?? ''),
-        name:                 String(get('name') ?? ''),
-        short_description_et: get('short_description_et') ? String(get('short_description_et')) : undefined,
-        description_et:       get('description_et') ? String(get('description_et')) : undefined,
-        price:                parseFloat(String(get('price') ?? '0').replace(',', '.')) || 0,
-        in_stock:             !['false', '0', 'ei', 'otsas', 'no'].includes(stockVal),
-        category_slug:        get('category_slug') ? String(get('category_slug')) : undefined,
-      }
-    })
-    .filter(r => r.name)
+interface Result {
+  updated: number
+  skipped: number
+  errors: string[]
+  total_errors: number
 }
 
 export default function ImportPage() {
-  const router = useRouter()
   const { profile } = useAuth()
   const fileRef = useRef<HTMLInputElement>(null)
 
-  const [tab, setTab]       = useState<'new' | 'upsert'>('new')
-  const [rows, setRows]     = useState<ImportRow[] | null>(null)
-  const [parseErr, setParseErr] = useState('')
+  const [file, setFile]       = useState<File | null>(null)
+  const [status, setStatus]   = useState<Status>('idle')
+  const [result, setResult]   = useState<Result | null>(null)
+  const [errMsg, setErrMsg]   = useState('')
 
-  if (profile && !canManageProducts(profile.role)) {
-    router.replace('/haldus')
-    return null
+  if (profile && !canManageProducts(profile.role)) return null
+
+  const handleFile = (f: File) => {
+    setFile(f)
+    setStatus('idle')
+    setResult(null)
+    setErrMsg('')
   }
 
-  const handleFile = (file: File) => {
-    setParseErr(''); setRows(null)
-    const reader = new FileReader()
-    reader.onload = e => {
-      try {
-        const data = e.target?.result
-        const wb   = XLSX.read(data, { type: 'binary' })
-        const ws   = wb.Sheets[wb.SheetNames[0]]
-        const raw  = XLSX.utils.sheet_to_json<unknown[]>(ws, { header: 1 })
-        const parsed = parseRows(raw)
-        if (parsed.length === 0) { setParseErr('Failis ei leitud ridu. Kontrolli veerge.'); return }
-        setRows(parsed)
-      } catch {
-        setParseErr('Faili lugemine ebaõnnestus. Kontrolli faili formaati.')
+  const handleImport = async () => {
+    if (!file) return
+    setStatus('uploading')
+    setErrMsg('')
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+
+      const form = new FormData()
+      form.append('file', file)
+
+      const res = await fetch('/api/haldus/import', {
+        method: 'POST',
+        headers: session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {},
+        body: form,
+      })
+
+      const json = await res.json()
+      if (!res.ok) {
+        setErrMsg(json.error ?? 'Viga importimisel')
+        setStatus('error')
+        return
       }
+
+      setResult(json)
+      setStatus('done')
+    } catch (e) {
+      setErrMsg(e instanceof Error ? e.message : 'Tundmatu viga')
+      setStatus('error')
     }
-    reader.readAsBinaryString(file)
   }
 
-  const handleImport = async (importRows: ImportRow[]) => {
-    let imported = 0; let errors = 0
-
-    if (tab === 'new') {
-      for (const row of importRows) {
-        const { data, error } = await supabase.from('products').insert({
-          name: row.name, sku: row.sku || null,
-          short_description_et: row.short_description_et ?? null,
-          description_et: row.description_et ?? null,
-          price: row.price, in_stock: row.in_stock,
-          published: true,
-          slug: row.sku?.toLowerCase().replace(/[^a-z0-9]/g, '-') || null,
-        }).select('id').single()
-
-        if (error) { errors++; continue }
-        if (row.category_slug && data) {
-          await supabase.from('product_categories').insert({ product_id: data.id, category_slug: row.category_slug })
-        }
-        imported++
-      }
-    } else {
-      // Upsert SKU järgi
-      for (const row of importRows) {
-        if (!row.sku) { errors++; continue }
-
-        const { data: existing } = await supabase.from('products').select('id').eq('sku', row.sku).single()
-
-        if (existing) {
-          const { error } = await supabase.from('products').update({
-            name: row.name,
-            short_description_et: row.short_description_et ?? null,
-            description_et: row.description_et ?? null,
-            price: row.price, in_stock: row.in_stock,
-            updated_at: new Date().toISOString(),
-          }).eq('id', existing.id)
-
-          if (error) { errors++; continue }
-          if (row.category_slug) {
-            await supabase.from('product_categories').delete().eq('product_id', existing.id)
-            await supabase.from('product_categories').insert({ product_id: existing.id, category_slug: row.category_slug })
-          }
-        } else {
-          const { data, error } = await supabase.from('products').insert({
-            name: row.name, sku: row.sku,
-            short_description_et: row.short_description_et ?? null,
-            description_et: row.description_et ?? null,
-            price: row.price, in_stock: row.in_stock, published: true,
-            slug: row.sku.toLowerCase().replace(/[^a-z0-9]/g, '-'),
-          }).select('id').single()
-
-          if (error) { errors++; continue }
-          if (row.category_slug && data) {
-            await supabase.from('product_categories').insert({ product_id: data.id, category_slug: row.category_slug })
-          }
-        }
-        imported++
-      }
-    }
-
-    return { imported, errors }
+  const reset = () => {
+    setFile(null)
+    setStatus('idle')
+    setResult(null)
+    setErrMsg('')
+    if (fileRef.current) fileRef.current.value = ''
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 max-w-2xl">
       <div className="flex items-center gap-3">
         <Link href="/haldus/tooted" className="text-gray-400 hover:text-[#003366] transition-colors">
           <ArrowLeft size={20} />
@@ -160,75 +84,133 @@ export default function ImportPage() {
         <h1 className="text-2xl font-bold text-gray-900">Impordi tooted</h1>
       </div>
 
-      {/* Vahekaarti */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
-        <div className="flex border-b border-gray-100">
-          {(['new', 'upsert'] as const).map(t => (
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
+
+        {/* Info */}
+        <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 text-[14px] text-blue-800 space-y-1">
+          <p className="font-semibold">Kuidas kasutada:</p>
+          <ol className="list-decimal list-inside space-y-0.5 text-blue-700">
+            <li>Lae alla eksportfail toodete lehelt (Ekspordi CSV nupp)</li>
+            <li>Muuda failis soovitud andmeid — tooteinfo, hinnad, sildid, tehnilised andmed</li>
+            <li>Lae muudetud fail siia üles</li>
+          </ol>
+          <p className="text-blue-600 mt-1">SKU peab jääma muutmata — selle järgi leitakse toode.</p>
+        </div>
+
+        {/* Drop zone */}
+        {!file && (
+          <div
+            onClick={() => fileRef.current?.click()}
+            onDrop={e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) handleFile(f) }}
+            onDragOver={e => e.preventDefault()}
+            className="border-2 border-dashed border-gray-200 rounded-xl p-10 text-center cursor-pointer hover:border-[#003366] hover:bg-blue-50/30 transition-colors"
+          >
+            <Upload size={30} className="mx-auto mb-3 text-gray-300" />
+            <p className="text-[15px] text-gray-600 mb-1">
+              Lohista fail siia või <span className="text-[#003366] font-medium">vali fail</span>
+            </p>
+            <p className="text-[13px] text-gray-400">XLSX</p>
+          </div>
+        )}
+
+        <input
+          ref={fileRef}
+          type="file"
+          accept=".xlsx"
+          className="hidden"
+          onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = '' }}
+        />
+
+        {/* File selected */}
+        {file && status === 'idle' && (
+          <div className="flex items-center justify-between gap-4 bg-gray-50 rounded-xl px-4 py-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <FileSpreadsheet size={20} className="text-green-600 flex-shrink-0" />
+              <span className="text-[15px] font-medium text-gray-800 truncate">{file.name}</span>
+              <span className="text-[13px] text-gray-400 flex-shrink-0">
+                {(file.size / 1024).toFixed(0)} KB
+              </span>
+            </div>
+            <div className="flex gap-2 flex-shrink-0">
+              <button
+                onClick={reset}
+                className="px-3 py-1.5 text-[14px] text-gray-500 hover:text-gray-700 border border-gray-200 rounded-lg transition-colors"
+              >
+                Tühista
+              </button>
+              <button
+                onClick={handleImport}
+                className="px-4 py-1.5 text-[14px] font-semibold text-white bg-[#003366] rounded-lg hover:bg-[#004080] transition-colors"
+              >
+                Impordi
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Uploading */}
+        {status === 'uploading' && (
+          <div className="flex items-center gap-3 bg-blue-50 border border-blue-100 rounded-xl px-4 py-4">
+            <div className="w-5 h-5 border-2 border-[#003366] border-t-transparent rounded-full animate-spin flex-shrink-0" />
+            <span className="text-[15px] text-blue-800 font-medium">Importin andmeid, palun oota...</span>
+          </div>
+        )}
+
+        {/* Success */}
+        {status === 'done' && result && (
+          <div className="space-y-3">
+            <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-4">
+              <CheckCircle size={20} className="text-green-600 flex-shrink-0 mt-0.5" />
+              <div className="text-[15px] text-green-800">
+                <p className="font-semibold">Import lõpetatud</p>
+                <p className="mt-0.5">
+                  <span className="font-bold">{result.updated}</span> toodet uuendatud
+                  {result.skipped > 0 && <>, <span className="font-bold">{result.skipped}</span> vahele jäetud (SKU puudub)</>}
+                  {result.total_errors > 0 && <>, <span className="font-bold text-red-600">{result.total_errors}</span> viga</>}
+                </p>
+              </div>
+            </div>
+
+            {result.errors.length > 0 && (
+              <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+                <p className="text-[13px] font-semibold text-red-700 mb-1">Vead:</p>
+                <ul className="text-[13px] text-red-600 space-y-0.5">
+                  {result.errors.map((e, i) => <li key={i}>• {e}</li>)}
+                  {result.total_errors > result.errors.length && (
+                    <li className="text-gray-400">... ja {result.total_errors - result.errors.length} rohkem</li>
+                  )}
+                </ul>
+              </div>
+            )}
+
             <button
-              key={t}
-              onClick={() => { setTab(t); setRows(null); setParseErr('') }}
-              className={`px-6 py-3.5 text-[15px] font-medium border-b-2 transition-colors ${
-                tab === t ? 'border-[#003366] text-[#003366]' : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
+              onClick={reset}
+              className="w-full py-2.5 text-[15px] font-medium text-gray-600 border border-gray-200 rounded-xl hover:border-gray-300 transition-colors"
             >
-              {t === 'new' ? 'Lisa uued tooted' : 'Asenda olemasolevad (SKU järgi)'}
+              Impordi uus fail
             </button>
-          ))}
-        </div>
+          </div>
+        )}
 
-        <div className="p-6">
-          <p className="text-[15px] text-gray-600 mb-4">
-            {tab === 'new'
-              ? 'Lae üles CSV või Excel fail uute toodete lisamiseks. Oodatavad veerud: sku, name, price, in_stock, category.'
-              : 'Lae üles CSV või Excel fail olemasolevate toodete uuendamiseks SKU järgi. Tooted mida ei leita, lisatakse uutena.'}
-          </p>
-
-          {/* Faili üleslaadimisala */}
-          {!rows && (
-            <div
-              onClick={() => fileRef.current?.click()}
-              onDrop={e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) handleFile(f) }}
-              onDragOver={e => e.preventDefault()}
-              className="border-2 border-dashed border-gray-200 rounded-xl p-10 text-center cursor-pointer hover:border-[#003366] hover:bg-blue-50/30 transition-colors"
+        {/* Error */}
+        {status === 'error' && (
+          <div className="space-y-3">
+            <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-xl px-4 py-4">
+              <AlertCircle size={20} className="text-red-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-[15px] font-semibold text-red-700">Import ebaõnnestus</p>
+                <p className="text-[14px] text-red-600 mt-0.5">{errMsg}</p>
+              </div>
+            </div>
+            <button
+              onClick={reset}
+              className="w-full py-2.5 text-[15px] font-medium text-gray-600 border border-gray-200 rounded-xl hover:border-gray-300 transition-colors"
             >
-              <Upload size={30} className="mx-auto mb-3 text-gray-300" />
-              <p className="text-[15px] text-gray-600 mb-1">Lohista fail siia või <span className="text-[#003366] font-medium">vali fail</span></p>
-              <p className="text-[13px] text-gray-400">CSV, XLS, XLSX</p>
-            </div>
-          )}
-
-          <input ref={fileRef} type="file" accept=".csv,.xls,.xlsx" className="hidden"
-            onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = '' }} />
-
-          {parseErr && (
-            <div className="mt-3 flex items-start gap-2 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-[15px]">
-              <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
-              {parseErr}
-            </div>
-          )}
-
-          {rows && (
-            <ImportPreview
-              rows={rows}
-              mode={tab}
-              onConfirm={handleImport}
-              onCancel={() => { setRows(null); if (fileRef.current) fileRef.current.value = '' }}
-            />
-          )}
-        </div>
+              Proovi uuesti
+            </button>
+          </div>
+        )}
       </div>
-
-      {/* CSV näidis */}
-      {!rows && (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-          <h3 className="font-semibold text-gray-900 mb-3">CSV näidisformaat</h3>
-          <pre className="bg-gray-50 rounded-xl p-4 text-[13px] text-gray-600 overflow-x-auto font-mono">
-{`sku,name,price,in_stock,description,category
-PUMP-001,Grundfos CM 3-5,285.00,true,"Keskmise rõhuga pump",kute
-PUMP-002,Grundfos UP 15-14,89.50,false,"Tsirkulatsioonipump",sooja-tarbevee-tsirkulatsioonipump`}
-          </pre>
-        </div>
-      )}
     </div>
   )
 }
