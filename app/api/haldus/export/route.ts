@@ -21,7 +21,6 @@ export async function GET(req: NextRequest) {
     { data: products, error },
     { data: pcs },
     { data: cats },
-    { data: allProds },
     { data: attrs },
   ] = await Promise.all([
     supabaseAdmin
@@ -30,17 +29,14 @@ export async function GET(req: NextRequest) {
       .order('name'),
     supabaseAdmin.from('product_categories').select('product_id, category_slug'),
     supabaseAdmin.from('categories').select('slug, name_et'),
-    supabaseAdmin.from('products').select('id, sku'),
     supabaseAdmin.from('product_attributes').select('product_id, attribute_name, attribute_value').order('attribute_name'),
   ])
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   // ── Lookup maps ────────────────────────────────────────────────────────────
-  const catMap   = Object.fromEntries((cats  ?? []).map(c  => [c.slug,       c.name_et]))
-  const pcMap    = Object.fromEntries((pcs   ?? []).map(pc => [String(pc.product_id), pc.category_slug]))
-  const idToSku  = Object.fromEntries((allProds ?? []).map(p => [String(p.id), p.sku ?? '']))
-  const skuToId  = Object.fromEntries((allProds ?? []).map(p => [p.sku ?? '', String(p.id)]))
+  const catMap   = Object.fromEntries((cats ?? []).map(c  => [c.slug,       c.name_et]))
+  const pcMap    = Object.fromEntries((pcs  ?? []).map(pc => [String(pc.product_id), pc.category_slug]))
 
   // Group attributes by product_id
   const attrsByProduct: Record<string, Array<{ name: string; value: string }>> = {}
@@ -141,7 +137,7 @@ export async function GET(req: NextRequest) {
   const boolLabel   = (v: boolean) => v ? 'Jah' : 'Ei'
 
   ;(products ?? []).forEach(p => {
-    const prodId  = skuToId[p.sku ?? ''] ?? ''
+    const prodId  = String(p.id)
     const catSlug = pcMap[prodId] ?? ''
     const catName = catMap[catSlug] ?? catSlug
     const pAttrs  = attrsByProduct[prodId] ?? []
