@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
-import { ArrowLeft, Trash2, Plus, X, Save } from 'lucide-react'
+import { ArrowLeft, Trash2, Plus, X, Save, FileText, Loader2, ExternalLink } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 import { supabase } from '@/lib/supabase'
 import StatusToggle from '@/components/haldus/StatusToggle'
@@ -28,6 +28,13 @@ interface AttrRow {
 }
 
 interface Category { slug: string; name_et: string }
+
+interface DocRow {
+  id: number
+  label: string
+  public_url: string
+  storage_path: string
+}
 
 interface Product {
   id: string; sku: string | null; slug: string | null; name: string
@@ -62,6 +69,13 @@ export default function MuudaToode() {
   const [attrsSaving, setAttrsSaving] = useState(false)
   const [attrsSaved, setAttrsSaved]   = useState(false)
   const [attrsError, setAttrsError]   = useState('')
+
+  const [docs, setDocs]             = useState<DocRow[]>([])
+  const [newDocLabel, setNewDocLabel] = useState('')
+  const [docsUploading, setDocsUploading] = useState(false)
+  const [docsError, setDocsError]   = useState('')
+  const [docSaved, setDocSaved]     = useState(false)
+  const docFileRef                  = useRef<HTMLInputElement>(null)
 
   // form state
   const [name, setName]         = useState('')
@@ -101,6 +115,15 @@ export default function MuudaToode() {
         supabase.from('product_attributes').select('attribute_name, attribute_value').eq('product_id', id).order('attribute_name'),
       ])
       if (prodRes.error || !prodRes.data) { setNotFound(true); setLoading(false); return }
+      const pSku = (prodRes.data as Product).sku
+      if (pSku) {
+        const { data: docsData } = await supabase
+          .from('product_documents')
+          .select('id, label, public_url, storage_path')
+          .eq('sku', pSku)
+          .order('label')
+        setDocs((docsData ?? []) as DocRow[])
+      }
 
       const p = prodRes.data as Product
       setProduct(p)
@@ -226,6 +249,43 @@ export default function MuudaToode() {
   }
   function removeBulkRow(idx: number) {
     setBulkPrices(prev => prev.filter((_, i) => i !== idx))
+  }
+
+  async function handleUploadDoc(file: File) {
+    if (!newDocLabel.trim()) { setDocsError('Sisesta esmalt dokumendi nimetus'); return }
+    if (file.size > 55 * 1024 * 1024) { setDocsError('Fail on liiga suur (max 55 MB)'); return }
+    setDocsUploading(true); setDocsError('')
+
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
+    const storagePath = `${product?.sku}/${Date.now()}-${safeName}`
+
+    const { error: uploadErr } = await supabase.storage
+      .from('product-documents')
+      .upload(storagePath, file, { contentType: 'application/pdf', upsert: false })
+
+    if (uploadErr) { setDocsError('Üleslaadimise viga: ' + uploadErr.message); setDocsUploading(false); return }
+
+    const { data: { publicUrl } } = supabase.storage.from('product-documents').getPublicUrl(storagePath)
+
+    const { data: inserted, error: dbErr } = await supabase
+      .from('product_documents')
+      .insert({ sku: product?.sku, product_id: Number(id), label: newDocLabel.trim(), storage_path: storagePath, public_url: publicUrl })
+      .select('id, label, public_url, storage_path')
+      .single()
+
+    if (dbErr) { setDocsError('Andmebaasi viga: ' + dbErr.message); setDocsUploading(false); return }
+
+    setDocs(prev => [...prev, inserted as DocRow].sort((a, b) => a.label.localeCompare(b.label)))
+    setNewDocLabel('')
+    setDocsUploading(false)
+    setDocSaved(true)
+    setTimeout(() => setDocSaved(false), 3000)
+  }
+
+  async function handleDeleteDoc(docId: number, storagePath: string) {
+    await supabase.storage.from('product-documents').remove([storagePath])
+    await supabase.from('product_documents').delete().eq('id', docId)
+    setDocs(prev => prev.filter(d => d.id !== docId))
   }
 
   function addAttrRow() {
@@ -386,6 +446,71 @@ export default function MuudaToode() {
                   onUpload={url => setCurveUrl(url)}
                   onRemove={() => setCurveUrl('')}
                 />
+              </div>
+            </div>
+
+            {/* Documents */}
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="font-semibold text-gray-900">Dokumendid</h2>
+                  <p className="text-[13px] text-gray-400 mt-0.5">{docs.length} dokumenti</p>
+                </div>
+                {docSaved && <span className="text-[13px] text-green-600 font-medium">Lisatud!</span>}
+              </div>
+
+              <div className="space-y-2">
+                {docs.map(doc => (
+                  <div key={doc.id} className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border border-gray-200">
+                    <FileText size={15} className="text-[#003366] flex-shrink-0" />
+                    <a href={doc.public_url} target="_blank" rel="noreferrer"
+                      className="flex-1 min-w-0 text-[14px] text-[#003366] hover:underline truncate flex items-center gap-1">
+                      {doc.label}
+                      <ExternalLink size={11} className="flex-shrink-0 opacity-60" />
+                    </a>
+                    <button type="button" onClick={() => handleDeleteDoc(doc.id, doc.storage_path)}
+                      className="p-1.5 text-gray-400 hover:text-red-500 transition-colors flex-shrink-0">
+                      <X size={14} />
+                    </button>
+                  </div>
+                ))}
+                {docs.length === 0 && (
+                  <p className="text-[14px] text-gray-400 italic">Dokumente pole lisatud.</p>
+                )}
+              </div>
+
+              <div className="border-t border-gray-100 pt-4 space-y-3">
+                <p className="text-[14px] font-medium text-gray-700">Lisa dokument</p>
+                <input
+                  value={newDocLabel}
+                  onChange={e => setNewDocLabel(e.target.value)}
+                  placeholder="Dokumendi nimetus (nt Paigaldusjuhend)"
+                  className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-[14px] text-gray-900 outline-none focus:border-[#003366]"
+                />
+                <div
+                  onDrop={e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) handleUploadDoc(f) }}
+                  onDragOver={e => e.preventDefault()}
+                  onClick={() => !docsUploading && docFileRef.current?.click()}
+                  className="border-2 border-dashed border-gray-200 rounded-xl p-5 text-center cursor-pointer hover:border-[#003366] hover:bg-blue-50/30 transition-colors"
+                >
+                  {docsUploading ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <Loader2 size={20} className="text-[#003366] animate-spin" />
+                      <p className="text-[13px] text-gray-500">Laen üles...</p>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-1">
+                      <FileText size={20} className="text-gray-300" />
+                      <p className="text-[13px] text-gray-500">
+                        Lohista PDF siia või <span className="text-[#003366] font-medium">vali fail</span>
+                      </p>
+                      <p className="text-[12px] text-gray-400">PDF — max 55 MB</p>
+                    </div>
+                  )}
+                </div>
+                <input ref={docFileRef} type="file" accept="application/pdf,.pdf" className="hidden"
+                  onChange={e => { const f = e.target.files?.[0]; if (f) handleUploadDoc(f); e.target.value = '' }} />
+                {docsError && <p className="text-[13px] text-red-500">{docsError}</p>}
               </div>
             </div>
 

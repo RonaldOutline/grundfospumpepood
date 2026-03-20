@@ -33,3 +33,12 @@ on conflict (id) do update set public = true;
 create policy "Public read storage"
   on storage.objects for select
   using (bucket_id = 'product-documents');
+
+-- Allow authenticated admins to upload and delete
+create policy "Authenticated upload"
+  on storage.objects for insert to authenticated
+  with check (bucket_id = 'product-documents');
+
+create policy "Authenticated delete"
+  on storage.objects for delete to authenticated
+  using (bucket_id = 'product-documents');

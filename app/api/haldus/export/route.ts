@@ -21,6 +21,7 @@ export async function GET(req: NextRequest) {
     { data: products, error },
     { data: pcs },
     { data: cats },
+    { data: docsRaw },
   ] = await Promise.all([
     supabaseAdmin
       .from('products')
@@ -28,6 +29,7 @@ export async function GET(req: NextRequest) {
       .order('name').limit(10000),
     supabaseAdmin.from('product_categories').select('product_id, category_slug').limit(10000),
     supabaseAdmin.from('categories').select('slug, name_et').limit(1000),
+    supabaseAdmin.from('product_documents').select('sku, label').order('label').limit(50000),
   ])
 
   // Fetch all attributes via pagination (PostgREST max_rows=1000 per request)
@@ -50,6 +52,13 @@ export async function GET(req: NextRequest) {
   // ── Lookup maps ────────────────────────────────────────────────────────────
   const catMap   = Object.fromEntries((cats ?? []).map(c  => [c.slug,       c.name_et]))
   const pcMap    = Object.fromEntries((pcs  ?? []).map(pc => [String(pc.product_id), pc.category_slug]))
+
+  // Group documents by SKU
+  const docsBySku: Record<string, string[]> = {}
+  for (const d of (docsRaw ?? [])) {
+    if (!docsBySku[d.sku]) docsBySku[d.sku] = []
+    docsBySku[d.sku].push(d.label)
+  }
 
   // Group attributes by product_id
   const attrsByProduct: Record<string, Array<{ name: string; value: string }>> = {}
@@ -105,6 +114,8 @@ export async function GET(req: NextRequest) {
     { key: 'drawing_url',  header: 'Joonis URL',           width: 60  },
     { key: 'category_gf',  header: 'Grundfos kategooria',  width: 28  },
     { key: 'url_gf',       header: 'Grundfos URL',         width: 70  },
+    { key: 'docs_count',   header: 'Dok arv',              width: 10  },
+    { key: 'docs_labels',  header: 'Dokumendid',           width: 80  },
   ]
 
   // Dynamic attribute columns appended after fixed columns
@@ -155,6 +166,7 @@ export async function GET(req: NextRequest) {
     const catName = catMap[catSlug] ?? catSlug
     const pAttrs  = attrsByProduct[prodId] ?? []
     const attrMap = Object.fromEntries(pAttrs.map(a => [a.name, a.value]))
+    const pDocs   = docsBySku[p.sku ?? ''] ?? []
 
     const rowData: Record<string, string | number | null> = {
       sku:         p.sku         ?? '',
@@ -177,6 +189,8 @@ export async function GET(req: NextRequest) {
       drawing_url: p.drawing_url ?? '',
       category_gf: p.category_gf ?? '',
       url_gf:      p.url_gf      ?? '',
+      docs_count:  pDocs.length || null,
+      docs_labels: pDocs.join('; ') || '',
     }
     for (const n of allAttrNames) rowData[`attr__${n}`] = attrMap[n] ?? ''
 
@@ -200,6 +214,7 @@ export async function GET(req: NextRequest) {
       else if (['price', 'sale_price'].includes(col.key))           bg = GREEN_LIGHT
       else if (['category', 'tags'].includes(col.key))              bg = BLUE_LIGHT
       else if (['curve_url', 'drawing_url'].includes(col.key))      bg = ORANGE_LIGHT
+      else if (['docs_count', 'docs_labels'].includes(col.key))    bg = 'E0F7FA'
       else if (col.key.startsWith('attr__'))                        bg = PURPLE_LIGHT
       cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bg } }
     })
@@ -216,6 +231,16 @@ export async function GET(req: NextRequest) {
     const stockCell = row.getCell(stockIdx)
     stockCell.font      = { bold: true, color: { argb: p.in_stock ? '2E7D32' : 'C62828' }, name: 'Arial', size: 10 }
     stockCell.alignment = { horizontal: 'center', vertical: 'middle' }
+
+    // Docs count — centered and bold if > 0
+    const docsCountIdx = COLS.findIndex(c => c.key === 'docs_count') + 1
+    const docsCountCell = row.getCell(docsCountIdx)
+    docsCountCell.alignment = { horizontal: 'center', vertical: 'middle' }
+    if (pDocs.length > 0) docsCountCell.font = { bold: true, name: 'Arial', size: 10 }
+
+    // Docs labels — wrap text
+    const docsLabelsIdx = COLS.findIndex(c => c.key === 'docs_labels') + 1
+    row.getCell(docsLabelsIdx).alignment = { vertical: 'top', wrapText: false }
 
     // SKU bold
     row.getCell(1).font = { bold: true, name: 'Arial', size: 10 }
