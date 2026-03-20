@@ -26,10 +26,10 @@ export async function GET(req: NextRequest) {
     supabaseAdmin
       .from('products')
       .select('id, sku, name, short_description_et, price, sale_price, in_stock, published, image_url, weight_kg, length_cm, width_cm, height_cm, slug, tags, importance, curve_url, drawing_url, category_gf, url_gf')
-      .order('name'),
-    supabaseAdmin.from('product_categories').select('product_id, category_slug'),
-    supabaseAdmin.from('categories').select('slug, name_et'),
-    supabaseAdmin.from('product_attributes').select('product_id, attribute_name, attribute_value').order('attribute_name'),
+      .order('name').limit(10000),
+    supabaseAdmin.from('product_categories').select('product_id, category_slug').limit(10000),
+    supabaseAdmin.from('categories').select('slug, name_et').limit(1000),
+    supabaseAdmin.from('product_attributes').select('product_id, attribute_name, attribute_value').order('attribute_name').limit(100000),
   ])
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
