@@ -37,19 +37,19 @@ export async function POST(req: NextRequest) {
   }
 
   // ── Parse multipart form ───────────────────────────────────────────────────
-  let buffer: Buffer
+  let arrayBuf: ArrayBuffer
   try {
     const form = await req.formData()
     const file = form.get('file') as File | null
     if (!file) return NextResponse.json({ error: 'Fail puudub' }, { status: 400 })
-    buffer = Buffer.from(await file.arrayBuffer())
+    arrayBuf = await file.arrayBuffer()
   } catch {
     return NextResponse.json({ error: 'Faili lugemine ebaõnnestus' }, { status: 400 })
   }
 
   // ── Read xlsx ──────────────────────────────────────────────────────────────
   const wb = new ExcelJS.Workbook()
-  await wb.xlsx.load(buffer as unknown as Buffer)
+  await wb.xlsx.load(arrayBuf)
   const ws = wb.worksheets[0]
   if (!ws) return NextResponse.json({ error: 'Tühi fail' }, { status: 400 })
 
