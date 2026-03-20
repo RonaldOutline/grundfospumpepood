@@ -21,7 +21,6 @@ export async function GET(req: NextRequest) {
     { data: products, error },
     { data: pcs },
     { data: cats },
-    { data: attrs },
   ] = await Promise.all([
     supabaseAdmin
       .from('products')
@@ -29,8 +28,22 @@ export async function GET(req: NextRequest) {
       .order('name').limit(10000),
     supabaseAdmin.from('product_categories').select('product_id, category_slug').limit(10000),
     supabaseAdmin.from('categories').select('slug, name_et').limit(1000),
-    supabaseAdmin.from('product_attributes').select('product_id, attribute_name, attribute_value').order('attribute_name').limit(100000),
   ])
+
+  // Fetch all attributes via pagination (PostgREST max_rows=1000 per request)
+  const attrs: Array<{ product_id: string; attribute_name: string; attribute_value: string }> = []
+  let from = 0
+  while (true) {
+    const { data: batch, error: bErr } = await supabaseAdmin
+      .from('product_attributes')
+      .select('product_id, attribute_name, attribute_value')
+      .order('attribute_name')
+      .range(from, from + 999)
+    if (bErr || !batch || batch.length === 0) break
+    attrs.push(...batch)
+    if (batch.length < 1000) break
+    from += 1000
+  }
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
