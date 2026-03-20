@@ -229,7 +229,9 @@
     "tabDescription": "Product description",
     "tabSpecs": "Technical data",
     "tabDrawing": "Drawings",
-    "tabCurves": "Curves"
+    "tabCurves": "Curves",
+    "tabDocuments": "Documents",
+    "noDocuments": "No documents available."
   },
   "cart": {
     "title": "Shopping Cart",

@@ -229,7 +229,9 @@
     "tabDescription": "Produkta apraksts",
     "tabSpecs": "Tehniskie dati",
     "tabDrawing": "Rasējumi",
-    "tabCurves": "Līknes"
+    "tabCurves": "Līknes",
+    "tabDocuments": "Dokumenti",
+    "noDocuments": "Dokumenti nav pieejami."
   },
   "cart": {
     "title": "Iepirkumu grozs",

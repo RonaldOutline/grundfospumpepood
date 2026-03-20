@@ -229,7 +229,9 @@
     "tabDescription": "Toote kirjeldus",
     "tabSpecs": "Tehnilised andmed",
     "tabDrawing": "Joonised",
-    "tabCurves": "Kõverad"
+    "tabCurves": "Kõverad",
+    "tabDocuments": "Dokumendid",
+    "noDocuments": "Dokumendid puuduvad."
   },
   "cart": {
     "title": "Ostukorv",

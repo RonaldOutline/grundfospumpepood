@@ -229,7 +229,9 @@
     "tabDescription": "Описание товара",
     "tabSpecs": "Технические данные",
     "tabDrawing": "Чертежи",
-    "tabCurves": "Кривые"
+    "tabCurves": "Кривые",
+    "tabDocuments": "Документы",
+    "noDocuments": "Документы отсутствуют."
   },
   "cart": {
     "title": "Корзина",

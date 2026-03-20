@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { useTranslations, useLocale } from 'next-intl'
 import {
   ChevronRight, Package, Truck, Shield,
-  Phone, ZoomIn, Check, Share2, Printer, ShoppingCart
+  Phone, ZoomIn, Check, Share2, Printer, ShoppingCart, FileText
 } from 'lucide-react'
 import { groupBySection } from '@/lib/spec-sections'
 import { withVat, fmt } from '@/lib/price'
@@ -46,6 +46,13 @@ interface Product {
 interface Attribute {
   attribute_name: string
   attribute_value: string
+}
+
+interface ProductDocument {
+  id: number
+  label: string
+  public_url: string
+  storage_path: string
 }
 
 interface RelatedProduct {
@@ -394,7 +401,7 @@ function AttributesTable({ attributes, product }: { attributes: Attribute[]; pro
 
 // ─── TOOTE TABID ───────────────────────────────────────────────────────────
 
-function ProductTabs({ product, attributes, locale, attrNameMap }: { product: Product; attributes: Attribute[]; locale: string; attrNameMap: Record<string, string> }) {
+function ProductTabs({ product, attributes, locale, attrNameMap, documents }: { product: Product; attributes: Attribute[]; locale: string; attrNameMap: Record<string, string>; documents: ProductDocument[] }) {
   const t = useTranslations('product')
 
   const tabs = [
@@ -402,6 +409,7 @@ function ProductTabs({ product, attributes, locale, attrNameMap }: { product: Pr
     { key: 'specs',       label: t('tabSpecs') },
     { key: 'drawing',     label: t('tabDrawing') },
     { key: 'curves',      label: t('tabCurves') },
+    { key: 'documents',   label: `${t('tabDocuments')}${documents.length ? ` (${documents.length})` : ''}` },
   ]
 
   const [active, setActive] = useState<string>('description')
@@ -490,6 +498,31 @@ function ProductTabs({ product, attributes, locale, attrNameMap }: { product: Pr
             ? <img src={product.curve_url} alt={`${product.name} kõver`} className="max-w-full mx-auto" />
             : <span className="text-gray-400 italic text-[15px]">Kõverad puuduvad.</span>
         )}
+
+        {active === 'documents' && (
+          documents.length > 0
+            ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {documents.map(doc => (
+                  <a
+                    key={doc.id}
+                    href={doc.public_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-100 hover:border-[#003366]/30 hover:bg-[#003366]/4 transition-all group"
+                  >
+                    <div className="flex-shrink-0 w-9 h-9 bg-[#003366]/8 rounded-lg flex items-center justify-center group-hover:bg-[#003366]/15 transition-colors">
+                      <FileText size={16} className="text-[#003366]" />
+                    </div>
+                    <span className="text-[14px] text-gray-700 leading-snug group-hover:text-[#003366] transition-colors line-clamp-2">
+                      {doc.label}
+                    </span>
+                  </a>
+                ))}
+              </div>
+            )
+            : <span className="text-gray-400 italic text-[15px]">{t('noDocuments')}</span>
+        )}
       </div>
     </div>
   )
@@ -543,6 +576,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
   const [attributes, setAttributes] = useState<Attribute[]>([])
   const [attrNameMap, setAttrNameMap] = useState<Record<string, string>>({})
   const [related, setRelated] = useState<RelatedProduct[]>([])
+  const [documents, setDocuments] = useState<ProductDocument[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -594,6 +628,14 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         setRelated(relProds || [])
       }
 
+      const { data: docs } = await supabase
+        .from('product_documents')
+        .select('id, label, public_url, storage_path')
+        .eq('sku', prod.sku)
+        .order('label')
+
+      setDocuments(docs || [])
+
       setLoading(false)
     }
 
@@ -639,7 +681,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         </div>
 
         {/* Tabid */}
-        <ProductTabs product={product} attributes={attributes} locale={locale} attrNameMap={attrNameMap} />
+        <ProductTabs product={product} attributes={attributes} locale={locale} attrNameMap={attrNameMap} documents={documents} />
 
         {/* Seotud tooted */}
         <RelatedProducts products={related} />

@@ -229,7 +229,9 @@
     "tabDescription": "Produkto aprašymas",
     "tabSpecs": "Techniniai duomenys",
     "tabDrawing": "Brėžiniai",
-    "tabCurves": "Kreivės"
+    "tabCurves": "Kreivės",
+    "tabDocuments": "Dokumentai",
+    "noDocuments": "Dokumentų nėra."
   },
   "cart": {
     "title": "Pirkinių krepšelis",

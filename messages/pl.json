@@ -229,7 +229,9 @@
     "tabDescription": "Opis produktu",
     "tabSpecs": "Dane techniczne",
     "tabDrawing": "Rysunki",
-    "tabCurves": "Krzywe"
+    "tabCurves": "Krzywe",
+    "tabDocuments": "Dokumenty",
+    "noDocuments": "Brak dokumentów."
   },
   "cart": {
     "title": "Koszyk",
