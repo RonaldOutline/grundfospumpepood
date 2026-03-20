@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
 
   // ── Read xlsx ──────────────────────────────────────────────────────────────
   const wb = new ExcelJS.Workbook()
-  await wb.xlsx.load(buffer)
+  await wb.xlsx.load(buffer as unknown as Buffer)
   const ws = wb.worksheets[0]
   if (!ws) return NextResponse.json({ error: 'Tühi fail' }, { status: 400 })
 

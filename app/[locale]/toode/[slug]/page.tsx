@@ -159,9 +159,17 @@ function ProductGallery({ image, name }: { image: string; name: string }) {
 
 // ─── TOOTE INFO ────────────────────────────────────────────────────────────
 
+function normalizeTagKey(tag: string): string {
+  return tag.toLowerCase()
+    .replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/õ/g, 'o')
+    .replace(/ž/g, 'z').replace(/š/g, 's').replace(/č/g, 'c')
+    .replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '')
+}
+
 function ProductInfo({ product }: { product: Product }) {
   const t = useTranslations('product')
   const tBenefits = useTranslations('benefits')
+  const tTags = useTranslations('tags')
   const locale = useLocale()
   const shortDesc = (product[`short_description_${locale}` as keyof Product] as string | null)
     || product.short_description_et
@@ -307,6 +315,22 @@ function ProductInfo({ product }: { product: Product }) {
           <Printer size={15} /> {t('print')}
         </button>
       </div>
+
+      {/* Sildid hashtagidena */}
+      {product.tags && (
+        <div className="flex flex-wrap gap-x-3 gap-y-1 pt-1">
+          {product.tags.split(',').map(tag => tag.trim()).filter(Boolean).map(tag => {
+            const key = normalizeTagKey(tag)
+            let label = tag
+            try { label = tTags(key as Parameters<typeof tTags>[0]) } catch { /* unknown tag — use original */ }
+            return (
+              <span key={tag} className="text-[14px] text-[#003366]/60 hover:text-[#003366] transition-colors cursor-default">
+                #{label}
+              </span>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
