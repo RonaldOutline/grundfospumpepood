@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
-import { ArrowLeft, Trash2, Plus, X } from 'lucide-react'
+import { ArrowLeft, Trash2, Plus, X, Save } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 import { supabase } from '@/lib/supabase'
 import StatusToggle from '@/components/haldus/StatusToggle'
@@ -19,6 +19,13 @@ interface BulkPriceRow {
   isNew?: boolean
 }
 
+interface AttrRow {
+  id?: string
+  attribute_name: string
+  attribute_value: string
+  isNew?: boolean
+}
+
 interface Category { slug: string; name_et: string }
 
 interface Product {
@@ -28,6 +35,9 @@ interface Product {
   image_url: string | null; published: boolean
   weight_kg: number | null; length_cm: number | null
   width_cm: number | null; height_cm: number | null
+  curve_url: string | null; drawing_url: string | null
+  tags: string | null; importance: number | null
+  category_gf: string | null; url_gf: string | null
 }
 
 export default function MuudaToode() {
@@ -47,6 +57,10 @@ export default function MuudaToode() {
   const [bulkPrices, setBulkPrices] = useState<BulkPriceRow[]>([])
   const [bulkSaving, setBulkSaving] = useState(false)
   const [bulkSaved, setBulkSaved]   = useState(false)
+  const [attrs, setAttrs]           = useState<AttrRow[]>([])
+  const [attrsSaving, setAttrsSaving] = useState(false)
+  const [attrsSaved, setAttrsSaved]   = useState(false)
+  const [attrsError, setAttrsError]   = useState('')
 
   // form state
   const [name, setName]         = useState('')
@@ -64,6 +78,12 @@ export default function MuudaToode() {
   const [length, setLength]     = useState('')
   const [width, setWidth]       = useState('')
   const [height, setHeight]     = useState('')
+  const [curveUrl, setCurveUrl] = useState('')
+  const [drawingUrl, setDrawingUrl] = useState('')
+  const [tags, setTags]         = useState('')
+  const [importance, setImportance] = useState('')
+  const [categoryGf, setCategoryGf] = useState('')
+  const [urlGf, setUrlGf]       = useState('')
 
   useEffect(() => {
     if (profile && !canManageProducts(profile.role)) router.replace('/haldus')
@@ -72,18 +92,18 @@ export default function MuudaToode() {
   useEffect(() => {
     if (!id) return
     async function load() {
-      const [prodRes, catRes, pcRes, bpRes] = await Promise.all([
+      const [prodRes, catRes, pcRes, bpRes, attrRes] = await Promise.all([
         supabase.from('products').select('*').eq('id', id).single(),
         supabase.from('categories').select('slug, name_et').order('name_et'),
         supabase.from('product_categories').select('category_slug').eq('product_id', id),
         supabase.from('bulk_pricing').select('id, min_quantity, price').eq('product_id', id).order('min_quantity'),
+        supabase.from('product_attributes').select('attribute_name, attribute_value').eq('product_id', id).order('attribute_name'),
       ])
       if (prodRes.error || !prodRes.data) { setNotFound(true); setLoading(false); return }
 
       const p = prodRes.data as Product
       setProduct(p)
       setCategories(catRes.data ?? [])
-
       setName(p.name)
       setSku(p.sku ?? '')
       setSlug(p.slug ?? '')
@@ -98,8 +118,15 @@ export default function MuudaToode() {
       setLength(p.length_cm ? String(p.length_cm) : '')
       setWidth(p.width_cm  ? String(p.width_cm)  : '')
       setHeight(p.height_cm ? String(p.height_cm) : '')
+      setCurveUrl(p.curve_url ?? '')
+      setDrawingUrl(p.drawing_url ?? '')
+      setTags(p.tags ?? '')
+      setImportance(p.importance ? String(p.importance) : '')
+      setCategoryGf(p.category_gf ?? '')
+      setUrlGf(p.url_gf ?? '')
       setCatSlugs((pcRes.data ?? []).map(r => r.category_slug))
       setBulkPrices((bpRes.data ?? []) as BulkPriceRow[])
+      setAttrs((attrRes.data ?? []) as AttrRow[])
       setLoading(false)
     }
     load()
@@ -121,6 +148,12 @@ export default function MuudaToode() {
       length_cm: length ? parseFloat(length) : null,
       width_cm:  width  ? parseFloat(width)  : null,
       height_cm: height ? parseFloat(height) : null,
+      curve_url: curveUrl.trim() || null,
+      drawing_url: drawingUrl.trim() || null,
+      tags: tags.trim() || null,
+      importance: importance ? parseInt(importance) : null,
+      category_gf: categoryGf.trim() || null,
+      url_gf: urlGf.trim() || null,
       updated_at: new Date().toISOString(),
     }).eq('id', id)
 
@@ -142,7 +175,7 @@ export default function MuudaToode() {
     await supabase.from('product_categories').delete().eq('product_id', id)
     if (catSlugs.length > 0) {
       await supabase.from('product_categories').insert(
-        catSlugs.map(slug => ({ product_id: id, category_slug: slug }))
+        catSlugs.map(s => ({ product_id: id, category_slug: s }))
       )
     }
 
@@ -159,9 +192,7 @@ export default function MuudaToode() {
 
   async function handleSaveBulk() {
     setBulkSaving(true); setBulkSaved(false)
-    // Kustuta vanad read
     await supabase.from('bulk_pricing').delete().eq('product_id', id)
-    // Lisa uued
     const rows = bulkPrices.filter(r => r.min_quantity > 0 && r.price > 0)
     if (rows.length > 0) {
       await supabase.from('bulk_pricing').insert(
@@ -172,16 +203,38 @@ export default function MuudaToode() {
     setTimeout(() => setBulkSaved(false), 3000)
   }
 
+  async function handleSaveAttrs() {
+    setAttrsSaving(true); setAttrsSaved(false); setAttrsError('')
+    const valid = attrs.filter(a => a.attribute_name.trim() && a.attribute_value.trim())
+    await supabase.from('product_attributes').delete().eq('product_id', id)
+    if (valid.length > 0) {
+      const { error: err } = await supabase.from('product_attributes').insert(
+        valid.map(a => ({ product_id: Number(id), attribute_name: a.attribute_name.trim(), attribute_value: a.attribute_value.trim() }))
+      )
+      if (err) { setAttrsError(err.message); setAttrsSaving(false); return }
+    }
+    setAttrsSaving(false); setAttrsSaved(true)
+    setTimeout(() => setAttrsSaved(false), 3000)
+  }
+
   function addBulkRow() {
     setBulkPrices(prev => [...prev, { min_quantity: 0, price: 0, isNew: true }])
   }
-
   function updateBulkRow(idx: number, field: 'min_quantity' | 'price', val: string) {
     setBulkPrices(prev => prev.map((r, i) => i === idx ? { ...r, [field]: Number(val) } : r))
   }
-
   function removeBulkRow(idx: number) {
     setBulkPrices(prev => prev.filter((_, i) => i !== idx))
+  }
+
+  function addAttrRow() {
+    setAttrs(prev => [...prev, { attribute_name: '', attribute_value: '', isNew: true }])
+  }
+  function updateAttr(idx: number, field: 'attribute_name' | 'attribute_value', val: string) {
+    setAttrs(prev => prev.map((a, i) => i === idx ? { ...a, [field]: val } : a))
+  }
+  function removeAttr(idx: number) {
+    setAttrs(prev => prev.filter((_, i) => i !== idx))
   }
 
   if (!canManageProducts(profile?.role ?? '')) return null
@@ -241,7 +294,7 @@ export default function MuudaToode() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-          {/* Vasakpoolne */}
+          {/* Left column */}
           <div className="lg:col-span-2 space-y-5">
 
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
@@ -272,6 +325,11 @@ export default function MuudaToode() {
                 <label className="block text-[15px] font-medium text-gray-700 mb-1.5">Kirjeldus</label>
                 <textarea value={desc} onChange={e => setDesc(e.target.value)} rows={6}
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl text-[15px] text-gray-900 outline-none focus:border-[#003366] resize-y" />
+              </div>
+              <div>
+                <label className="block text-[15px] font-medium text-gray-700 mb-1.5">Sildid (komadega eraldatud)</label>
+                <input value={tags} onChange={e => setTags(e.target.value)} placeholder="nt Küte,Grundfos,Vaikne"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-[15px] text-gray-900 outline-none focus:border-[#003366]" />
               </div>
             </div>
 
@@ -305,7 +363,84 @@ export default function MuudaToode() {
               </div>
             </div>
 
-            {/* Hulgihinnad */}
+            {/* Files: drawing + curves */}
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+              <h2 className="font-semibold text-gray-900">Failid</h2>
+              <div>
+                <label className="block text-[15px] font-medium text-gray-700 mb-1.5">Joonis URL</label>
+                <input value={drawingUrl} onChange={e => setDrawingUrl(e.target.value)} placeholder="https://..."
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-[15px] text-gray-900 font-mono outline-none focus:border-[#003366]" />
+                {drawingUrl && (
+                  <a href={drawingUrl} target="_blank" rel="noreferrer"
+                    className="inline-block mt-1.5 text-[13px] text-[#003366] hover:underline">Ava joonis ↗</a>
+                )}
+              </div>
+              <div>
+                <label className="block text-[15px] font-medium text-gray-700 mb-1.5">Kõverad URL</label>
+                <input value={curveUrl} onChange={e => setCurveUrl(e.target.value)} placeholder="https://..."
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-[15px] text-gray-900 font-mono outline-none focus:border-[#003366]" />
+                {curveUrl && (
+                  <a href={curveUrl} target="_blank" rel="noreferrer"
+                    className="inline-block mt-1.5 text-[13px] text-[#003366] hover:underline">Ava kõverad ↗</a>
+                )}
+              </div>
+            </div>
+
+            {/* Technical attributes */}
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="font-semibold text-gray-900">Tehnilised andmed</h2>
+                  <p className="text-[13px] text-gray-400 mt-0.5">{attrs.length} parameetrit</p>
+                </div>
+                {attrsSaved && <span className="text-[13px] text-green-600 font-medium">Salvestatud!</span>}
+              </div>
+
+              {attrsError && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-[13px]">{attrsError}</div>}
+
+              <div className="space-y-2">
+                {attrs.length > 0 && (
+                  <div className="grid grid-cols-[1fr_1fr_auto] gap-2 text-[13px] font-medium text-gray-500 px-1">
+                    <span>Parameeter</span>
+                    <span>Väärtus</span>
+                    <span />
+                  </div>
+                )}
+                {attrs.map((a, idx) => (
+                  <div key={idx} className="grid grid-cols-[1fr_1fr_auto] gap-2 items-center">
+                    <input
+                      value={a.attribute_name}
+                      onChange={e => updateAttr(idx, 'attribute_name', e.target.value)}
+                      placeholder="Parameeter"
+                      className="px-3 py-2 border border-gray-200 rounded-xl text-[14px] text-gray-900 outline-none focus:border-[#003366]"
+                    />
+                    <input
+                      value={a.attribute_value}
+                      onChange={e => updateAttr(idx, 'attribute_value', e.target.value)}
+                      placeholder="Väärtus"
+                      className="px-3 py-2 border border-gray-200 rounded-xl text-[14px] text-gray-900 outline-none focus:border-[#003366]"
+                    />
+                    <button type="button" onClick={() => removeAttr(idx)}
+                      className="p-2 text-gray-400 hover:text-red-500 transition-colors">
+                      <X size={15} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex gap-2">
+                <button type="button" onClick={addAttrRow}
+                  className="flex items-center gap-1.5 px-4 py-2.5 border border-gray-200 rounded-xl text-[15px] text-gray-600 hover:border-[#003366] hover:text-[#003366] transition-colors">
+                  <Plus size={15} /> Lisa parameeter
+                </button>
+                <button type="button" onClick={handleSaveAttrs} disabled={attrsSaving}
+                  className="flex items-center gap-1.5 px-4 py-2.5 bg-[#003366] text-white font-semibold rounded-xl hover:bg-[#004080] transition-colors disabled:opacity-60 text-[15px]">
+                  <Save size={14} /> {attrsSaving ? 'Salvestan...' : 'Salvesta andmed'}
+                </button>
+              </div>
+            </div>
+
+            {/* Bulk pricing */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -358,9 +493,10 @@ export default function MuudaToode() {
                 </button>
               </div>
             </div>
+
           </div>
 
-          {/* Parempoolne */}
+          {/* Right column */}
           <div className="space-y-5">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
               <h2 className="font-semibold text-gray-900 mb-4">Staatus</h2>
@@ -393,6 +529,26 @@ export default function MuudaToode() {
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
               <h2 className="font-semibold text-gray-900 mb-4">Pilt</h2>
               <ProductImageUpload currentUrl={imageUrl} onUpload={setImageUrl} onRemove={() => setImageUrl(null)} />
+            </div>
+
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+              <h2 className="font-semibold text-gray-900">Muud andmed</h2>
+              <div>
+                <label className="block text-[15px] font-medium text-gray-700 mb-1.5">Tähtsus (1–10)</label>
+                <input type="number" min="1" max="10" step="1" value={importance} onChange={e => setImportance(e.target.value)}
+                  placeholder="—"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-[15px] text-gray-900 outline-none focus:border-[#003366]" />
+              </div>
+              <div>
+                <label className="block text-[15px] font-medium text-gray-700 mb-1.5">Grundfos kategooria</label>
+                <input value={categoryGf} onChange={e => setCategoryGf(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-[15px] text-gray-900 outline-none focus:border-[#003366]" placeholder="—" />
+              </div>
+              <div>
+                <label className="block text-[15px] font-medium text-gray-700 mb-1.5">Grundfos URL</label>
+                <input value={urlGf} onChange={e => setUrlGf(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-[15px] text-gray-900 font-mono outline-none focus:border-[#003366]" placeholder="https://..." />
+              </div>
             </div>
 
             <button type="submit" disabled={saving}
